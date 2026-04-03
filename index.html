@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Ramiro Carnicer — Backend Engineer & Builder</title>
+  <meta name="description" content="Backend engineer at Mercado Libre. Founder building AI products, backend systems, and internet experiments from Buenos Aires."/>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800;900&family=Manrope:wght@400;500;700&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-container-highest": "#353535",
+            "on-tertiary-fixed": "#ffffff",
+            "surface-variant": "#353535",
+            "surface-container-low": "#1b1b1b",
+            "on-primary-fixed": "#ffffff",
+            "surface-container-high": "#2a2a2a",
+            "surface-container-lowest": "#0e0e0e",
+            "on-surface": "#e2e2e2",
+            "inverse-on-surface": "#303030",
+            "outline-variant": "#474747",
+            "on-surface-variant": "#c6c6c6",
+            "primary": "#ffffff",
+            "primary-fixed": "#b02f00",
+            "primary-fixed-dim": "#862200",
+            "secondary-container": "#454747",
+            "background": "#131313",
+            "surface-dim": "#131313",
+            "surface-container": "#1f1f1f",
+            "on-background": "#e2e2e2",
+            "outline": "#919191",
+            "surface": "#131313",
+            "surface-bright": "#393939",
+          },
+          borderRadius: {
+            "DEFAULT": "0.125rem",
+            "sm": "0.125rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px",
+          },
+          fontFamily: {
+            "headline": ["Inter", "sans-serif"],
+            "body": ["Manrope", "sans-serif"],
+            "label": ["Space Grotesk", "monospace"],
+          }
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: #131313;
+      color: #e2e2e2;
+      font-family: 'Manrope', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .technical-label { font-family: 'Space Grotesk', monospace; }
+    .headline-bold {
+      font-family: 'Inter', sans-serif;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+    }
+    .quintic-out { transition-timing-function: cubic-bezier(0.23, 1, 0.32, 1); }
+
+    /* Fade-up animation */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { animation: fadeUp 0.9s cubic-bezier(0.23, 1, 0.32, 1) both; }
+    .delay-1 { animation-delay: 0.15s; }
+    .delay-2 { animation-delay: 0.3s; }
+    .delay-3 { animation-delay: 0.45s; }
+    .delay-4 { animation-delay: 0.6s; }
+
+    /* Mobile menu transition */
+    #mobile-menu {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    #mobile-menu.open { max-height: 400px; }
+
+    /* Rotating hamburger */
+    #hamburger-icon { transition: transform 0.3s ease; }
+    .menu-open #hamburger-icon { transform: rotate(90deg); }
+
+    /* Ghost border for cards */
+    .ghost-border { border: 1px solid rgba(71, 71, 71, 0.15); }
+
+    /* Orange underline on nav active */
+    .nav-active { border-bottom: 1px solid #b02f00; padding-bottom: 4px; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #131313; }
+    ::-webkit-scrollbar-thumb { background: #353535; border-radius: 2px; }
+    ::-webkit-scrollbar-thumb:hover { background: #b02f00; }
+
+    /* Selection */
+    ::selection { background: #b02f00; color: white; }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     NAV
+══════════════════════════════════════════════ -->
+<nav class="sticky top-0 z-50 bg-surface/80 backdrop-blur-xl border-b border-white/5">
+  <div class="max-w-7xl mx-auto px-6 md:px-8 py-5 flex justify-between items-center">
+
+    <!-- Logo -->
+    <a href="#" class="text-white font-black uppercase tracking-tighter headline-bold text-lg leading-none">
+      RAM4<span class="text-primary-fixed">.</span>DEV
+    </a>
+
+    <!-- Desktop links -->
+    <div class="hidden md:flex items-center gap-10">
+      <a href="#work"       class="nav-active text-white technical-label text-sm uppercase tracking-wider font-bold">Work</a>
+      <a href="#writing"    class="text-on-surface-variant hover:text-white transition-colors duration-300 quintic-out technical-label text-sm uppercase tracking-wider">Writing</a>
+      <a href="#philosophy" class="text-on-surface-variant hover:text-white transition-colors duration-300 quintic-out technical-label text-sm uppercase tracking-wider">Philosophy</a>
+      <a href="#contact"    class="text-on-surface-variant hover:text-white transition-colors duration-300 quintic-out technical-label text-sm uppercase tracking-wider">Contact</a>
+    </div>
+
+    <!-- Desktop CTA -->
+    <a href="#contact"
+       class="hidden md:inline-flex bg-primary-fixed text-white px-5 py-2.5 text-sm technical-label font-bold rounded-sm quintic-out hover:brightness-110 active:scale-95 transition-all duration-200">
+      Connect
+    </a>
+
+    <!-- Mobile hamburger -->
+    <button id="hamburger-btn"
+            onclick="toggleMenu()"
+            aria-label="Toggle menu"
+            class="md:hidden text-on-surface-variant hover:text-white transition-colors p-1">
+      <span id="hamburger-icon" class="material-symbols-outlined text-2xl">menu</span>
+    </button>
+
+  </div>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="md:hidden border-t border-white/5 bg-surface/95 backdrop-blur-xl">
+    <div class="max-w-7xl mx-auto px-6 py-6 flex flex-col gap-6">
+      <a href="#work"       onclick="closeMenu()" class="technical-label text-white text-sm uppercase tracking-wider font-bold border-b border-primary-fixed pb-2 w-fit">Work</a>
+      <a href="#writing"    onclick="closeMenu()" class="technical-label text-on-surface-variant text-sm uppercase tracking-wider hover:text-white transition-colors">Writing</a>
+      <a href="#philosophy" onclick="closeMenu()" class="technical-label text-on-surface-variant text-sm uppercase tracking-wider hover:text-white transition-colors">Philosophy</a>
+      <a href="#contact"    onclick="closeMenu()" class="technical-label text-on-surface-variant text-sm uppercase tracking-wider hover:text-white transition-colors">Contact</a>
+      <a href="#contact"
+         onclick="closeMenu()"
+         class="mt-2 bg-primary-fixed text-white px-6 py-3 text-sm technical-label font-bold rounded-sm text-center hover:brightness-110 transition-all">
+        Connect
+      </a>
+    </div>
+  </div>
+</nav>
+
+
+<!-- ══════════════════════════════════════════════
+     HERO
+══════════════════════════════════════════════ -->
+<header class="relative pt-24 pb-40 px-6 md:px-8 max-w-7xl mx-auto overflow-hidden">
+
+  <!-- Background glow accent -->
+  <div class="absolute top-0 right-0 w-96 h-96 bg-primary-fixed opacity-5 rounded-full blur-3xl pointer-events-none"></div>
+
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-end">
+    <div class="md:col-span-11">
+
+      <!-- Label -->
+      <div class="fade-up technical-label text-primary-fixed text-xs font-bold tracking-widest uppercase mb-6 flex items-center gap-3">
+        <span class="inline-block w-8 h-px bg-primary-fixed"></span>
+        Backend Engineer · Founder-minded Builder · Buenos Aires
+      </div>
+
+      <!-- Name -->
+      <h1 class="fade-up delay-1 headline-bold text-[clamp(3rem,11vw,8.5rem)] text-white mb-8 leading-[0.88]">
+        RAMIRO<br/>CARNICER
+      </h1>
+
+      <!-- Bottom row -->
+      <div class="fade-up delay-2 grid grid-cols-1 md:grid-cols-2 gap-10 mt-12">
+
+        <!-- Tagline + bio -->
+        <div>
+          <p class="text-xl md:text-2xl text-on-surface-variant font-medium leading-relaxed mb-2">
+            I build backend systems, AI products, and internet experiments from zero.
+          </p>
+          <p class="text-base text-on-surface-variant/70 leading-relaxed mt-4">
+            Currently engineering at Mercado Libre and building&nbsp;<span class="text-white font-semibold">Khora</span>&thinsp;— an AI-native product for organizational intelligence. Based in Buenos Aires.
+          </p>
+        </div>
+
+        <!-- CTAs + socials -->
+        <div class="flex flex-col justify-end gap-6">
+          <div class="flex flex-wrap gap-4">
+            <a href="#work"
+               class="bg-primary-fixed text-white px-7 py-3.5 text-sm technical-label font-bold rounded-sm hover:brightness-110 active:scale-95 transition-all quintic-out">
+              View Projects
+            </a>
+            <a href="#writing"
+               class="bg-surface-container-highest text-on-surface px-7 py-3.5 text-sm technical-label font-bold rounded-sm hover:bg-surface-container-high active:scale-95 transition-all quintic-out">
+              Read Writing
+            </a>
+          </div>
+
+          <!-- Social links -->
+          <div class="flex items-center gap-6 mt-2">
+            <a href="https://github.com/ram4-dev"
+               target="_blank" rel="noopener"
+               class="technical-label text-on-surface-variant hover:text-primary-fixed transition-colors text-xs uppercase tracking-widest font-bold">
+              GitHub
+            </a>
+            <span class="w-px h-4 bg-outline-variant/50"></span>
+            <a href="https://x.com/ram4_dev"
+               target="_blank" rel="noopener"
+               class="technical-label text-on-surface-variant hover:text-primary-fixed transition-colors text-xs uppercase tracking-widest font-bold">
+              X / Twitter
+            </a>
+            <span class="w-px h-4 bg-outline-variant/50"></span>
+            <a href="https://ar.linkedin.com/in/ramirocarnicersouble"
+               target="_blank" rel="noopener"
+               class="technical-label text-on-surface-variant hover:text-primary-fixed transition-colors text-xs uppercase tracking-widest font-bold">
+              LinkedIn
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Current status strip -->
+  <div class="fade-up delay-3 mt-20 flex items-center gap-4">
+    <span class="flex items-center gap-2 bg-primary-fixed/10 text-primary-fixed technical-label text-xs font-bold px-4 py-2 rounded-full uppercase tracking-widest">
+      <span class="inline-block w-2 h-2 rounded-full bg-primary-fixed animate-pulse"></span>
+      Currently building Khora
+    </span>
+    <span class="text-on-surface-variant/50 technical-label text-xs">
+      Backend Systems · Agent Workflows · Early-stage Product
+    </span>
+  </div>
+
+</header>
+
+
+<!-- ══════════════════════════════════════════════
+     SELECTED BUILDS
+══════════════════════════════════════════════ -->
+<section class="py-28 px-6 md:px-8 bg-surface-container-low" id="work">
+  <div class="max-w-7xl mx-auto">
+
+    <div class="flex flex-col md:flex-row justify-between items-baseline mb-20 gap-4">
+      <h2 class="headline-bold text-5xl md:text-7xl text-white">Selected Builds</h2>
+      <span class="technical-label text-on-surface-variant text-sm">01 / ARCHIVE</span>
+    </div>
+
+    <!-- Projects grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-px bg-white/5 border border-white/5">
+
+      <!-- Khora — Current Focus -->
+      <a href="https://khora.ar" target="_blank" rel="noopener"
+         class="bg-surface-container p-8 md:p-12 group hover:bg-surface-container-high transition-colors duration-500 quintic-out block">
+        <div class="flex justify-between items-start mb-10">
+          <span class="technical-label text-xs uppercase tracking-widest text-primary-fixed font-bold bg-primary-fixed/10 px-3 py-1 rounded-full">
+            Current Focus
+          </span>
+          <span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300">north_east</span>
+        </div>
+        <h3 class="text-2xl md:text-3xl font-bold text-white mb-3">Khora</h3>
+        <p class="text-on-surface-variant mb-10 text-base md:text-lg leading-relaxed">
+          AI-native product for People Analytics and organizational intelligence. Goes beyond dashboards — it predicts, signals, and acts.
+        </p>
+        <div class="space-y-3">
+          <div class="flex items-center gap-4">
+            <span class="technical-label text-xs text-outline w-20">ROLE</span>
+            <span class="text-sm font-bold text-on-surface">Founder / Product Engineer</span>
+          </div>
+          <div class="flex items-center gap-4">
+            <span class="technical-label text-xs text-outline w-20">FOCUS</span>
+            <span class="text-sm font-bold text-on-surface">AI · HR Tech · Agent Workflows</span>
+          </div>
+          <div class="flex items-center gap-4">
+            <span class="technical-label text-xs text-outline w-20">STATUS</span>
+            <span class="text-sm font-bold text-primary-fixed">In Progress</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Poker Bot Arena -->
+      <a href="https://github.com/ram4-dev/poker_bot_arena" target="_blank" rel="noopener"
+         class="bg-surface-container p-8 md:p-12 group hover:bg-surface-container-high transition-colors duration-500 quintic-out block">
+        <div class="flex justify-between items-start mb-10">
+          <span class="technical-label text-xs uppercase tracking-widest text-outline">Systems</span>
+          <span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300">north_east</span>
+        </div>
+        <h3 class="text-2xl md:text-3xl font-bold text-white mb-3">Poker Bot Arena</h3>
+        <p class="text-on-surface-variant mb-10 text-base md:text-lg leading-relaxed">
+          Competitive platform where autonomous agents play poker via REST API. Built around game loop architecture, agent isolation, and real-time state management.
+        </p>
+        <div class="space-y-3">
+          <div class="flex items-center gap-4">
+            <span class="technical-label text-xs text-outline w-20">ROLE</span>
+            <span class="text-sm font-bold text-on-surface">Creator / Architect</span>
+          </div>
+          <div class="flex items-center gap-4">
+            <span class="technical-label text-xs text-outline w-20">STACK</span>
+            <span class="text-sm font-bold text-on-surface">Python · REST API · Agent Design</span>
+          </div>
+          <div class="flex items-center gap-4">
+            <span class="technical-label text-xs text-outline w-20">STATUS</span>
+            <span class="text-sm font-bold text-on-surface">Experiment</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Anotamelo -->
+      <a href="https://anotamelo.xyz" target="_blank" rel="noopener"
+         class="bg-surface-container p-8 md:p-12 group hover:bg-surface-container-high transition-colors duration-500 quintic-out block">
+        <div class="flex justify-between items-start mb-10">
+          <span class="technical-label text-xs uppercase tracking-widest text-outline">Product</span>
+          <span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300">north_east</span>
+        </div>
+        <h3 class="text-2xl md:text-3xl font-bold text-white mb-3">Anotamelo</h3>
+        <p class="text-on-surface-variant mb-10 text-base md:text-lg leading-relaxed">
+          WhatsApp bot for shared group expense management, powered by AI. Consumer-facing, natural language interface, zero friction for non-technical users.
+        </p>
+        <div class="space-y-3">
+          <div class="flex items-center gap-4">
+            <span class="technical-label text-xs text-outline w-20">ROLE</span>
+            <span class="text-sm font-bold text-on-surface">Creator / Engineer</span>
+          </div>
+          <div class="flex items-center gap-4">
+            <span class="technical-label text-xs text-outline w-20">STACK</span>
+            <span class="text-sm font-bold text-on-surface">Python · WhatsApp API · LLM</span>
+          </div>
+          <div class="flex items-center gap-4">
+            <span class="technical-label text-xs text-outline w-20">STATUS</span>
+            <span class="text-sm font-bold text-on-surface">Live / Iterating</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- SDD Custom Kit -->
+      <a href="https://github.com/ram4-dev/simple_mutiple_agents_sdd" target="_blank" rel="noopener"
+         class="bg-surface-container p-8 md:p-12 group hover:bg-surface-container-high transition-colors duration-500 quintic-out block">
+        <div class="flex justify-between items-start mb-10">
+          <span class="technical-label text-xs uppercase tracking-widest text-outline">Dev Tooling</span>
+          <span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300">north_east</span>
+        </div>
+        <h3 class="text-2xl md:text-3xl font-bold text-white mb-3">SDD Custom Kit</h3>
+        <p class="text-on-surface-variant mb-10 text-base md:text-lg leading-relaxed">
+          Portable, spec-driven development kit with multi-agent orchestration. Turns technical specs into implemented code using a structured pipeline of specialized agents.
+        </p>
+        <div class="space-y-3">
+          <div class="flex items-center gap-4">
+            <span class="technical-label text-xs text-outline w-20">ROLE</span>
+            <span class="text-sm font-bold text-on-surface">Designer / Builder</span>
+          </div>
+          <div class="flex items-center gap-4">
+            <span class="technical-label text-xs text-outline w-20">STACK</span>
+            <span class="text-sm font-bold text-on-surface">Multi-agent · LLM · Spec-driven</span>
+          </div>
+          <div class="flex items-center gap-4">
+            <span class="technical-label text-xs text-outline w-20">STATUS</span>
+            <span class="text-sm font-bold text-on-surface">Open Source</span>
+          </div>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- View more on GitHub -->
+    <div class="mt-10 text-center">
+      <a href="https://github.com/ram4-dev?tab=repositories"
+         target="_blank" rel="noopener"
+         class="technical-label text-on-surface-variant hover:text-primary-fixed text-sm uppercase tracking-widest transition-colors duration-300 inline-flex items-center gap-2">
+        View all repositories
+        <span class="material-symbols-outlined text-base">arrow_forward</span>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════
+     WHAT I DO
+══════════════════════════════════════════════ -->
+<section class="py-28 px-6 md:px-8">
+  <div class="max-w-7xl mx-auto">
+
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+      <div class="md:col-span-1">
+        <h2 class="technical-label text-primary-fixed font-bold text-xs tracking-widest uppercase mt-2">Expertise</h2>
+      </div>
+      <div class="md:col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-12 md:gap-16">
+
+        <div>
+          <h3 class="text-xl md:text-2xl font-bold text-white mb-3">Backend Systems</h3>
+          <p class="text-on-surface-variant leading-relaxed text-sm md:text-base">
+            Scalable APIs, microservices, distributed architecture. Working at Mercado Libre means designing for billions of requests. Reliability is not optional.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="text-xl md:text-2xl font-bold text-white mb-3">AI Products</h3>
+          <p class="text-on-surface-variant leading-relaxed text-sm md:text-base">
+            Agent workflows, applied LLMs, productized AI. The interesting problems aren't in demos — they're in making these systems reliable enough to deploy.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="text-xl md:text-2xl font-bold text-white mb-3">Product Engineering</h3>
+          <p class="text-on-surface-variant leading-relaxed text-sm md:text-base">
+            From zero to shipped. Technical judgment and product taste are not separate skills. Building Khora taught me they're the same thing.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="text-xl md:text-2xl font-bold text-white mb-3">Technical Strategy</h3>
+          <p class="text-on-surface-variant leading-relaxed text-sm md:text-base">
+            Architecture decisions, stack selection, technical tradeoffs for early-stage products. Boring technology for critical paths. Innovation where it actually matters.
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Mercado Libre strip -->
+    <div class="mt-24 border border-white/5 bg-surface-container-low p-8 md:p-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div>
+        <div class="technical-label text-xs text-outline uppercase tracking-widest mb-2">Day job</div>
+        <p class="text-white font-bold text-lg">Backend Software Engineer at Mercado Libre</p>
+        <p class="text-on-surface-variant text-sm mt-1">Scalable backend systems at Latin America's largest e-commerce and fintech platform.</p>
+      </div>
+      <div class="flex items-center gap-3 shrink-0">
+        <span class="technical-label text-xs text-outline uppercase tracking-widest">Buenos Aires</span>
+        <span class="w-1 h-1 rounded-full bg-outline"></span>
+        <span class="technical-label text-xs text-outline uppercase tracking-widest">Argentina</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════
+     WRITING
+══════════════════════════════════════════════ -->
+<section class="py-28 px-6 md:px-8 bg-surface-container-lowest" id="writing">
+  <div class="max-w-7xl mx-auto">
+
+    <div class="flex flex-col md:flex-row justify-between items-baseline mb-20 gap-4">
+      <h2 class="headline-bold text-5xl md:text-7xl text-white">Writing</h2>
+      <a class="technical-label text-sm text-primary-fixed font-bold hover:underline underline-offset-4"
+         href="https://ar.linkedin.com/in/ramirocarnicersouble" target="_blank" rel="noopener">
+        View All on LinkedIn
+      </a>
+    </div>
+
+    <div class="divide-y divide-white/10 border-y border-white/10">
+
+      <a href="https://es.linkedin.com/posts/ramirocarnicersouble_entrepreneurship-startuplife-mvp-activity-7440781755235725312-UQkK"
+         target="_blank" rel="noopener"
+         class="group block py-10 md:py-12">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="flex-1">
+            <div class="flex flex-wrap items-center gap-3 mb-4">
+              <span class="technical-label text-xs text-outline">LinkedIn</span>
+              <span class="technical-label text-xs text-primary-fixed uppercase tracking-wider">Startups</span>
+            </div>
+            <h3 class="text-xl md:text-2xl lg:text-3xl font-bold text-white group-hover:text-primary-fixed transition-colors duration-300">
+              When the Market Doesn't Respond, You Pivot Faster
+            </h3>
+            <p class="text-on-surface-variant text-sm mt-2 leading-relaxed">On building MVPs, confronting market silence, and iterating without ego. The loop that actually works.</p>
+          </div>
+          <span class="material-symbols-outlined text-outline-variant group-hover:text-white group-hover:translate-x-1 transition-all duration-300 shrink-0">arrow_forward</span>
+        </div>
+      </a>
+
+      <a href="https://es.linkedin.com/posts/ramirocarnicersouble_los-dashboards-de-datos-van-a-morir-cuando-activity-7442544569130541056-E18R"
+         target="_blank" rel="noopener"
+         class="group block py-10 md:py-12">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="flex-1">
+            <div class="flex flex-wrap items-center gap-3 mb-4">
+              <span class="technical-label text-xs text-outline">LinkedIn</span>
+              <span class="technical-label text-xs text-primary-fixed uppercase tracking-wider">AI · People Analytics</span>
+            </div>
+            <h3 class="text-xl md:text-2xl lg:text-3xl font-bold text-white group-hover:text-primary-fixed transition-colors duration-300">
+              Dashboards Are Dying. Prediction Is Next.
+            </h3>
+            <p class="text-on-surface-variant text-sm mt-2 leading-relaxed">Data reporting is not strategy. Real analytical value is forward-looking — signal detection, not passive charts.</p>
+          </div>
+          <span class="material-symbols-outlined text-outline-variant group-hover:text-white group-hover:translate-x-1 transition-all duration-300 shrink-0">arrow_forward</span>
+        </div>
+      </a>
+
+      <a href="https://es.linkedin.com/posts/ramirocarnicersouble_la-gente-de-rrhh-no-sirve-para-nada-eso-activity-7438310576201576448-6JqC"
+         target="_blank" rel="noopener"
+         class="group block py-10 md:py-12">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="flex-1">
+            <div class="flex flex-wrap items-center gap-3 mb-4">
+              <span class="technical-label text-xs text-outline">LinkedIn</span>
+              <span class="technical-label text-xs text-primary-fixed uppercase tracking-wider">HR · Systems</span>
+            </div>
+            <h3 class="text-xl md:text-2xl lg:text-3xl font-bold text-white group-hover:text-primary-fixed transition-colors duration-300">
+              Why People Teams Fail at Data (and What Actually Fixes It)
+            </h3>
+            <p class="text-on-surface-variant text-sm mt-2 leading-relaxed">The real bottleneck isn't tooling — it's the mental model. A systems-thinking take on HR and organizational intelligence.</p>
+          </div>
+          <span class="material-symbols-outlined text-outline-variant group-hover:text-white group-hover:translate-x-1 transition-all duration-300 shrink-0">arrow_forward</span>
+        </div>
+      </a>
+
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════
+     PHILOSOPHY
+══════════════════════════════════════════════ -->
+<section class="py-28 px-6 md:px-8" id="philosophy">
+  <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-16">
+
+    <div class="md:col-span-5">
+      <h2 class="headline-bold text-4xl md:text-5xl lg:text-6xl text-white mb-8 leading-tight">Building<br/>with Intent</h2>
+      <p class="text-lg text-on-surface-variant leading-relaxed">
+        Software is craft. I care about systems that work in the real world — not just in demos. Technical depth is leverage, not identity theater.
+      </p>
+    </div>
+
+    <div class="md:col-span-7 space-y-10">
+
+      <div class="border-l-4 border-primary-fixed pl-8">
+        <h4 class="technical-label text-white font-bold text-lg mb-2">01. Ship, Learn, Iterate</h4>
+        <p class="text-on-surface-variant text-sm leading-relaxed">
+          Shipping beats planning theater. The fastest feedback loop wins. I prefer a live product with rough edges over a perfect spec with no users.
+        </p>
+      </div>
+
+      <div class="border-l-4 border-outline-variant/30 pl-8">
+        <h4 class="technical-label text-white font-bold text-lg mb-2">02. Ownership at Every Level</h4>
+        <p class="text-on-surface-variant text-sm leading-relaxed">
+          No silos. I want to understand the product vision and the technical constraints simultaneously. Engineers who only see code miss half the problem.
+        </p>
+      </div>
+
+      <div class="border-l-4 border-outline-variant/30 pl-8">
+        <h4 class="technical-label text-white font-bold text-lg mb-2">03. AI When It Moves from Novelty to Execution</h4>
+        <p class="text-on-surface-variant text-sm leading-relaxed">
+          I'm not interested in AI as a demo category. I'm interested in it when it connects to real workflows and changes how work actually gets done.
+        </p>
+      </div>
+
+      <div class="border-l-4 border-outline-variant/30 pl-8">
+        <h4 class="technical-label text-white font-bold text-lg mb-2">04. Product Taste Is an Engineering Skill</h4>
+        <p class="text-on-surface-variant text-sm leading-relaxed">
+          Choosing the right abstraction and choosing the right feature are the same skill. Code quality without product judgment is just expensive craft work.
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════
+     CONTACT / CTA
+══════════════════════════════════════════════ -->
+<section class="py-36 md:py-48 px-6 md:px-8 bg-surface-container-low text-center" id="contact">
+  <div class="max-w-3xl mx-auto">
+
+    <div class="inline-block px-4 py-2 bg-primary-fixed/10 text-primary-fixed technical-label text-xs font-bold rounded-full mb-8 uppercase tracking-widest">
+      Open to interesting conversations
+    </div>
+
+    <h2 class="headline-bold text-4xl md:text-6xl lg:text-8xl text-white mb-8 leading-tight">
+      Let's build<br/>something real.
+    </h2>
+
+    <p class="text-on-surface-variant text-base md:text-lg mb-12 leading-relaxed">
+      If you're building something ambitious in AI, backend infrastructure, or early-stage product — I'm always interested in a good conversation.
+    </p>
+
+    <div class="flex flex-col sm:flex-row justify-center items-center gap-6">
+      <a href="mailto:ramirocarnicersouble8@gmail.com"
+         class="bg-primary-fixed text-white px-10 py-4 text-base technical-label font-bold rounded-sm quintic-out hover:brightness-110 active:scale-95 transition-all w-full sm:w-auto">
+        ramirocarnicersouble8@gmail.com
+      </a>
+      <div class="flex items-center gap-6">
+        <a href="https://x.com/ram4_dev" target="_blank" rel="noopener"
+           class="text-on-surface hover:text-primary-fixed transition-colors technical-label text-sm font-bold uppercase tracking-widest underline underline-offset-8">X</a>
+        <a href="https://github.com/ram4-dev" target="_blank" rel="noopener"
+           class="text-on-surface hover:text-primary-fixed transition-colors technical-label text-sm font-bold uppercase tracking-widest underline underline-offset-8">GitHub</a>
+        <a href="https://ar.linkedin.com/in/ramirocarnicersouble" target="_blank" rel="noopener"
+           class="text-on-surface hover:text-primary-fixed transition-colors technical-label text-sm font-bold uppercase tracking-widest underline underline-offset-8">LinkedIn</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════════ -->
+<footer class="bg-surface-container-lowest py-10 px-6 md:px-8">
+  <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center border-t border-white/5 pt-10 gap-6">
+
+    <div class="text-sm font-bold text-outline technical-label">
+      RAMIRO CARNICER SOUBLE — RAM4 — BUENOS AIRES
+    </div>
+
+    <div class="text-outline technical-label text-xs">
+      © 2026 · Built from zero, shipped on purpose.
+    </div>
+
+    <div class="flex gap-6">
+      <a href="https://github.com/ram4-dev" target="_blank" rel="noopener"
+         class="text-outline hover:text-primary-fixed transition-colors technical-label text-xs uppercase tracking-wider">GitHub</a>
+      <a href="https://x.com/ram4_dev" target="_blank" rel="noopener"
+         class="text-outline hover:text-primary-fixed transition-colors technical-label text-xs uppercase tracking-wider">X</a>
+      <a href="https://ar.linkedin.com/in/ramirocarnicersouble" target="_blank" rel="noopener"
+         class="text-outline hover:text-primary-fixed transition-colors technical-label text-xs uppercase tracking-wider">LinkedIn</a>
+      <a href="https://www.instagram.com/ram4.dev/" target="_blank" rel="noopener"
+         class="text-outline hover:text-primary-fixed transition-colors technical-label text-xs uppercase tracking-wider">Instagram</a>
+    </div>
+
+  </div>
+</footer>
+
+
+<!-- ══════════════════════════════════════════════
+     JS
+══════════════════════════════════════════════ -->
+<script>
+  // Mobile menu toggle
+  function toggleMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn  = document.getElementById('hamburger-btn');
+    const icon = document.getElementById('hamburger-icon');
+    const open = menu.classList.toggle('open');
+    btn.classList.toggle('menu-open', open);
+    icon.textContent = open ? 'close' : 'menu';
+  }
+  function closeMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn  = document.getElementById('hamburger-btn');
+    const icon = document.getElementById('hamburger-icon');
+    menu.classList.remove('open');
+    btn.classList.remove('menu-open');
+    icon.textContent = 'menu';
+  }
+
+  // Nav active state on scroll
+  const sections = ['work','writing','philosophy','contact'];
+  const navLinks = {};
+  sections.forEach(id => {
+    navLinks[id] = document.querySelector(`a[href="#${id}"]`);
+  });
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const link = navLinks[entry.target.id];
+      if (!link) return;
+      if (entry.isIntersecting) {
+        // Remove active from all
+        Object.values(navLinks).forEach(l => l && l.classList.remove('nav-active','text-white'));
+        link.classList.add('nav-active', 'text-white');
+        link.classList.remove('text-on-surface-variant');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) observer.observe(el);
+  });
+</script>
+
+</body>
+</html>
