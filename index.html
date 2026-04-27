@@ -235,7 +235,7 @@
     </h1>
 
     <p class="fade-up delay-2 mt-5 max-w-2xl text-base leading-7 text-olive md:text-lg md:leading-8">
-      Soy Ramiro Carnicer Souble. Preguntale al asistente lo que quieras saber sobre mi experiencia, proyectos o forma de trabajar.
+      I’m Ramiro Carnicer Souble. Ask the assistant anything about my experience, projects or how I work.
     </p>
 
     <!-- ─── CHAT PANEL ─────────────────────────────────────────── -->
@@ -247,33 +247,33 @@
             <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-terracotta/40"></span>
             <span class="relative inline-flex h-2.5 w-2.5 rounded-full bg-terracotta"></span>
           </span>
-          <span class="text-sm font-medium text-ink">Asistente de Ramiro</span>
-          <span class="hidden text-xs text-stone md:inline">· Pregunta lo que quieras</span>
+          <span class="text-sm font-medium text-ink">Ramiro’s assistant</span>
+          <span class="hidden text-xs text-stone md:inline">· Ask anything</span>
         </div>
-        <button id="chat-reset" type="button" class="text-[0.7rem] uppercase tracking-[0.12em] text-stone hover:text-terracotta">Nueva conversación</button>
+        <button id="chat-reset" type="button" class="text-[0.7rem] uppercase tracking-[0.12em] text-stone hover:text-terracotta">New conversation</button>
       </div>
 
       <div id="chat-messages" class="flex max-h-[440px] min-h-[260px] flex-col gap-4 overflow-y-auto px-5 py-5 md:max-h-[480px] md:px-6 md:py-6" aria-live="polite"></div>
 
       <div id="chat-suggestions" class="flex flex-wrap gap-2 px-5 pb-3 md:px-6">
-        <button type="button" data-q="¿Quién es Ramiro?" class="rounded-full bg-sand px-3.5 py-1.5 text-xs text-warm shadow-[0_0_0_1px_#d1cfc5] hover:bg-[#ece9df] hover:text-ink">¿Quién es Ramiro?</button>
-        <button type="button" data-q="¿En qué proyectos está trabajando?" class="rounded-full bg-sand px-3.5 py-1.5 text-xs text-warm shadow-[0_0_0_1px_#d1cfc5] hover:bg-[#ece9df] hover:text-ink">Proyectos actuales</button>
-        <button type="button" data-q="Contame sobre Khora" class="rounded-full bg-sand px-3.5 py-1.5 text-xs text-warm shadow-[0_0_0_1px_#d1cfc5] hover:bg-[#ece9df] hover:text-ink">Khora</button>
-        <button type="button" data-q="¿Está disponible para trabajar?" class="rounded-full bg-sand px-3.5 py-1.5 text-xs text-warm shadow-[0_0_0_1px_#d1cfc5] hover:bg-[#ece9df] hover:text-ink">¿Disponible?</button>
-        <button type="button" data-q="¿Cómo lo contacto?" class="rounded-full bg-sand px-3.5 py-1.5 text-xs text-warm shadow-[0_0_0_1px_#d1cfc5] hover:bg-[#ece9df] hover:text-ink">Contacto</button>
-        <button type="button" data-q="Give me a short professional summary in English" class="rounded-full bg-sand px-3.5 py-1.5 text-xs text-warm shadow-[0_0_0_1px_#d1cfc5] hover:bg-[#ece9df] hover:text-ink">Summary in English</button>
+        <button type="button" data-q="Who is Ramiro?" class="rounded-full bg-sand px-3.5 py-1.5 text-xs text-warm shadow-[0_0_0_1px_#d1cfc5] hover:bg-[#ece9df] hover:text-ink">Who is Ramiro?</button>
+        <button type="button" data-q="What is he working on right now?" class="rounded-full bg-sand px-3.5 py-1.5 text-xs text-warm shadow-[0_0_0_1px_#d1cfc5] hover:bg-[#ece9df] hover:text-ink">Current projects</button>
+        <button type="button" data-q="Tell me about Khora" class="rounded-full bg-sand px-3.5 py-1.5 text-xs text-warm shadow-[0_0_0_1px_#d1cfc5] hover:bg-[#ece9df] hover:text-ink">Khora</button>
+        <button type="button" data-q="Is he open to new opportunities?" class="rounded-full bg-sand px-3.5 py-1.5 text-xs text-warm shadow-[0_0_0_1px_#d1cfc5] hover:bg-[#ece9df] hover:text-ink">Available?</button>
+        <button type="button" data-q="How can I reach him?" class="rounded-full bg-sand px-3.5 py-1.5 text-xs text-warm shadow-[0_0_0_1px_#d1cfc5] hover:bg-[#ece9df] hover:text-ink">Contact</button>
+        <button type="button" data-q="Resumime en una frase quién es Ramiro" class="rounded-full bg-sand px-3.5 py-1.5 text-xs text-warm shadow-[0_0_0_1px_#d1cfc5] hover:bg-[#ece9df] hover:text-ink">Resumen en español</button>
       </div>
 
       <form id="chat-form" class="border-t border-cream px-3 py-3 md:px-4 md:py-4">
         <div class="flex items-end gap-2">
-          <textarea id="chat-input" rows="1" placeholder="Preguntale algo a Ramiro..." maxlength="2000" class="flex-1 resize-none rounded-xl bg-parchment px-4 py-3 text-[0.95rem] leading-6 text-ink placeholder:text-stone shadow-[0_0_0_1px_#e8e6dc] focus:outline-none focus:shadow-[0_0_0_1px_#c96442] max-h-40"></textarea>
-          <button id="chat-send" type="submit" aria-label="Enviar" class="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-terracotta text-ivory shadow-[0_0_0_1px_#c96442] hover:bg-coral disabled:opacity-50 disabled:cursor-not-allowed">
+          <textarea id="chat-input" rows="1" placeholder="Ask Ramiro anything..." maxlength="2000" class="flex-1 resize-none rounded-xl bg-parchment px-4 py-3 text-[0.95rem] leading-6 text-ink placeholder:text-stone shadow-[0_0_0_1px_#e8e6dc] focus:outline-none focus:shadow-[0_0_0_1px_#c96442] max-h-40"></textarea>
+          <button id="chat-send" type="submit" aria-label="Send" class="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-terracotta text-ivory shadow-[0_0_0_1px_#c96442] hover:bg-coral disabled:opacity-50 disabled:cursor-not-allowed">
             <span class="material-symbols-outlined text-xl">arrow_upward</span>
           </button>
         </div>
         <div class="mt-2 flex items-center justify-between px-1 text-[0.7rem] text-stone">
-          <span>Asistente con IA. Puede equivocarse.</span>
-          <span class="hidden md:inline">Enter para enviar · Shift + Enter nueva línea</span>
+          <span>AI assistant. May make mistakes.</span>
+          <span class="hidden md:inline">Enter to send · Shift + Enter for a new line</span>
         </div>
       </form>
 
@@ -297,7 +297,7 @@
 
     <div class="mt-12 flex justify-center text-stone md:mt-16">
       <a href="#work" class="inline-flex flex-col items-center gap-2 text-[0.7rem] uppercase tracking-[0.12em] hover:text-terracotta">
-        <span>Más sobre Ramiro</span>
+        <span>More about Ramiro</span>
         <span class="material-symbols-outlined text-base">keyboard_arrow_down</span>
       </a>
     </div>
@@ -592,7 +592,7 @@
     const suggestionsEl = document.getElementById('chat-suggestions');
     const resetBtn      = document.getElementById('chat-reset');
 
-    const INITIAL_GREETING = 'Hola, soy el asistente de Ramiro. Puedo contarte sobre su experiencia, sus proyectos, su forma de trabajar o cómo contactarlo. ¿Qué te gustaría saber?';
+    const INITIAL_GREETING = "Hi, I’m Ramiro’s assistant. I can tell you about his experience, projects, how he works, or how to reach him. What would you like to know?";
 
     /** @type {{role:'user'|'assistant', content:string}[]} */
     let history = [];
@@ -745,7 +745,7 @@
       const text = (rawText || '').trim();
       if (!text) return;
       if (text.length > 2000) {
-        appendError('Tu mensaje es demasiado largo. Probá con uno más corto.');
+        appendError('Your message is too long. Try a shorter one.');
         return;
       }
 
@@ -772,7 +772,7 @@
 
         if (!resp.ok) {
           removeTyping();
-          let errMsg = 'Hubo un problema. Probá de nuevo en un rato.';
+          let errMsg = 'Something went wrong. Please try again in a moment.';
           try {
             const data = await resp.json();
             if (data && data.error) errMsg = data.error;
@@ -790,7 +790,7 @@
           const data = await resp.json();
           answer = (data && data.answer) ? String(data.answer) : '';
           if (!answer) {
-            appendError('No recibí respuesta. Probá de nuevo.');
+            appendError('No response received. Please try again.');
             history.pop();
             return;
           }
@@ -855,7 +855,7 @@
 
         if (!answer) {
           removeTyping();
-          appendError('No recibí respuesta. Probá de nuevo.');
+          appendError('No response received. Please try again.');
           history.pop();
           return;
         }
@@ -871,7 +871,7 @@
           history.push({ role: 'assistant', content: answer });
         } else {
           if (assistant) assistant.remove();
-          appendError('No pude conectarme. Revisá tu conexión y probá de nuevo.');
+          appendError('Connection failed. Check your network and try again.');
           history.pop();
         }
       } finally {

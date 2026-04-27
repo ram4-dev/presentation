@@ -426,8 +426,8 @@ module.exports = async function handler(req, res) {
     sendJson(res, 429, {
       error:
         rl.reason === "rate_limit_day"
-          ? "Llegaste al límite diario. Probá de nuevo mañana."
-          : "Demasiadas preguntas seguidas. Esperá unos segundos.",
+          ? "You’ve hit today’s limit. Please try again tomorrow."
+          : "Too many requests in a short time. Please wait a few seconds.",
     });
     return;
   }
@@ -485,12 +485,12 @@ async function handleJson(res, fullMessages, env) {
     console.error("[/api/chat] upstream error:", msg);
     if (msg.includes("aborted") || msg.includes("AbortError")) {
       sendJson(res, 504, {
-        error: "El asistente tardó demasiado en responder. Intentá de nuevo.",
+        error: "The assistant took too long to respond. Please try again.",
       });
       return;
     }
     sendJson(res, 502, {
-      error: "El asistente no está disponible en este momento. Probá de nuevo en un rato.",
+      error: "The assistant is unavailable right now. Please try again in a moment.",
     });
   }
 }
@@ -532,8 +532,8 @@ async function handleStream(res, fullMessages, env) {
     const isTimeout = msg.includes("aborted") || msg.includes("AbortError");
     writeEvent({
       err: isTimeout
-        ? "El asistente tardó demasiado en responder. Intentá de nuevo."
-        : "El asistente no está disponible en este momento. Probá de nuevo en un rato.",
+        ? "The assistant took too long to respond. Please try again."
+        : "The assistant is unavailable right now. Please try again in a moment.",
     });
   } finally {
     try { res.end(); } catch {}
