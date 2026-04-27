@@ -672,6 +672,37 @@
       scrollToBottom();
     }
 
+    // Creates an empty assistant bubble that can be updated as tokens stream in.
+    function createStreamingAssistant() {
+      const wrap = document.createElement('div');
+      wrap.className = 'flex justify-start';
+      const bubble = document.createElement('div');
+      bubble.className = 'chat-bubble-assistant max-w-[88%] rounded-2xl bg-parchment px-4 py-3 text-[0.95rem] leading-7 text-ink shadow-[0_0_0_1px_#e8e6dc] break-words';
+      bubble.innerHTML = '';
+      wrap.appendChild(bubble);
+      messagesEl.appendChild(wrap);
+      scrollToBottom();
+      let lastRender = 0;
+      return {
+        update(rawText) {
+          // Throttle markdown re-render to ~30 fps; always update on long pauses.
+          const now = performance.now();
+          if (now - lastRender > 32) {
+            bubble.innerHTML = renderMarkdown(rawText);
+            lastRender = now;
+            scrollToBottom();
+          }
+        },
+        finalize(rawText) {
+          bubble.innerHTML = renderMarkdown(rawText);
+          scrollToBottom();
+        },
+        remove() {
+          wrap.remove();
+        },
+      };
+    }
+
     function appendError(text) {
       const wrap = document.createElement('div');
       wrap.className = 'flex justify-start';
@@ -726,39 +757,123 @@
       setBusy(true);
       appendTyping();
 
+      let assistant = null;
+      let answer = '';
+
       try {
         const resp = await fetch('/api/chat', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'text/event-stream',
+          },
           body: JSON.stringify({ messages: history }),
         });
-        removeTyping();
 
         if (!resp.ok) {
+          removeTyping();
           let errMsg = 'Hubo un problema. Probá de nuevo en un rato.';
           try {
             const data = await resp.json();
             if (data && data.error) errMsg = data.error;
           } catch {}
           appendError(errMsg);
-          // Roll back the last user message from history so a retry doesn't duplicate context cost.
           history.pop();
           return;
         }
 
-        const data = await resp.json();
-        const answer = (data && data.answer) ? String(data.answer) : '';
+        const ctype = resp.headers.get('content-type') || '';
+
+        if (!ctype.includes('text/event-stream')) {
+          // Backend chose JSON mode: parse as a single message.
+          removeTyping();
+          const data = await resp.json();
+          answer = (data && data.answer) ? String(data.answer) : '';
+          if (!answer) {
+            appendError('No recibí respuesta. Probá de nuevo.');
+            history.pop();
+            return;
+          }
+          appendAssistant(answer);
+          history.push({ role: 'assistant', content: answer });
+          return;
+        }
+
+        // SSE streaming branch.
+        const reader = resp.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+        let streamError = null;
+        let ended = false;
+
+        outer: while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(value, { stream: true });
+
+          let sep;
+          while ((sep = buffer.indexOf('\n\n')) !== -1) {
+            const event = buffer.slice(0, sep);
+            buffer = buffer.slice(sep + 2);
+
+            // Take the data: line(s); concat in case of multi-line data.
+            const dataLines = event
+              .split('\n')
+              .filter((l) => l.startsWith('data:'))
+              .map((l) => l.slice(5).replace(/^ /, ''));
+            if (dataLines.length === 0) continue;
+            const payload = dataLines.join('\n');
+
+            let obj;
+            try { obj = JSON.parse(payload); } catch { continue; }
+
+            if (typeof obj.t === 'string' && obj.t.length > 0) {
+              if (!assistant) {
+                removeTyping();
+                assistant = createStreamingAssistant();
+              }
+              answer += obj.t;
+              assistant.update(answer);
+            } else if (obj.err) {
+              streamError = String(obj.err);
+              break outer;
+            } else if (obj.end) {
+              ended = true;
+              break outer;
+            }
+          }
+        }
+
+        if (assistant && answer) assistant.finalize(answer);
+
+        if (streamError) {
+          if (!assistant) removeTyping();
+          appendError(streamError);
+          history.pop();
+          return;
+        }
+
         if (!answer) {
+          removeTyping();
           appendError('No recibí respuesta. Probá de nuevo.');
           history.pop();
           return;
         }
-        appendAssistant(answer);
+
         history.push({ role: 'assistant', content: answer });
+        // 'ended' is informational; we already have the full answer.
+        void ended;
       } catch (e) {
         removeTyping();
-        appendError('No pude conectarme. Revisá tu conexión y probá de nuevo.');
-        history.pop();
+        if (assistant && answer) {
+          // Stream broke mid-flight but we did receive partial content.
+          assistant.finalize(answer);
+          history.push({ role: 'assistant', content: answer });
+        } else {
+          if (assistant) assistant.remove();
+          appendError('No pude conectarme. Revisá tu conexión y probá de nuevo.');
+          history.pop();
+        }
       } finally {
         setBusy(false);
         inputEl.focus();

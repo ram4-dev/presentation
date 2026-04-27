@@ -12,8 +12,15 @@
 // Frontend contract:
 //   POST /api/chat
 //   body: { messages: [{ role: "user" | "assistant", content: string }, ...] }
-//   200:  { answer: string, model: string }
-//   4xx:  { error: string }
+//
+//   If Accept: text/event-stream  -> server-sent events stream
+//     data: {"t": "<token chunk>"}\n\n   (zero or more)
+//     data: {"end": true, "model": "<model>"}\n\n  (terminator)
+//     data: {"err": "<message>"}\n\n      (on error mid-stream)
+//
+//   Otherwise -> JSON
+//     200: { answer: string, model: string }
+//     4xx: { error: string }
 //
 // Env vars (set in Vercel project settings):
 //   LLM_API_KEY    (required)  - bearer token for the LLM provider
@@ -231,7 +238,7 @@ function resolveProviderConfig(env) {
   };
 }
 
-async function callLLM(messages, env) {
+async function fetchLLM(messages, env, { stream }) {
   const { baseUrl, model, apiKey } = resolveProviderConfig(env);
 
   if (!apiKey) {
@@ -256,12 +263,12 @@ async function callLLM(messages, env) {
         messages,
         max_tokens: MAX_OUTPUT_TOKENS,
         temperature: 0.4,
-        stream: false,
+        stream: !!stream,
       }),
       signal: controller.signal,
     });
   } finally {
-    clearTimeout(timeout);
+    if (!stream) clearTimeout(timeout);
   }
 
   if (!resp.ok) {
@@ -269,13 +276,68 @@ async function callLLM(messages, env) {
     throw new Error(`LLM error ${resp.status}: ${text.slice(0, 300)}`);
   }
 
+  return { resp, model };
+}
+
+async function callLLM(messages, env) {
+  const { resp, model } = await fetchLLM(messages, env, { stream: false });
   const data = await resp.json();
   const answer = data?.choices?.[0]?.message?.content;
   if (typeof answer !== "string" || answer.length === 0) {
     throw new Error("LLM returned empty answer");
   }
-
   return { answer: answer.trim(), model };
+}
+
+// Iterates the OpenAI-style SSE response from the LLM provider, yielding
+// each text delta as it arrives.
+async function* iterateLLMStream(messages, env) {
+  const { resp, model } = await fetchLLM(messages, env, { stream: true });
+
+  const reader = resp.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  let yielded = false;
+
+  try {
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+
+      // SSE events are separated by a blank line.
+      let sep;
+      while ((sep = buffer.indexOf("\n\n")) !== -1) {
+        const event = buffer.slice(0, sep);
+        buffer = buffer.slice(sep + 2);
+
+        for (const line of event.split("\n")) {
+          if (!line.startsWith("data:")) continue;
+          const payload = line.slice(5).trim();
+          if (!payload) continue;
+          if (payload === "[DONE]") {
+            yield { type: "end", model, yielded };
+            return;
+          }
+          try {
+            const json = JSON.parse(payload);
+            const delta = json?.choices?.[0]?.delta?.content;
+            if (typeof delta === "string" && delta.length > 0) {
+              yielded = true;
+              yield { type: "token", text: delta };
+            }
+          } catch {
+            // skip malformed line
+          }
+        }
+      }
+    }
+  } finally {
+    try { reader.releaseLock(); } catch {}
+  }
+
+  // Stream ended without an explicit [DONE] sentinel.
+  yield { type: "end", model, yielded };
 }
 
 // ---------- Response helpers (portable: works on Vercel + plain http server) ----------
@@ -384,13 +446,25 @@ module.exports = async function handler(req, res) {
     ...messages,
   ];
 
-  // Call the LLM provider.
+  // Streaming or one-shot? Decide from the Accept header.
+  const accept = String(req.headers.accept || "");
+  const wantsStream = accept.includes("text/event-stream");
+
+  if (wantsStream) {
+    await handleStream(res, fullMessages, process.env);
+  } else {
+    await handleJson(res, fullMessages, process.env);
+  }
+};
+
+// ---------- Mode handlers ----------
+
+async function handleJson(res, fullMessages, env) {
   try {
-    const { answer, model } = await callLLM(fullMessages, process.env);
+    const { answer, model } = await callLLM(fullMessages, env);
     sendJson(res, 200, { answer, model });
   } catch (e) {
-    const msg = String(e && e.message || e);
-    // Don't leak provider details to client.
+    const msg = String((e && e.message) || e);
     console.error("[/api/chat] upstream error:", msg);
     if (msg.includes("aborted") || msg.includes("AbortError")) {
       sendJson(res, 504, {
@@ -402,4 +476,49 @@ module.exports = async function handler(req, res) {
       error: "El asistente no está disponible en este momento. Probá de nuevo en un rato.",
     });
   }
-};
+}
+
+async function handleStream(res, fullMessages, env) {
+  // Set up SSE response headers.
+  res.statusCode = 200;
+  res.setHeader("Content-Type", "text/event-stream; charset=utf-8");
+  res.setHeader("Cache-Control", "no-cache, no-transform");
+  res.setHeader("Connection", "keep-alive");
+  // Disables proxy buffering on Vercel/nginx so tokens reach the client live.
+  res.setHeader("X-Accel-Buffering", "no");
+  if (typeof res.flushHeaders === "function") res.flushHeaders();
+
+  const writeEvent = (obj) => {
+    res.write(`data: ${JSON.stringify(obj)}\n\n`);
+  };
+
+  let model = null;
+  let producedAny = false;
+
+  try {
+    for await (const evt of iterateLLMStream(fullMessages, env)) {
+      if (evt.type === "token") {
+        producedAny = true;
+        writeEvent({ t: evt.text });
+      } else if (evt.type === "end") {
+        model = evt.model;
+      }
+    }
+    if (!producedAny) {
+      writeEvent({ err: "empty" });
+    } else {
+      writeEvent({ end: true, model });
+    }
+  } catch (e) {
+    const msg = String((e && e.message) || e);
+    console.error("[/api/chat stream] upstream error:", msg);
+    const isTimeout = msg.includes("aborted") || msg.includes("AbortError");
+    writeEvent({
+      err: isTimeout
+        ? "El asistente tardó demasiado en responder. Intentá de nuevo."
+        : "El asistente no está disponible en este momento. Probá de nuevo en un rato.",
+    });
+  } finally {
+    try { res.end(); } catch {}
+  }
+}
