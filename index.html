@@ -150,6 +150,43 @@
       border: 2px solid var(--parchment);
     }
     ::-webkit-scrollbar-thumb:hover { background: var(--terracotta); }
+
+    /* ─── Chat ────────────────────────────────────────────────── */
+    .typing-dot {
+      display: inline-block;
+      width: 7px; height: 7px;
+      border-radius: 999px;
+      background: var(--terracotta);
+      animation: typingDot 1.2s infinite ease-in-out;
+    }
+    .typing-dot:nth-child(2) { animation-delay: 0.15s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.3s; }
+    @keyframes typingDot {
+      0%, 60%, 100% { opacity: 0.25; transform: translateY(0); }
+      30%           { opacity: 1;    transform: translateY(-3px); }
+    }
+    #chat-messages {
+      scrollbar-width: thin;
+      scrollbar-color: #cbc8bb transparent;
+    }
+    .chat-bubble-assistant a {
+      color: var(--terracotta);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    .chat-bubble-assistant a:hover { color: var(--coral); }
+    .chat-bubble-assistant strong { font-weight: 600; }
+    .chat-bubble-assistant code {
+      background: var(--sand);
+      padding: 0.05em 0.4em;
+      border-radius: 4px;
+      font-size: 0.88em;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    .chat-bubble-assistant ul { margin: 0.25rem 0; padding-left: 1.25rem; list-style: disc; }
+    .chat-bubble-assistant li + li { margin-top: 0.15rem; }
+    .chat-bubble-assistant p + p { margin-top: 0.5rem; }
+    #chat-input::-webkit-scrollbar { width: 6px; }
   </style>
   <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -184,53 +221,87 @@
   </div>
 </nav>
 
-<header class="relative overflow-hidden px-6 pb-28 pt-20 md:px-8 md:pb-36 md:pt-24">
+<header class="relative overflow-hidden px-6 pb-20 pt-14 md:px-8 md:pb-28 md:pt-20">
   <div class="pointer-events-none absolute right-0 top-0 h-72 w-72 rounded-full bg-terracotta/10 blur-3xl"></div>
-  <div class="mx-auto max-w-6xl">
-    <div class="max-w-5xl">
-      <div class="fade-up eyebrow mb-6 flex items-center gap-3 text-terracotta">
-        <span class="inline-block h-px w-8 bg-terracotta"></span>
-        Backend Engineer · Founder-minded Builder · Buenos Aires
-      </div>
+  <div class="mx-auto max-w-5xl">
 
-      <h1 class="fade-up delay-1 max-w-5xl text-[clamp(3rem,8vw,5.8rem)] leading-[1.08] text-ink">
-        Backend systems, AI products, and thoughtful internet experiments.
-      </h1>
-
-      <div class="fade-up delay-2 mt-10 grid gap-10 md:grid-cols-2 md:items-end">
-        <div>
-          <p class="editorial-lead max-w-2xl">
-            I’m Ramiro Carnicer Souble, a backend engineer at Mercado Libre building products around AI, automation, and systems design with a founder mindset.
-          </p>
-          <p class="mt-5 max-w-2xl text-base leading-7 text-olive">
-            I like technical depth, but I care just as much about shipping things that people actually use. Currently focused on Khora, agent workflows, and early-stage product building.
-          </p>
-        </div>
-
-        <div class="flex flex-col gap-6 md:items-start">
-          <div class="flex flex-wrap gap-4">
-            <a href="#work" class="rounded-xl bg-terracotta px-6 py-3.5 text-sm text-ivory shadow-[0_0_0_1px_#c96442] hover:bg-coral">View Projects</a>
-            <a href="#writing" class="rounded-xl bg-sand px-6 py-3.5 text-sm text-warm shadow-[0_0_0_1px_#d1cfc5] hover:bg-[#ece9df]">Read Writing</a>
-          </div>
-
-          <div class="flex flex-wrap items-center gap-5 text-sm text-olive">
-            <a href="https://github.com/ram4-dev" target="_blank" rel="noopener" class="hover:text-terracotta">GitHub</a>
-            <span class="h-4 w-px bg-cream"></span>
-            <a href="https://x.com/ram4_dev" target="_blank" rel="noopener" class="hover:text-terracotta">X / Twitter</a>
-            <span class="h-4 w-px bg-cream"></span>
-            <a href="https://ar.linkedin.com/in/ramirocarnicersouble" target="_blank" rel="noopener" class="hover:text-terracotta">LinkedIn</a>
-          </div>
-        </div>
-      </div>
+    <div class="fade-up eyebrow mb-6 flex items-center gap-3 text-terracotta">
+      <span class="inline-block h-px w-8 bg-terracotta"></span>
+      Backend Engineer · Founder-minded Builder · Buenos Aires
     </div>
 
-    <div class="fade-up delay-3 mt-16 flex flex-col gap-4 md:flex-row md:items-center">
-      <span class="inline-flex w-fit items-center gap-3 rounded-full bg-sand px-4 py-2 text-xs uppercase tracking-[0.12em] text-warm shadow-[0_0_0_1px_#d1cfc5]">
+    <h1 class="fade-up delay-1 max-w-4xl text-[clamp(2.25rem,5.5vw,4rem)] leading-[1.1] text-ink">
+      Backend systems, AI products, and thoughtful internet experiments.
+    </h1>
+
+    <p class="fade-up delay-2 mt-5 max-w-2xl text-base leading-7 text-olive md:text-lg md:leading-8">
+      Soy Ramiro Carnicer Souble. Preguntale al asistente lo que quieras saber sobre mi experiencia, proyectos o forma de trabajar.
+    </p>
+
+    <!-- ─── CHAT PANEL ─────────────────────────────────────────── -->
+    <div class="fade-up delay-3 mt-10 rounded-[1.75rem] border border-cream bg-ivory shadow-[0_0_0_1px_#f0eee6] md:mt-12">
+
+      <div class="flex items-center justify-between gap-4 border-b border-cream px-5 py-3.5 md:px-6">
+        <div class="flex items-center gap-3">
+          <span class="relative inline-flex h-2.5 w-2.5">
+            <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-terracotta/40"></span>
+            <span class="relative inline-flex h-2.5 w-2.5 rounded-full bg-terracotta"></span>
+          </span>
+          <span class="text-sm font-medium text-ink">Asistente de Ramiro</span>
+          <span class="hidden text-xs text-stone md:inline">· Pregunta lo que quieras</span>
+        </div>
+        <button id="chat-reset" type="button" class="text-[0.7rem] uppercase tracking-[0.12em] text-stone hover:text-terracotta">Nueva conversación</button>
+      </div>
+
+      <div id="chat-messages" class="flex max-h-[440px] min-h-[260px] flex-col gap-4 overflow-y-auto px-5 py-5 md:max-h-[480px] md:px-6 md:py-6" aria-live="polite"></div>
+
+      <div id="chat-suggestions" class="flex flex-wrap gap-2 px-5 pb-3 md:px-6">
+        <button type="button" data-q="¿Quién es Ramiro?" class="rounded-full bg-sand px-3.5 py-1.5 text-xs text-warm shadow-[0_0_0_1px_#d1cfc5] hover:bg-[#ece9df] hover:text-ink">¿Quién es Ramiro?</button>
+        <button type="button" data-q="¿En qué proyectos está trabajando?" class="rounded-full bg-sand px-3.5 py-1.5 text-xs text-warm shadow-[0_0_0_1px_#d1cfc5] hover:bg-[#ece9df] hover:text-ink">Proyectos actuales</button>
+        <button type="button" data-q="Contame sobre Khora" class="rounded-full bg-sand px-3.5 py-1.5 text-xs text-warm shadow-[0_0_0_1px_#d1cfc5] hover:bg-[#ece9df] hover:text-ink">Khora</button>
+        <button type="button" data-q="¿Está disponible para trabajar?" class="rounded-full bg-sand px-3.5 py-1.5 text-xs text-warm shadow-[0_0_0_1px_#d1cfc5] hover:bg-[#ece9df] hover:text-ink">¿Disponible?</button>
+        <button type="button" data-q="¿Cómo lo contacto?" class="rounded-full bg-sand px-3.5 py-1.5 text-xs text-warm shadow-[0_0_0_1px_#d1cfc5] hover:bg-[#ece9df] hover:text-ink">Contacto</button>
+        <button type="button" data-q="Give me a short professional summary in English" class="rounded-full bg-sand px-3.5 py-1.5 text-xs text-warm shadow-[0_0_0_1px_#d1cfc5] hover:bg-[#ece9df] hover:text-ink">Summary in English</button>
+      </div>
+
+      <form id="chat-form" class="border-t border-cream px-3 py-3 md:px-4 md:py-4">
+        <div class="flex items-end gap-2">
+          <textarea id="chat-input" rows="1" placeholder="Preguntale algo a Ramiro..." maxlength="2000" class="flex-1 resize-none rounded-xl bg-parchment px-4 py-3 text-[0.95rem] leading-6 text-ink placeholder:text-stone shadow-[0_0_0_1px_#e8e6dc] focus:outline-none focus:shadow-[0_0_0_1px_#c96442] max-h-40"></textarea>
+          <button id="chat-send" type="submit" aria-label="Enviar" class="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-terracotta text-ivory shadow-[0_0_0_1px_#c96442] hover:bg-coral disabled:opacity-50 disabled:cursor-not-allowed">
+            <span class="material-symbols-outlined text-xl">arrow_upward</span>
+          </button>
+        </div>
+        <div class="mt-2 flex items-center justify-between px-1 text-[0.7rem] text-stone">
+          <span>Asistente con IA. Puede equivocarse.</span>
+          <span class="hidden md:inline">Enter para enviar · Shift + Enter nueva línea</span>
+        </div>
+      </form>
+
+    </div>
+    <!-- ─── /CHAT PANEL ────────────────────────────────────────── -->
+
+    <div class="fade-up delay-4 mt-10 flex flex-col items-start justify-between gap-6 md:mt-12 md:flex-row md:items-center">
+      <div class="flex flex-wrap items-center gap-5 text-sm text-olive">
+        <a href="https://github.com/ram4-dev" target="_blank" rel="noopener" class="hover:text-terracotta">GitHub</a>
+        <span class="h-4 w-px bg-cream"></span>
+        <a href="https://x.com/ram4_dev" target="_blank" rel="noopener" class="hover:text-terracotta">X / Twitter</a>
+        <span class="h-4 w-px bg-cream"></span>
+        <a href="https://ar.linkedin.com/in/ramirocarnicersouble" target="_blank" rel="noopener" class="hover:text-terracotta">LinkedIn</a>
+      </div>
+
+      <span class="inline-flex items-center gap-3 rounded-full bg-sand px-4 py-2 text-xs uppercase tracking-[0.12em] text-warm shadow-[0_0_0_1px_#d1cfc5]">
         <span class="inline-block h-2 w-2 rounded-full bg-terracotta"></span>
         Currently building Khora
       </span>
-      <span class="text-sm text-stone">Backend Systems · Agent Workflows · Early-stage Product</span>
     </div>
+
+    <div class="mt-12 flex justify-center text-stone md:mt-16">
+      <a href="#work" class="inline-flex flex-col items-center gap-2 text-[0.7rem] uppercase tracking-[0.12em] hover:text-terracotta">
+        <span>Más sobre Ramiro</span>
+        <span class="material-symbols-outlined text-base">keyboard_arrow_down</span>
+      </a>
+    </div>
+
   </div>
 </header>
 
@@ -509,6 +580,222 @@
     const el = document.getElementById(id);
     if (el) observer.observe(el);
   });
+</script>
+
+<script>
+  // ─── Chat client ──────────────────────────────────────────────
+  (function () {
+    const messagesEl    = document.getElementById('chat-messages');
+    const formEl        = document.getElementById('chat-form');
+    const inputEl       = document.getElementById('chat-input');
+    const sendBtn       = document.getElementById('chat-send');
+    const suggestionsEl = document.getElementById('chat-suggestions');
+    const resetBtn      = document.getElementById('chat-reset');
+
+    const INITIAL_GREETING = 'Hola, soy el asistente de Ramiro. Puedo contarte sobre su experiencia, sus proyectos, su forma de trabajar o cómo contactarlo. ¿Qué te gustaría saber?';
+
+    /** @type {{role:'user'|'assistant', content:string}[]} */
+    let history = [];
+    let busy = false;
+
+    function escapeHtml(s) {
+      return s.replace(/[&<>"']/g, c => ({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+      }[c]));
+    }
+
+    // Minimal, safe-ish markdown -> HTML for assistant bubbles.
+    function renderMarkdown(text) {
+      let s = escapeHtml(text);
+      // Inline code first (so we don't catch its contents below).
+      s = s.replace(/`([^`\n]+)`/g, '<code>$1</code>');
+      // Bold **text**
+      s = s.replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>');
+      // Italic *text* (single, not part of **)
+      s = s.replace(/(^|[^*])\*([^*\n]+)\*(?!\*)/g, '$1<em>$2</em>');
+      // Markdown links [text](url)
+      s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
+        '<a href="$2" target="_blank" rel="noopener">$1</a>');
+      // Bare URLs (not already in href)
+      s = s.replace(/(^|[\s(])(https?:\/\/[^\s<)]+)/g,
+        '$1<a href="$2" target="_blank" rel="noopener">$2</a>');
+
+      // Block-level: paragraphs and bullet lists.
+      const lines = s.split('\n');
+      const out = [];
+      let inList = false;
+      let buf = [];
+      const flushBuf = () => {
+        if (buf.length) {
+          out.push('<p>' + buf.join(' ') + '</p>');
+          buf = [];
+        }
+      };
+      for (const line of lines) {
+        const isBullet = /^\s*[-*]\s+/.test(line);
+        if (isBullet) {
+          flushBuf();
+          if (!inList) { out.push('<ul>'); inList = true; }
+          out.push('<li>' + line.replace(/^\s*[-*]\s+/, '') + '</li>');
+        } else if (line.trim() === '') {
+          flushBuf();
+          if (inList) { out.push('</ul>'); inList = false; }
+        } else {
+          if (inList) { out.push('</ul>'); inList = false; }
+          buf.push(line);
+        }
+      }
+      flushBuf();
+      if (inList) out.push('</ul>');
+      return out.join('');
+    }
+
+    function appendUser(text) {
+      const wrap = document.createElement('div');
+      wrap.className = 'flex justify-end';
+      const bubble = document.createElement('div');
+      bubble.className = 'max-w-[85%] rounded-2xl bg-sand px-4 py-3 text-[0.95rem] leading-6 text-ink shadow-[0_0_0_1px_#d1cfc5] whitespace-pre-wrap break-words';
+      bubble.textContent = text;
+      wrap.appendChild(bubble);
+      messagesEl.appendChild(wrap);
+      scrollToBottom();
+    }
+
+    function appendAssistant(text) {
+      const wrap = document.createElement('div');
+      wrap.className = 'flex justify-start';
+      const bubble = document.createElement('div');
+      bubble.className = 'chat-bubble-assistant max-w-[88%] rounded-2xl bg-parchment px-4 py-3 text-[0.95rem] leading-7 text-ink shadow-[0_0_0_1px_#e8e6dc] break-words';
+      bubble.innerHTML = renderMarkdown(text);
+      wrap.appendChild(bubble);
+      messagesEl.appendChild(wrap);
+      scrollToBottom();
+    }
+
+    function appendError(text) {
+      const wrap = document.createElement('div');
+      wrap.className = 'flex justify-start';
+      wrap.innerHTML = '<div class="max-w-[85%] rounded-2xl bg-[#fbecea] px-4 py-3 text-[0.9rem] leading-6 text-[#8a3a25] shadow-[0_0_0_1px_#ecd2cc]">' + escapeHtml(text) + '</div>';
+      messagesEl.appendChild(wrap);
+      scrollToBottom();
+    }
+
+    function appendTyping() {
+      const wrap = document.createElement('div');
+      wrap.className = 'flex justify-start';
+      wrap.id = 'chat-typing';
+      wrap.innerHTML = '<div class="rounded-2xl bg-parchment px-4 py-3 shadow-[0_0_0_1px_#e8e6dc]"><span class="inline-flex items-end gap-1.5"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></span></div>';
+      messagesEl.appendChild(wrap);
+      scrollToBottom();
+    }
+
+    function removeTyping() {
+      const t = document.getElementById('chat-typing');
+      if (t) t.remove();
+    }
+
+    function scrollToBottom() {
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    function setBusy(b) {
+      busy = b;
+      sendBtn.disabled = b;
+      inputEl.disabled = b;
+    }
+
+    function autoResize() {
+      inputEl.style.height = 'auto';
+      inputEl.style.height = Math.min(inputEl.scrollHeight, 160) + 'px';
+    }
+
+    async function sendMessage(rawText) {
+      if (busy) return;
+      const text = (rawText || '').trim();
+      if (!text) return;
+      if (text.length > 2000) {
+        appendError('Tu mensaje es demasiado largo. Probá con uno más corto.');
+        return;
+      }
+
+      suggestionsEl.classList.add('hidden');
+      appendUser(text);
+      history.push({ role: 'user', content: text });
+      inputEl.value = '';
+      autoResize();
+      setBusy(true);
+      appendTyping();
+
+      try {
+        const resp = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ messages: history }),
+        });
+        removeTyping();
+
+        if (!resp.ok) {
+          let errMsg = 'Hubo un problema. Probá de nuevo en un rato.';
+          try {
+            const data = await resp.json();
+            if (data && data.error) errMsg = data.error;
+          } catch {}
+          appendError(errMsg);
+          // Roll back the last user message from history so a retry doesn't duplicate context cost.
+          history.pop();
+          return;
+        }
+
+        const data = await resp.json();
+        const answer = (data && data.answer) ? String(data.answer) : '';
+        if (!answer) {
+          appendError('No recibí respuesta. Probá de nuevo.');
+          history.pop();
+          return;
+        }
+        appendAssistant(answer);
+        history.push({ role: 'assistant', content: answer });
+      } catch (e) {
+        removeTyping();
+        appendError('No pude conectarme. Revisá tu conexión y probá de nuevo.');
+        history.pop();
+      } finally {
+        setBusy(false);
+        inputEl.focus();
+      }
+    }
+
+    // Initial greeting (not pushed to history; it's a UI-only welcome).
+    appendAssistant(INITIAL_GREETING);
+
+    formEl.addEventListener('submit', (e) => {
+      e.preventDefault();
+      sendMessage(inputEl.value);
+    });
+
+    inputEl.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage(inputEl.value);
+      }
+    });
+    inputEl.addEventListener('input', autoResize);
+
+    suggestionsEl.querySelectorAll('button[data-q]').forEach((btn) => {
+      btn.addEventListener('click', () => sendMessage(btn.getAttribute('data-q')));
+    });
+
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        if (busy) return;
+        history = [];
+        messagesEl.innerHTML = '';
+        appendAssistant(INITIAL_GREETING);
+        suggestionsEl.classList.remove('hidden');
+        inputEl.focus();
+      });
+    }
+  })();
 </script>
 
 </body>

@@ -1,0 +1,8 @@
+.env
+.env.local
+.env.*.local
+node_modules/
+.vercel/
+.DS_Store
+.vercel
+.env*.local
