@@ -8,7 +8,7 @@ The home is a chat-first interface backed by an LLM that answers questions about
 
 - Static `index.html` with Tailwind via CDN (no build step).
 - One Vercel serverless function: `/api/chat.js`.
-- LLM provider: any OpenAI-compatible `/chat/completions` endpoint. Default: **[Groq](https://groq.com)** with `llama-3.3-70b-versatile`. Also tested with **[OpenCode Go](https://opencode.ai/go)**.
+- LLM provider: any OpenAI-compatible `/chat/completions` endpoint. Default: **[Groq](https://groq.com)** with `llama-3.1-8b-instant`. Also tested with **[OpenCode Go](https://opencode.ai/go)**.
 - Profile content lives as plain Markdown files in `/content`.
 
 ```
@@ -58,7 +58,7 @@ The assistant is told to prioritize Tier 1 projects (Khora, Crewlink, Poker Bot 
    | Variable | Required | Default |
    |---|---|---|
    | `LLM_API_KEY` | yes | — |
-   | `LLM_MODEL` | no | `llama-3.3-70b-versatile` |
+   | `LLM_MODEL` | no | `llama-3.1-8b-instant` |
    | `LLM_BASE_URL` | no | `https://api.groq.com/openai/v1` |
 
    The legacy names `OPENCODE_API_KEY` / `OPENCODE_MODEL` / `OPENCODE_BASE_URL` are still accepted as fallbacks.
@@ -74,14 +74,14 @@ Any OpenAI-compatible `/chat/completions` endpoint works. Three common options:
 ```env
 LLM_API_KEY=gsk_...
 LLM_BASE_URL=https://api.groq.com/openai/v1
-LLM_MODEL=llama-3.3-70b-versatile
+LLM_MODEL=llama-3.1-8b-instant
 ```
 
 Get a key: https://console.groq.com/keys
 
 Other Groq models worth trying:
 
-- `llama-3.3-70b-versatile` — higher quality, but only 12k TPM on free tier
+- `llama-3.1-8b-instant` — higher quality, but only 12k TPM on free tier
 - `moonshotai/kimi-k2-instruct` — strong instruction following
 - `qwen/qwen3-32b` — great bilingual ES/EN
 - `openai/gpt-oss-120b` — highest quality available on Groq today

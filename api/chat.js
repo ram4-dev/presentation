@@ -24,7 +24,7 @@
 //
 // Env vars (set in Vercel project settings):
 //   LLM_API_KEY    (required)  - bearer token for the LLM provider
-//   LLM_MODEL      (optional)  - default: "llama-3.3-70b-versatile"
+//   LLM_MODEL      (optional)  - default: "llama-3.1-8b-instant"
 //   LLM_BASE_URL   (optional)  - default: "https://api.groq.com/openai/v1"
 //
 // Backwards-compatible aliases also accepted:
@@ -36,7 +36,7 @@ const path = require("node:path");
 // ---------- Config ----------
 
 const DEFAULT_BASE_URL = "https://api.groq.com/openai/v1";
-const DEFAULT_MODEL = "llama-3.3-70b-versatile";
+const DEFAULT_MODEL = "llama-3.1-8b-instant";
 
 const MAX_USER_MESSAGE_CHARS = 2000;
 const MAX_HISTORY_MESSAGES = 20;
@@ -61,7 +61,10 @@ function loadContext() {
   const contentDir = path.join(process.cwd(), "content");
 
   // Order matters: identity first, then about, then everything else.
-  // Repositories.md goes last because it's the largest.
+  // NOTE: repositories.md is intentionally excluded from the in-prompt
+  // context. It's ~9 KB / ~2.6k tokens and would blow past the free-tier
+  // TPM/TPD budgets. Tier 1 projects already live in projects.md; for the
+  // full catalog we point users at the GitHub profile.
   const order = [
     "identity.md",
     "about.md",
@@ -72,7 +75,6 @@ function loadContext() {
     "writing.md",
     "contact.md",
     "faq.md",
-    "repositories.md",
   ];
 
   const parts = [];
@@ -85,6 +87,21 @@ function loadContext() {
       // Missing file -> skip silently.
     }
   }
+
+  // Synthetic note so the assistant knows where to point people for the
+  // full repo catalog without us having to ship it as context.
+  parts.push(
+    [
+      "# === FILE: repositories_pointer.md ===",
+      "",
+      "El catálogo completo de los 49 repos públicos de Ramiro vive en GitHub:",
+      "https://github.com/ram4-dev?tab=repositories",
+      "",
+      "Si alguien pregunta por un repo o proyecto que no figura en projects.md,",
+      "sugiere mirar su GitHub directamente en lugar de inventar detalles.",
+      "",
+    ].join("\n")
+  );
 
   CACHED_CONTEXT = parts.join("\n\n");
   return CACHED_CONTEXT;
