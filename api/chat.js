@@ -17,7 +17,7 @@
 //
 // Env vars (set in Vercel project settings):
 //   LLM_API_KEY    (required)  - bearer token for the LLM provider
-//   LLM_MODEL      (optional)  - default: "llama-3.1-8b-instant"
+//   LLM_MODEL      (optional)  - default: "llama-3.3-70b-versatile"
 //   LLM_BASE_URL   (optional)  - default: "https://api.groq.com/openai/v1"
 //
 // Backwards-compatible aliases also accepted:
@@ -29,7 +29,7 @@ const path = require("node:path");
 // ---------- Config ----------
 
 const DEFAULT_BASE_URL = "https://api.groq.com/openai/v1";
-const DEFAULT_MODEL = "llama-3.1-8b-instant";
+const DEFAULT_MODEL = "llama-3.3-70b-versatile";
 
 const MAX_USER_MESSAGE_CHARS = 2000;
 const MAX_HISTORY_MESSAGES = 20;
