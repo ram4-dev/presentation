@@ -6,7 +6,7 @@ Me interesa la profundidad técnica, pero me importa igual o más shippear cosas
 
 ## De dónde vengo
 
-Estudié ingeniería en la UBA (FIUBA). Mi background es técnico, con foco en backend y diseño de sistemas, pero el interés por producto y por construir cosas desde cero apareció bastante temprano y nunca se fue.
+Estoy cursando Ingeniería Informática en la Universidad de Buenos Aires (FIUBA). Mi background es técnico, con foco en backend y diseño de sistemas, pero el interés por producto y por construir cosas desde cero apareció bastante temprano y nunca se fue.
 
 ## Qué me mueve
 

@@ -14,7 +14,7 @@ Khora es donde junto las dos cosas que me importan: ingeniería seria y producto
 
 ## Educación
 
-Ingeniería Informática (Software Engineering) en la Universidad de Buenos Aires (UBA / FIUBA).
+Actualmente curso Ingeniería Informática (Software Engineering) en la Universidad de Buenos Aires (UBA / FIUBA).
 
 ## Áreas donde más me muevo
 
