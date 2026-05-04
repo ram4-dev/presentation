@@ -1,0 +1,1683 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SDD + Orquestación Multi-Agente — Codex Meeting</title>
+<style>
+  :root {
+    --navy:       #1E2761;
+    --navy-deep:  #151A47;
+    --navy-soft:  #2D3277;
+    --yellow:     #FFE600;
+    --yellow-d:   #D4BF00;
+    --white:      #FFFFFF;
+    --bg:         #F5F7FA;
+    --text:       #0F172A;
+    --text-mute:  #475569;
+    --text-soft:  #64748B;
+    --border:     #E2E8F0;
+    --red:        #DC2626;
+    --green:      #059669;
+    --amber:      #D97706;
+    --blue:       #2563EB;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%;
+    background: #0a0d24;
+    font-family: 'Trebuchet MS', 'Helvetica Neue', Arial, sans-serif;
+    color: var(--text);
+    overflow: hidden;
+  }
+
+  /* Stage holds the slide and scales to viewport */
+  #stage {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    perspective: 1200px;
+  }
+
+  /* The slide is fixed at 1330x750 (10 in × 75 dpi × 1.33 → 16:9 wide) */
+  .slide {
+    width: 1330px;
+    height: 750px;
+    position: relative;
+    background: var(--bg);
+    overflow: hidden;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+    transition: transform 250ms ease, opacity 250ms ease;
+  }
+  .slide.dark { background: var(--navy); color: var(--white); }
+  .slide:not(.active) { display: none; }
+
+  /* Visual elements */
+  .kicker {
+    position: absolute;
+    left: 60px; top: 55px;
+    font-size: 13px;
+    font-weight: bold;
+    color: var(--navy-soft);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+  .slide.dark .kicker { color: var(--yellow); }
+
+  h1.title {
+    position: absolute;
+    left: 60px; top: 95px;
+    font-size: 44px;
+    font-weight: 800;
+    color: var(--navy);
+    line-height: 1.1;
+  }
+  .slide.dark h1.title { color: var(--white); }
+
+  .accent-tick {
+    position: absolute;
+    width: 60px; height: 8px;
+    background: var(--yellow);
+    border-radius: 0;
+  }
+  .accent-tick.under-title { left: 60px; top: 175px; }
+
+  .footer {
+    position: absolute;
+    bottom: 22px;
+    font-size: 12px;
+    color: var(--text-soft);
+  }
+  .footer.left  { left: 60px; }
+  .footer.right { right: 60px; }
+  .slide.dark .footer { color: rgba(255,255,255,0.45); }
+
+  /* Cards */
+  .card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    position: absolute;
+  }
+  .card.has-stripe::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 8px;
+    background: var(--yellow);
+  }
+  .card.stripe-red::before    { background: var(--red); }
+  .card.stripe-green::before  { background: var(--green); }
+  .card.stripe-blue::before   { background: var(--blue); }
+  .card.stripe-amber::before  { background: var(--amber); }
+
+  .card.has-leftbar::before {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0; left: 0;
+    width: 10px;
+    background: var(--yellow);
+    height: auto;
+  }
+
+  .pill {
+    display: inline-block;
+    background: var(--yellow);
+    color: var(--text);
+    padding: 7px 14px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+
+  .quote-banner {
+    position: absolute;
+    background: var(--navy);
+    color: var(--white);
+    padding: 22px 30px 22px 36px;
+    font-style: italic;
+    font-size: 22px;
+    line-height: 1.4;
+  }
+  .quote-banner::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 10px;
+    background: var(--yellow);
+  }
+  .quote-banner b { color: var(--yellow); font-style: normal; }
+
+  .mono { font-family: 'Courier New', 'SF Mono', Consolas, monospace; }
+
+  .badge-num {
+    width: 60px; height: 60px;
+    background: var(--navy);
+    color: var(--yellow);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    font-weight: 800;
+  }
+
+  .nav-controls {
+    position: fixed;
+    bottom: 16px; right: 16px;
+    display: flex; gap: 8px;
+    z-index: 100;
+  }
+  .nav-controls button {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.85);
+    width: 38px; height: 38px;
+    border-radius: 8px;
+    font-size: 18px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .nav-controls button:hover {
+    background: var(--yellow);
+    color: var(--navy);
+    border-color: var(--yellow);
+  }
+  .nav-counter {
+    position: fixed;
+    bottom: 16px; left: 16px;
+    color: rgba(255,255,255,0.55);
+    font-size: 12px;
+    font-family: 'Courier New', monospace;
+    background: rgba(0,0,0,0.4);
+    padding: 8px 12px;
+    border-radius: 6px;
+    z-index: 100;
+  }
+
+  /* Progress bar at top */
+  .progress {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: rgba(255,255,255,0.06);
+    z-index: 100;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--yellow);
+    transition: width 250ms ease;
+  }
+
+  /* Slide-specific helpers */
+  .grid-bg-dot {
+    position: absolute;
+    width: 6px; height: 6px;
+    background: var(--yellow);
+    opacity: 0.3;
+    border-radius: 50%;
+  }
+
+  .left-yellow-bar {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 25px;
+    background: var(--yellow);
+  }
+
+  /* TOKEN BAR (slide 3) */
+  .token-bar {
+    height: 50px;
+    background: var(--border);
+    position: relative;
+    border-radius: 0;
+  }
+  .token-bar > span {
+    position: absolute;
+    top: 0; bottom: 0;
+    display: block;
+  }
+
+  /* Symptom card (slide 4) */
+  .sym-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    padding: 24px;
+    position: relative;
+    border-radius: 0;
+  }
+  .sym-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 8px;
+    background: var(--red);
+  }
+  .sym-icon {
+    width: 56px; height: 56px;
+    background: var(--red);
+    color: var(--white);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; font-weight: 800;
+    margin-bottom: 16px;
+  }
+  .sym-card h3 { font-size: 20px; color: var(--text); margin-bottom: 6px; }
+  .sym-card p  { font-size: 14px; color: var(--text-mute); line-height: 1.4; }
+
+  /* Doc cards row (slide 6) */
+  .doc-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    align-items: stretch;
+  }
+  .doc-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    padding: 18px 12px 18px;
+    text-align: center;
+    position: relative;
+  }
+  .doc-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 8px;
+    background: var(--yellow);
+  }
+  .doc-card .num {
+    width: 50px; height: 50px;
+    background: var(--navy);
+    color: var(--yellow);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; font-weight: 800;
+    margin: 16px auto 14px;
+  }
+  .doc-card .filename {
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    color: var(--navy);
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+  .doc-card .q {
+    font-size: 18px;
+    font-style: italic;
+    color: var(--text);
+    line-height: 1.25;
+    margin-bottom: 18px;
+  }
+  .doc-card hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 14px 12px 12px;
+  }
+  .doc-card .audience-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: var(--text-soft);
+    margin-bottom: 4px;
+  }
+  .doc-card .audience { font-size: 13px; color: var(--text-mute); }
+
+  /* Generic flex row */
+  .flex-row { display: flex; gap: 18px; }
+
+  /* Compare card (slide 5) */
+  .compare-card {
+    flex: 1;
+    background: var(--white);
+    border: 1px solid var(--border);
+    padding: 24px 28px;
+    position: relative;
+  }
+  .compare-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 8px;
+  }
+  .compare-card.bad::before  { background: var(--red); }
+  .compare-card.good::before { background: var(--green); }
+  .compare-card .label {
+    font-size: 12px; font-weight: 800; letter-spacing: 4px; text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .compare-card.bad  .label { color: var(--red); }
+  .compare-card.good .label { color: var(--green); }
+  .compare-card .lead { font-size: 19px; margin-bottom: 16px; }
+  .compare-card .lead.italic { font-style: italic; color: var(--text); }
+  .compare-card .pts li {
+    list-style: none;
+    color: var(--text-mute);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .compare-card .pts li::before {
+    content: '→ ';
+    font-weight: 700;
+    margin-right: 4px;
+  }
+  .compare-card.bad  .pts li::before { color: var(--red); }
+  .compare-card.good .pts li::before { color: var(--green); }
+
+  /* Role table (slide 10) */
+  .roles-table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+  }
+  .roles-table th {
+    background: var(--navy);
+    color: var(--yellow);
+    text-align: left;
+    padding: 12px 18px;
+    font-size: 12px;
+    letter-spacing: 3px;
+    font-weight: 800;
+  }
+  .roles-table td {
+    padding: 16px 18px;
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+    font-size: 14px;
+    color: var(--text);
+  }
+  .roles-table tr:nth-child(even) td { background: var(--bg); }
+  .roles-table td.role {
+    font-size: 17px;
+    font-weight: 800;
+    border-left: 8px solid;
+    width: 250px;
+  }
+  .roles-table td.no   { color: var(--text-mute); font-style: italic; width: 280px; }
+  .role-color-1 { border-color: var(--navy); }
+  .role-color-2 { border-color: var(--blue); }
+  .role-color-3 { border-color: var(--green); }
+  .role-color-4 { border-color: var(--yellow-d); }
+
+  /* Pipeline stages (slide 12) */
+  .stages {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .stage {
+    flex: 1;
+    background: var(--white);
+    border: 1px solid var(--border);
+    padding: 18px 12px 22px;
+    text-align: center;
+    position: relative;
+  }
+  .stage::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 8px;
+  }
+  .stage.color-blue::before    { background: var(--blue); }
+  .stage.color-navy::before    { background: var(--navy); }
+  .stage.color-green::before   { background: var(--green); }
+  .stage.color-amber::before   { background: var(--amber); }
+  .stage.highlight {
+    box-shadow: 0 0 0 3px var(--yellow);
+  }
+  .stage h4 {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .stage .sub {
+    font-size: 13px;
+    font-style: italic;
+    color: var(--text-mute);
+  }
+  .stage-arrow {
+    font-size: 22px;
+    color: var(--navy);
+    font-weight: 800;
+  }
+
+  /* freshContext diagram (slide 11) */
+  .fc-diagram {
+    display: grid;
+    grid-template-columns: 1.6fr 0.9fr 1.6fr 1.05fr;
+    gap: 12px;
+    align-items: stretch;
+  }
+  .fc-box {
+    background: var(--navy);
+    color: var(--white);
+    padding: 16px 18px;
+    position: relative;
+  }
+  .fc-box::before {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0; left: 0;
+    width: 8px;
+  }
+  .fc-box.impl::before   { background: var(--green); }
+  .fc-box.review::before { background: var(--yellow); }
+  .fc-box .lbl  { font-size: 11px; font-weight: 800; letter-spacing: 3px; margin-bottom: 8px; }
+  .fc-box.impl .lbl   { color: var(--green); }
+  .fc-box.review .lbl { color: var(--yellow); }
+  .fc-box h3 { font-size: 19px; font-weight: 700; margin-bottom: 10px; }
+  .fc-box .small { font-size: 12px; font-family: 'Courier New', monospace; opacity: 0.85; line-height: 1.4; }
+
+  .firewall {
+    background: var(--yellow);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    flex-direction: column;
+    padding: 12px;
+    font-weight: 800;
+    font-size: 13px;
+    line-height: 1.2;
+  }
+  .firewall .ico { font-size: 22px; margin-bottom: 6px; }
+
+  .verdict-box {
+    background: var(--white);
+    border: 2px solid var(--navy);
+    padding: 14px;
+    text-align: center;
+  }
+  .verdict-box .lbl { font-size: 10px; letter-spacing: 3px; color: var(--text-soft); font-weight: 800; margin-bottom: 8px; }
+  .verdict-box li {
+    list-style: none;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    font-weight: 800;
+    margin: 4px 0;
+  }
+  .verdict-box li.accept  { color: var(--green); }
+  .verdict-box li.changes { color: var(--amber); }
+  .verdict-box li.block   { color: var(--red); }
+
+  /* CTA columns (slide 16) */
+  .cta-col {
+    flex: 1;
+    background: var(--navy-soft);
+    color: var(--white);
+    padding: 30px 28px;
+    position: relative;
+  }
+  .cta-col::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 8px;
+    background: var(--yellow);
+  }
+  .cta-col h4 { font-size: 12px; color: var(--yellow); letter-spacing: 4px; margin-bottom: 18px; font-weight: 800; }
+  .cta-col p  { font-size: 17px; line-height: 1.5; }
+  .cta-col p b { font-weight: 800; }
+  .cta-col p i { color: rgba(255,255,255,0.7); font-style: italic; font-size: 14px; }
+
+  /* Slide 14 numbered cards */
+  .num-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    padding: 22px 28px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .num-card .num-circ {
+    width: 64px; height: 64px;
+    background: var(--navy);
+    color: var(--yellow);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px; font-weight: 800;
+    flex-shrink: 0;
+  }
+  .num-card .text h3 {
+    font-size: 22px;
+    color: var(--text);
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .num-card .text h3 b { color: var(--navy); font-weight: 800; }
+  .num-card .text p { color: var(--text-mute); font-size: 15px; font-style: italic; }
+
+  /* ─── Fragment animations ─────────────────────────────────── */
+  .fragment {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 350ms cubic-bezier(.2,.7,.3,1),
+                transform 350ms cubic-bezier(.2,.7,.3,1);
+    pointer-events: none;
+    will-change: opacity, transform;
+  }
+  .fragment.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  .fragment.fade-in   { transform: translateY(0); }
+  .fragment.fade-up   { transform: translateY(20px); }
+  .fragment.fade-left { transform: translateX(-24px); }
+  .fragment.fade-right{ transform: translateX(24px); }
+  .fragment.zoom-in   { transform: scale(0.92); }
+  .fragment.fade-left.visible,
+  .fragment.fade-right.visible,
+  .fragment.zoom-in.visible { transform: none; }
+
+  /* Hint indicator: shows how many fragments left in the slide */
+  .frag-hint {
+    position: fixed;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.45);
+    color: rgba(255,255,255,0.55);
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    z-index: 100;
+    transition: opacity 250ms ease;
+  }
+  .frag-hint.empty { opacity: 0; }
+  .frag-hint .dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.25);
+    margin: 0 2px;
+    vertical-align: middle;
+  }
+  .frag-hint .dot.on { background: var(--yellow); }
+
+</style>
+</head>
+<body>
+
+<div class="progress"><div class="progress-fill" id="progress-fill"></div></div>
+
+<div id="stage">
+
+  <!-- ─────────────────────── SLIDE 1 — TITLE ─────────────────────── -->
+  <section class="slide dark active" data-n="1">
+    <div class="left-yellow-bar"></div>
+    <div style="position:absolute; right:80px; top:60px; display:grid; grid-template-columns:repeat(6,16px); grid-template-rows:repeat(4,16px); gap:8px;">
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+    </div>
+
+    <div style="position:absolute; left:80px; top:120px; color:var(--yellow); font-size:14px; font-weight:bold; letter-spacing:6px;">
+      CODEX MEETING · MAYO 2026
+    </div>
+
+    <h1 style="position:absolute; left:80px; top:200px; font-size:64px; font-weight:800; color:var(--white); line-height:1.05;">
+      Spec-Driven Development<br>
+      <span style="font-size:48px;">+ orquestación multi-agente</span>
+    </h1>
+
+    <div style="position:absolute; left:80px; top:480px; width:120px; height:6px; background:var(--yellow);"></div>
+
+    <div style="position:absolute; left:80px; top:510px; font-size:22px; font-style:italic; color:rgba(255,255,255,0.8); max-width:1100px; line-height:1.4;">
+      Cómo administrar el context window<br>
+      y escalar agentes que no se sabotean a sí mismos
+    </div>
+
+    <div style="position:absolute; left:80px; bottom:60px; color:var(--yellow); font-size:16px;">
+      Ramiro Carnicer · Search Backend
+    </div>
+  </section>
+
+  <!-- ─────────────────────── SLIDE 2 — TESIS ─────────────────────── -->
+  <section class="slide dark" data-n="2">
+    <div style="position:absolute; left:80px; top:80px; color:var(--yellow); font-size:13px; font-weight:bold; letter-spacing:6px;">
+      LA TESIS
+    </div>
+
+    <div style="position:absolute; left:80px; top:160px; right:80px; font-size:34px; line-height:1.25; color:var(--white); font-weight:700;">
+      <p style="margin-bottom:24px;"><b>El context window</b> <span style="color:rgba(255,255,255,0.85);">es el cuello de botella de los agentes.</span></p>
+      <p style="margin-bottom:24px;"><span style="color:var(--yellow);">SDD</span> lo administra como recurso escaso.</p>
+      <p style="margin-bottom:24px;"><span style="color:var(--yellow);">La orquestación multi-agente</span> lo escala<br>en contextos frescos y aislados.</p>
+      <p style="margin-top:36px;"><span style="color:rgba(255,255,255,0.7); font-size:26px;">Juntos, hacen que la IA pase de <i>asistente que sugiere</i> a</span><br>
+      <span style="color:var(--yellow); font-style:italic; font-weight:800;">equipo que entrega.</span></p>
+    </div>
+
+    <div class="footer right">2 / 18</div>
+  </section>
+
+  <!-- ─────────────────────── SLIDE 3 — CONTEXT WINDOW ─────────────────────── -->
+  <section class="slide" data-n="3">
+    <div class="kicker">1 · El problema</div>
+    <h1 class="title">Context window: la "RAM" del modelo</h1>
+    <div class="accent-tick under-title"></div>
+
+    <div style="position:absolute; left:60px; top:280px; width:600px;">
+      <p style="font-size:22px; font-weight:700; color:var(--text); margin-bottom:6px;">El modelo NO tiene memoria.</p>
+      <p style="font-size:18px; color:var(--text-mute); margin-bottom:30px;">Cada turno relee TODO el historial desde cero.</p>
+      <p style="font-size:22px; font-weight:700; color:var(--text); margin-bottom:6px;">Y cuando el contexto se llena…</p>
+      <p style="font-size:18px; color:var(--text-mute);">todo se degrada — antes de llegar al techo.</p>
+    </div>
+
+    <div style="position:absolute; left:720px; top:270px; right:60px;">
+      <div style="font-size:11px; font-weight:800; letter-spacing:4px; color:var(--text-soft); margin-bottom:10px;">UNA SESIÓN REAL</div>
+
+      <div class="token-bar">
+        <span style="left:0;            width:2.5%; background:var(--navy);"></span>
+        <span style="left:2.5%;         width:5%;   background:var(--navy-soft);"></span>
+        <span style="left:7.5%;         width:30%;  background:var(--amber);"></span>
+      </div>
+      <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:12px; color:var(--text-soft);">
+        <span>200K tokens</span>
+        <span>≈ 500 páginas</span>
+      </div>
+
+      <div style="margin-top:20px; display:grid; grid-template-columns:auto 1fr auto; gap:8px 16px; font-size:14px;">
+        <span style="width:20px; height:14px; background:var(--navy); align-self:center;"></span>
+        <span>System prompt</span>
+        <span class="mono" style="color:var(--text-mute);">5K</span>
+        <span style="width:20px; height:14px; background:var(--navy-soft); align-self:center;"></span>
+        <span>Tools / MCPs</span>
+        <span class="mono" style="color:var(--text-mute);">10K</span>
+        <span style="width:20px; height:14px; background:var(--amber); align-self:center;"></span>
+        <span>Conversación</span>
+        <span class="mono" style="color:var(--text-mute);">60K</span>
+        <span style="width:20px; height:14px; background:var(--border); align-self:center;"></span>
+        <span>Libre</span>
+        <span class="mono" style="color:var(--text-mute);">125K</span>
+      </div>
+    </div>
+
+    <div class="quote-banner" style="left:60px; right:60px; bottom:80px;">
+      Suena mucho — hasta que abrís un repo real con 165K líneas de código.
+    </div>
+
+    <div class="footer left">Codex Meeting · SDD + Multi-Agente · Ramiro Carnicer</div>
+    <div class="footer right">3 / 18</div>
+  </section>
+
+  <!-- ─────────────────────── SLIDE 4 — CONTEXT ROT ─────────────────────── -->
+  <section class="slide" data-n="4">
+    <div class="kicker">1 · El problema</div>
+    <h1 class="title">Context rot: la degradación silenciosa</h1>
+    <div class="accent-tick under-title"></div>
+
+    <div style="position:absolute; left:60px; right:60px; top:270px; display:grid; grid-template-columns:repeat(4,1fr); gap:18px;">
+      <div class="sym-card">
+        <div class="sym-icon">✕</div>
+        <h3>Olvida instrucciones</h3>
+        <p>Lo que le dijiste<br>10 mensajes atrás<br>ya no está.</p>
+      </div>
+      <div class="sym-card">
+        <div class="sym-icon">≈</div>
+        <h3>Confunde archivos</h3>
+        <p>Mezcla clases<br>con nombres<br>parecidos.</p>
+      </div>
+      <div class="sym-card">
+        <div class="sym-icon">↻</div>
+        <h3>Repite errores</h3>
+        <p>Vuelve a meter<br>el mismo bug<br>ya corregido.</p>
+      </div>
+      <div class="sym-card">
+        <div class="sym-icon">?</div>
+        <h3>Inventa APIs</h3>
+        <p>Llama métodos<br>que no existen<br>en tu codebase.</p>
+      </div>
+    </div>
+
+    <div class="quote-banner" style="left:60px; right:60px; bottom:80px;">
+      No es que el modelo se vuelva tonto. <b>Es que se distrae.</b>
+    </div>
+
+    <div class="footer left">Codex Meeting · SDD + Multi-Agente · Ramiro Carnicer</div>
+    <div class="footer right">4 / 18</div>
+  </section>
+
+  <!-- ─────────────────────── SLIDE 5 — SDD EN UNA FRASE ─────────────────────── -->
+  <section class="slide" data-n="5">
+    <div class="kicker">2 · La solución base</div>
+    <h1 class="title">SDD: Spec-Driven Development</h1>
+    <div class="accent-tick under-title"></div>
+
+    <p style="position:absolute; left:60px; right:60px; top:270px; font-size:24px; font-style:italic; color:var(--text); line-height:1.4;">
+      Antes de escribir código, escribimos especificaciones que el agente puede leer, validar y descomponer en tareas.
+    </p>
+
+    <div style="position:absolute; left:60px; right:60px; top:430px;" class="flex-row">
+      <div class="compare-card bad">
+        <div class="label">Vibe Coding</div>
+        <div class="lead italic">"Hacé un endpoint que…"</div>
+        <ul class="pts">
+          <li>el agente improvisa</li>
+          <li>30% sale bien</li>
+          <li>70% hay que refactorizar</li>
+        </ul>
+      </div>
+      <div class="compare-card good">
+        <div class="label">SDD</div>
+        <div class="lead mono">ticket → spec → plan → código → review</div>
+        <ul class="pts">
+          <li>cada paso es un artefacto leíble</li>
+          <li>el agente nunca improvisa</li>
+          <li>el contexto se mantiene comprimido</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer left">Codex Meeting · SDD + Multi-Agente · Ramiro Carnicer</div>
+    <div class="footer right">5 / 18</div>
+  </section>
+
+  <!-- ─────────────────────── SLIDE 6 — 4 DOCUMENTOS ─────────────────────── -->
+  <section class="slide" data-n="6">
+    <div class="kicker">2 · La solución base</div>
+    <h1 class="title">Los 4 documentos del SDD</h1>
+    <div class="accent-tick under-title"></div>
+
+    <div style="position:absolute; left:60px; right:60px; top:280px;" class="doc-row">
+      <div class="doc-card">
+        <div class="num">1</div>
+        <div class="filename">proposal.md</div>
+        <div class="q">¿Qué problema<br>resolvemos?</div>
+        <hr>
+        <div class="audience-label">PARA</div>
+        <div class="audience">PM + tech lead</div>
+      </div>
+      <div class="doc-card">
+        <div class="num">2</div>
+        <div class="filename">functional.md</div>
+        <div class="q">¿Cómo se ve<br>desde afuera?</div>
+        <hr>
+        <div class="audience-label">PARA</div>
+        <div class="audience">QA + producto</div>
+      </div>
+      <div class="doc-card">
+        <div class="num">3</div>
+        <div class="filename">technical.md</div>
+        <div class="q">¿Cómo lo<br>construimos?</div>
+        <hr>
+        <div class="audience-label">PARA</div>
+        <div class="audience">Devs</div>
+      </div>
+      <div class="doc-card">
+        <div class="num">4</div>
+        <div class="filename">tasks-breakdown.md</div>
+        <div class="q">¿En qué orden<br>entregamos?</div>
+        <hr>
+        <div class="audience-label">PARA</div>
+        <div class="audience">Quien codea</div>
+      </div>
+    </div>
+
+    <p style="position:absolute; left:60px; right:60px; bottom:80px; text-align:center; font-size:22px; font-style:italic; color:var(--text);">
+      Cada documento <b style="color:var(--navy); font-style:normal;">constrains</b> al siguiente.
+    </p>
+
+    <div class="footer left">Codex Meeting · SDD + Multi-Agente · Ramiro Carnicer</div>
+    <div class="footer right">6 / 18</div>
+  </section>
+
+  <!-- ─────────────────────── SLIDE 7 — COMPRESIÓN ─────────────────────── -->
+  <section class="slide" data-n="7">
+    <div class="kicker">2 · La solución base</div>
+    <h1 class="title">Por qué este orden no es opcional</h1>
+    <div class="accent-tick under-title"></div>
+
+    <p style="position:absolute; left:60px; right:60px; top:270px; font-size:26px; line-height:1.3; color:var(--text);">
+      Cuando el agente codea el task #3,<br>NO necesita leer el ticket original.
+    </p>
+    <p style="position:absolute; left:60px; right:60px; top:380px; font-size:18px; color:var(--text-mute);">
+      Solo necesita el <span class="mono" style="color:var(--text);">tasks-breakdown.md</span> y el slice relevante de <span class="mono" style="color:var(--text);">technical.md</span>.
+    </p>
+
+    <div style="position:absolute; left:60px; right:60px; top:455px;">
+      <div style="font-size:11px; font-weight:800; letter-spacing:3px; color:var(--text-soft); margin-bottom:14px;">
+        TOKENS CARGADOS AL CODEAR EL TASK #3
+      </div>
+      <div style="display:grid; grid-template-columns:140px 1fr 140px; gap:12px; align-items:center; margin-bottom:10px;">
+        <span style="font-size:16px; font-weight:700;">Sin SDD</span>
+        <div class="token-bar"><span style="left:0; width:100%; background:var(--red);"></span></div>
+        <span class="mono" style="font-size:14px;">50,000 tokens</span>
+      </div>
+      <div style="display:grid; grid-template-columns:140px 1fr 140px; gap:12px; align-items:center;">
+        <span style="font-size:16px; font-weight:700;">Con SDD</span>
+        <div class="token-bar"><span style="left:0; width:6%; background:var(--green);"></span></div>
+        <span class="mono" style="font-size:14px;">3,000 tokens</span>
+      </div>
+    </div>
+
+    <div class="quote-banner" style="left:60px; right:60px; bottom:80px;">
+      <b>SDD es compresión semántica del contexto.</b>
+    </div>
+
+    <div class="footer left">Codex Meeting · SDD + Multi-Agente · Ramiro Carnicer</div>
+    <div class="footer right">7 / 18</div>
+  </section>
+
+  <!-- ─────────────────────── SLIDE 8 — SDD AS SKILL ─────────────────────── -->
+  <section class="slide" data-n="8">
+    <div class="kicker">2 · La solución base</div>
+    <h1 class="title">SDD se aplica como una skill</h1>
+    <div class="accent-tick under-title"></div>
+
+    <div style="position:absolute; left:60px; right:60px; top:280px; display:grid; grid-template-columns:1fr 60px 1fr 60px 1.4fr; align-items:start; gap:10px;">
+      <!-- Ticket -->
+      <div class="card has-leftbar" style="position:relative; padding:18px 20px; min-height:230px;">
+        <div style="font-size:11px; letter-spacing:3px; color:var(--blue); font-weight:800; margin-bottom:8px;">TICKET JIRA</div>
+        <div class="mono" style="font-size:22px; font-weight:800; color:var(--text); margin-bottom:14px;">CODEX-001</div>
+        <div style="font-size:14px; color:var(--text-mute); line-height:1.4;">Generador de<br>changelog desde<br>git log</div>
+      </div>
+      <div style="text-align:center; font-size:36px; color:var(--navy); align-self:center;">→</div>
+
+      <!-- Skill SDD -->
+      <div style="background:var(--navy); padding:24px; min-height:230px; text-align:center; position:relative;">
+        <div style="position:absolute; top:0; left:0; right:0; height:8px; background:var(--yellow);"></div>
+        <div style="font-size:11px; color:var(--yellow); letter-spacing:3px; font-weight:800; margin-bottom:14px;">SKILL</div>
+        <div style="font-size:48px; font-weight:800; color:var(--white); margin-bottom:8px;">SDD</div>
+        <div style="font-size:13px; color:rgba(255,255,255,0.75); font-style:italic;">Spec-Driven<br>Development</div>
+      </div>
+
+      <div style="text-align:center; font-size:36px; color:var(--navy); align-self:center;">→</div>
+
+      <!-- Outputs -->
+      <div>
+        <div class="card has-leftbar" style="position:relative; padding:8px 16px; margin-bottom:6px;">
+          📄  <span class="mono" style="font-size:14px;">proposal.md</span>
+        </div>
+        <div class="card has-leftbar" style="position:relative; padding:8px 16px; margin-bottom:6px;">
+          📄  <span class="mono" style="font-size:14px;">functional.md</span>
+        </div>
+        <div class="card has-leftbar" style="position:relative; padding:8px 16px; margin-bottom:6px;">
+          📄  <span class="mono" style="font-size:14px;">technical.md</span>
+        </div>
+        <div class="card has-leftbar" style="position:relative; padding:8px 16px;">
+          📄  <span class="mono" style="font-size:14px;">tasks-breakdown.md</span>
+        </div>
+        <div class="mono" style="margin-top:6px; font-size:11px; color:var(--text-soft); font-style:italic;">workspace/sdds/CODEX-001/</div>
+      </div>
+    </div>
+
+    <div style="position:absolute; left:60px; right:60px; bottom:60px; background:var(--white); border:3px solid var(--yellow); padding:20px 28px; display:flex; align-items:center; gap:18px;">
+      <div style="font-size:36px;">⚡</div>
+      <div>
+        <div style="font-size:22px; font-weight:800; color:var(--text); margin-bottom:4px;">Hasta acá: cero código.</div>
+        <div style="font-size:15px; color:var(--text-mute); font-style:italic;">El 60% del trabajo intelectual ya está hecho — y leíble por humanos.</div>
+      </div>
+    </div>
+
+    <div class="footer left">Codex Meeting · SDD + Multi-Agente · Ramiro Carnicer</div>
+    <div class="footer right">8 / 18</div>
+  </section>
+
+  <!-- ─────────────────────── SLIDE 9 — AGENTE ÚNICO ─────────────────────── -->
+  <section class="slide" data-n="9">
+    <div class="kicker">3 · Orquestación multi-agente</div>
+    <h1 class="title">Pero un agente único no escala</h1>
+    <div class="accent-tick under-title"></div>
+
+    <div style="position:absolute; left:60px; top:290px; width:380px; background:var(--navy); padding:24px; min-height:380px; text-align:center; position:absolute;">
+      <div style="position:absolute; top:0; left:0; right:0; height:8px; background:var(--red);"></div>
+      <div style="font-size:11px; color:var(--red); letter-spacing:3px; font-weight:800; margin-top:8px; margin-bottom:18px;">AGENTE MONOLITO</div>
+      <div style="font-size:30px; font-weight:800; color:var(--white); margin-bottom:24px;">Hace TODO</div>
+      <div style="font-size:16px; color:rgba(255,255,255,0.8); line-height:2;">
+        analiza ticket<br>
+        escribe spec<br>
+        codea<br>
+        <span style="color:var(--yellow); font-weight:700;">se revisa a sí mismo</span><br>
+        abre PR
+      </div>
+    </div>
+
+    <div style="position:absolute; left:520px; right:60px; top:280px; display:flex; flex-direction:column; gap:18px;">
+      <div class="card has-leftbar" style="position:relative; padding:18px 24px; --leftbar-color:var(--red);">
+        <h3 style="font-size:18px; margin-bottom:6px;">1.  Context bleed</h3>
+        <p style="font-size:14px; color:var(--text-mute); line-height:1.4;">Spec, código y review viven en el mismo contexto.<br>La review está sesgada.</p>
+      </div>
+      <div class="card" style="position:relative; padding:18px 24px; border-left:10px solid var(--amber);">
+        <h3 style="font-size:18px; margin-bottom:6px;">2.  Token blow-up</h3>
+        <p style="font-size:14px; color:var(--text-mute); line-height:1.4;">Al task #4, ya hay 80K tokens<br>de historial irrelevante.</p>
+      </div>
+      <div class="card" style="position:relative; padding:18px 24px; border-left:10px solid var(--red);">
+        <h3 style="font-size:18px; margin-bottom:6px;">3.  Sin punto de retorno</h3>
+        <p style="font-size:14px; color:var(--text-mute); line-height:1.4;">Si la review falla, el agente no puede pensar de nuevo —<br>su cabeza está llena.</p>
+      </div>
+    </div>
+
+    <div class="footer left">Codex Meeting · SDD + Multi-Agente · Ramiro Carnicer</div>
+    <div class="footer right">9 / 18</div>
+  </section>
+
+  <!-- ─────────────────────── SLIDE 10 — QUÉ ES UN SUB-AGENTE ─────────────────────── -->
+  <section class="slide" data-n="10">
+    <div class="kicker">3 · Orquestación multi-agente</div>
+    <h1 class="title">Un sub-agente = un .md o un .toml</h1>
+    <div class="accent-tick under-title"></div>
+
+    <p style="position:absolute; left:60px; right:60px; top:260px; font-size:20px; line-height:1.5; color:var(--text);">
+      Un agente con un <b style="color:var(--navy);">rol acotado</b>, su <b style="color:var(--navy);">propio contexto</b>, sus <b style="color:var(--navy);">tools permitidas</b> y su <b style="color:var(--navy);">system prompt</b>.<br>
+      En la práctica: un Markdown o un TOML.
+    </p>
+
+    <!-- Two file cards -->
+    <div style="position:absolute; left:60px; right:60px; top:380px; display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+      <!-- explorer.md -->
+      <div style="background:var(--bg-card,#fff); border:1px solid var(--border);">
+        <div style="background:var(--navy); color:var(--yellow); padding:10px 18px; font-family:'Courier New', monospace; font-size:14px; font-weight:700;">
+          📄&nbsp;&nbsp;explorer.md
+        </div>
+        <div style="background:var(--bg); padding:12px 18px; margin:14px; font-family:'Courier New', monospace; font-size:13px; line-height:1.45;">
+          <span style="color:var(--text-soft);">---</span><br>
+          <span style="color:var(--blue);">name:</span> explorer<br>
+          <span style="color:var(--blue);">model:</span> gpt-5.2<br>
+          <span style="color:var(--blue);">tools:</span> Read, Glob, Grep<br>
+          <span style="color:var(--text-soft);">---</span>
+        </div>
+        <div style="padding:6px 18px 18px; font-size:14px; font-style:italic; color:var(--text-mute); line-height:1.5;">
+          Sos un agente read-only.<br>
+          Leés el repo y devolvés contexto comprimido. Nunca escribís nada.
+        </div>
+      </div>
+      <!-- implementer.toml -->
+      <div style="background:var(--bg-card,#fff); border:1px solid var(--border);">
+        <div style="background:var(--navy); color:var(--yellow); padding:10px 18px; font-family:'Courier New', monospace; font-size:14px; font-weight:700;">
+          📄&nbsp;&nbsp;implementer.toml
+        </div>
+        <div style="background:var(--bg); padding:12px 18px; margin:14px; font-family:'Courier New', monospace; font-size:13px; line-height:1.45;">
+          <span style="color:var(--green);">name</span> = <span style="color:var(--text-mute);">"implementer"</span><br>
+          <span style="color:var(--green);">model</span> = <span style="color:var(--text-mute);">"gpt-5.3-codex"</span><br>
+          <span style="color:var(--green);">tools</span> = <span style="color:var(--text-mute);">["Edit", "Write", "Bash"]</span>
+        </div>
+        <div style="padding:6px 18px 18px; font-size:14px; font-style:italic; color:var(--text-mute); line-height:1.5;">
+          Implementás cambios con flujo TDD. Reportás archivos tocados y evidencia. No te revisás a vos mismo.
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom callout -->
+    <div style="position:absolute; left:60px; right:60px; bottom:55px; background:var(--yellow); padding:14px 20px; text-align:center; font-size:18px; font-family:'Trebuchet MS', sans-serif;">
+      Cambiar un agente = editar un .md o .toml.&nbsp;&nbsp;<b><i>Sin redeploy. Sin SDK.</i></b>
+    </div>
+
+    <div class="footer right">10 / 18</div>
+  </section>
+
+  <!-- ─────────────────────── SLIDE 11 — DIVISIÓN DE ROLES ─────────────────────── -->
+  <section class="slide" data-n="11">
+    <div class="kicker">3 · Orquestación multi-agente</div>
+    <h1 class="title">Una sesión principal + 5 sub-agentes</h1>
+    <div class="accent-tick under-title"></div>
+
+    <table class="roles-table" style="position:absolute; left:60px; right:60px; top:260px; width:calc(100% - 120px);">
+      <thead>
+        <tr><th>ROL</th><th>QUÉ HACE</th><th>QUÉ NO HACE</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="role role-color-2 mono">explorer</td>
+          <td><span style="color:var(--green); font-weight:800;">✓</span> Lee y comprime contexto del repo (read-only).</td>
+          <td class="no"><span style="color:var(--red); font-weight:800;">✕</span> Escribe nada.</td>
+        </tr>
+        <tr>
+          <td class="role role-color-1 mono">documentator</td>
+          <td><span style="color:var(--green); font-weight:800;">✓</span> Escribe specs en <span class="mono">docs/</span> (funcional + técnica).</td>
+          <td class="no"><span style="color:var(--red); font-weight:800;">✕</span> Toca código.</td>
+        </tr>
+        <tr>
+          <td class="role role-color-4 mono">planner</td>
+          <td><span style="color:var(--green); font-weight:800;">✓</span> Convierte spec en plan de tasks + checklist.</td>
+          <td class="no"><span style="color:var(--red); font-weight:800;">✕</span> Codea.</td>
+        </tr>
+        <tr>
+          <td class="role role-color-3 mono">implementer</td>
+          <td><span style="color:var(--green); font-weight:800;">✓</span> Codea con flujo TDD, reporta evidencia.</td>
+          <td class="no"><span style="color:var(--red); font-weight:800;">✕</span> Se revisa a sí mismo.</td>
+        </tr>
+        <tr>
+          <td class="role role-color-4 mono">tester_reviewer</td>
+          <td><span style="color:var(--green); font-weight:800;">✓</span> Tests + checks + handoff (report-only). <b>Contexto FRESCO.</b></td>
+          <td class="no"><span style="color:var(--red); font-weight:800;">✕</span> Modifica código.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="position:absolute; left:60px; right:60px; bottom:60px; background:var(--yellow); padding:14px; text-align:center; font-size:20px; font-weight:800; font-style:italic; color:var(--text); letter-spacing:3px;">
+      Un agente · un rol · un objetivo · un contexto.
+    </div>
+
+    <div class="footer right">11 / 18</div>
+  </section>
+
+  <!-- ─────────────────────── SLIDE 11 — FRESH CONTEXT ─────────────────────── -->
+  <section class="slide" data-n="12">
+    <div class="kicker">3 · Orquestación multi-agente</div>
+    <h1 class="title">El invariante crítico: freshContext</h1>
+    <div class="accent-tick under-title"></div>
+
+    <div class="fc-diagram" style="position:absolute; left:60px; right:60px; top:280px;">
+      <div class="fc-box impl">
+        <div class="lbl mono">IMPLEMENTER</div>
+        <h3>Codea + commit</h3>
+        <div class="small">reporta evidencia<br>crea .reviewing lock</div>
+      </div>
+      <div class="firewall">
+        <div class="ico">🧱</div>
+        FIREWALL<br>
+        <span class="mono" style="font-size:11px; font-weight:700;">freshContext: true</span>
+      </div>
+      <div class="fc-box review">
+        <div class="lbl mono">TESTER_REVIEWER</div>
+        <h3>Tests + checks + handoff</h3>
+        <div class="small">solo lee: spec + plan + diff<br>NO ve el resto</div>
+      </div>
+      <div class="verdict-box">
+        <div class="lbl">VERDICT</div>
+        <ul>
+          <li class="accept">accept</li>
+          <li class="changes">request-changes</li>
+          <li class="block">block</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="position:absolute; left:60px; right:60px; top:485px; background:var(--white); border:1px solid var(--border); padding:20px 28px; position:relative;">
+      <div style="position:absolute; top:0; left:0; right:0; height:8px; background:var(--yellow);"></div>
+      <div style="font-size:11px; font-weight:800; letter-spacing:4px; color:var(--navy); margin-top:6px; margin-bottom:10px;">POR QUÉ IMPORTA</div>
+      <div style="font-size:16px; line-height:1.55; color:var(--text);">
+        El <span class="mono">tester_reviewer</span> NO sabe lo que el <span class="mono">implementer</span> <i>intentó hacer</i>. Solo ve el resultado.<br>
+        Esto replica lo que hace un humano en code review: <b>lee el diff, no el debugger</b>.<br>
+        Si el <span class="mono">implementer</span> alucinó, el <span class="mono">tester_reviewer</span> lo cacha — porque <b>no comparte la alucinación</b>.
+      </div>
+    </div>
+
+    <div style="position:absolute; left:60px; right:60px; bottom:60px; text-align:center; font-size:13px; color:var(--text-soft); font-style:italic;">
+      🔒 Enforzado por hook <span class="mono">pretool_allowlist.py</span> — bloquea writes mientras existe el .reviewing lock.
+    </div>
+
+    <div class="footer left">Codex Meeting · SDD + Multi-Agente · Ramiro Carnicer</div>
+    <div class="footer right">12 / 18</div>
+  </section>
+
+  <!-- ─────────────────────── SLIDE 12 — END-TO-END FLOW ─────────────────────── -->
+  <section class="slide" data-n="13">
+    <div class="kicker">3 · Orquestación multi-agente</div>
+    <h1 class="title">El flow completo end-to-end</h1>
+    <div class="accent-tick under-title"></div>
+
+    <div class="stages" style="position:absolute; left:60px; right:60px; top:300px;">
+      <div class="stage color-blue">
+        <h4>JIRA TICKET</h4>
+        <div class="sub">input</div>
+      </div>
+      <div class="stage-arrow">→</div>
+      <div class="stage color-blue">
+        <h4>EXPLORER</h4>
+        <div class="sub">lee + comprime</div>
+      </div>
+      <div class="stage-arrow">→</div>
+      <div class="stage color-navy">
+        <h4>DOCUMENTATOR</h4>
+        <div class="sub">specs en docs/</div>
+      </div>
+      <div class="stage-arrow">→</div>
+      <div class="stage color-amber">
+        <h4>PLANNER</h4>
+        <div class="sub">spec → plan tasks</div>
+      </div>
+      <div class="stage-arrow">→</div>
+      <div class="stage color-amber highlight">
+        <h4>BUILD LOOP</h4>
+        <div class="sub">impl ⇄ tester × N</div>
+      </div>
+      <div class="stage-arrow">→</div>
+      <div class="stage color-green">
+        <h4>PR</h4>
+        <div class="sub">main integra</div>
+      </div>
+    </div>
+
+    <div style="position:absolute; top:430px; left:0; right:0; text-align:center; font-size:14px; font-weight:800; font-style:italic; color:var(--yellow-d);">
+      ↻  por cada task
+    </div>
+
+    <div style="position:absolute; left:60px; right:60px; bottom:80px; background:var(--navy); color:var(--white); padding:30px 36px; position:relative;">
+      <div style="position:absolute; top:0; bottom:0; left:0; width:8px; background:var(--yellow);"></div>
+      <div style="font-size:24px; font-weight:800; margin-bottom:10px;">
+        Cada caja es un agente con su propio context window.
+      </div>
+      <div style="font-size:16px; font-style:italic; color:rgba(255,255,255,0.8); line-height:1.4;">
+        Ningún agente ve más de lo que necesita.<br>
+        Es un pipeline de software, no una conversación.
+      </div>
+    </div>
+
+    <div class="footer left">Codex Meeting · SDD + Multi-Agente · Ramiro Carnicer</div>
+    <div class="footer right">13 / 18</div>
+  </section>
+
+  <!-- ─────────────────────── SLIDE 13 — DEMO HANDOFF ─────────────────────── -->
+  <section class="slide dark" data-n="14">
+    <div style="position:absolute; left:80px; top:80px; font-size:120px; color:var(--yellow); font-weight:800; line-height:1;">4</div>
+    <div style="position:absolute; left:300px; top:110px; color:var(--yellow); font-size:14px; letter-spacing:6px; font-weight:800;">DEMO EN VIVO</div>
+    <div style="position:absolute; left:300px; top:160px; color:var(--white); font-size:38px; font-weight:800;" class="mono">git-changelog-gen</div>
+
+    <div style="position:absolute; left:80px; top:340px; width:140px; height:8px; background:var(--yellow);"></div>
+
+    <div style="position:absolute; left:80px; top:380px; font-size:54px; color:var(--white); font-weight:800;">Vamos a la terminal.</div>
+
+    <div style="position:absolute; left:80px; top:480px; font-size:20px; color:rgba(255,255,255,0.75);">
+      Ticket  →  SDD  →  impl ⇄ review × 4  →  CHANGELOG.md  →  PR
+    </div>
+
+    <div style="position:absolute; left:80px; right:80px; bottom:80px; background:var(--navy-soft); padding:24px 30px; position:relative;">
+      <div style="position:absolute; top:0; bottom:0; left:0; width:8px; background:var(--yellow);"></div>
+      <div style="font-size:20px; font-weight:800; color:var(--yellow); margin-bottom:6px;">
+        Si algo falla en vivo, lo van a ver fallar.
+      </div>
+      <div style="font-size:15px; font-style:italic; color:rgba(255,255,255,0.75);">
+        Esto NO es un video. Es el sistema corriendo. Ojo a los handoffs.
+      </div>
+    </div>
+
+    <div class="footer right">14 / 18</div>
+  </section>
+
+  <!-- ─────────────────────── SLIDE 14 — 3 COSAS ─────────────────────── -->
+  <section class="slide" data-n="15">
+    <div class="kicker">5 · Cierre</div>
+    <h1 class="title">Las 3 cosas que hacen los buenos agentes</h1>
+    <div class="accent-tick under-title"></div>
+
+    <div style="position:absolute; left:60px; right:60px; top:280px; display:flex; flex-direction:column; gap:18px;">
+      <div class="num-card">
+        <div class="num-circ">1</div>
+        <div class="text">
+          <h3><b>Comprimen</b> el contexto antes de gastarlo.</h3>
+          <p>→ SDD: 4 archivos antes de codear</p>
+        </div>
+      </div>
+      <div class="num-card">
+        <div class="num-circ">2</div>
+        <div class="text">
+          <h3><b>Aíslan</b> roles para evitar context bleed.</h3>
+          <p>→ Multi-agente: un rol, un contexto</p>
+        </div>
+      </div>
+      <div class="num-card">
+        <div class="num-circ">3</div>
+        <div class="text">
+          <h3><b>Verifican</b> con contexto fresco.</h3>
+          <p>→ Review chain: no se creen a sí mismos</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="position:absolute; left:60px; right:60px; bottom:55px; background:var(--yellow); padding:14px; text-align:center; font-size:18px; font-weight:800; font-style:italic; color:var(--text); letter-spacing:3px;">
+      Compresión · Aislamiento · Verificación
+    </div>
+
+    <div class="footer left">Codex Meeting · SDD + Multi-Agente · Ramiro Carnicer</div>
+    <div class="footer right">15 / 18</div>
+  </section>
+
+  <!-- ─────────────────────── SLIDE 15 — LA IDEA ─────────────────────── -->
+  <section class="slide dark" data-n="16">
+    <div style="position:absolute; left:80px; top:80px;" class="pill">LA IDEA</div>
+
+    <div style="position:absolute; left:80px; top:200px; right:80px; font-size:50px; font-weight:800; color:var(--white); line-height:1.15;">
+      <p style="margin-bottom:36px;">El context window es <span style="color:var(--yellow);">ingeniería</span>, no magia.</p>
+      <p style="margin-bottom:18px;"><span style="color:var(--yellow);">SDD</span> lo administra.</p>
+      <p><span style="color:var(--yellow);">La orquestación</span> lo escala.</p>
+    </div>
+
+    <div style="position:absolute; left:80px; bottom:90px; width:100px; height:6px; background:var(--yellow);"></div>
+    <div style="position:absolute; left:80px; bottom:50px; font-size:14px; color:rgba(255,255,255,0.65); font-style:italic;">
+      Si se llevan UNA cosa, que sea esta.
+    </div>
+
+    <div class="footer right">16 / 18</div>
+  </section>
+
+  <!-- ─────────────────────── SLIDE 16 — CTA · ENSUCIATE LAS MANOS ─────────────────────── -->
+  <section class="slide dark" data-n="17">
+    <div class="left-yellow-bar"></div>
+
+    <!-- Decorative dotted grid (top-right) -->
+    <div style="position:absolute; right:60px; top:60px; display:grid; grid-template-columns:repeat(6, 16px); grid-template-rows:repeat(4, 16px); gap:10px;">
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+    </div>
+
+    <!-- Eyebrow -->
+    <div style="position:absolute; left:80px; top:80px;" class="pill">PERO OJO</div>
+
+    <!-- Big headline -->
+    <h1 style="position:absolute; left:80px; right:80px; top:200px; font-size:72px; font-weight:800; line-height:1.15; color:var(--white);">
+      Los agentes hacen.<br>
+      Vos los <span style="color:var(--yellow);">orquestás</span>.
+    </h1>
+
+    <!-- Yellow accent -->
+    <div style="position:absolute; left:80px; top:440px; width:90px; height:6px; background:var(--yellow);"></div>
+
+    <!-- Sub-message -->
+    <div style="position:absolute; left:80px; right:80px; top:470px; font-size:24px; line-height:1.5; color:#D5D7E0;">
+      Y para orquestar bien hay que haber <b style="color:var(--white);">metido mano en el código</b> y <b style="color:var(--white);">saber lo que estamos haciendo</b>.
+    </div>
+
+    <!-- Closing punch — yellow box for max prominence -->
+    <div style="position:absolute; left:80px; right:80px; bottom:60px; background:var(--yellow); padding:24px 32px; text-align:center;">
+      <div style="font-size:28px; font-weight:800; color:var(--text); font-family:'Trebuchet MS', sans-serif;">
+        No es magia.&nbsp;&nbsp;No <i>"vibe codeamos"</i>.&nbsp;&nbsp;Es <span style="color:var(--navy);">ingeniería de agentes</span>.
+      </div>
+    </div>
+
+    <div class="footer right">17 / 18</div>
+  </section>
+
+  <!-- ─────────────────────── SLIDE 17 — GRACIAS + MINI-BIO + REPO + REDES ─────────────────────── -->
+  <section class="slide dark" data-n="18">
+    <div class="left-yellow-bar"></div>
+
+    <!-- Decorative dotted grid (top-right) -->
+    <div style="position:absolute; right:60px; top:60px; display:grid; grid-template-columns:repeat(7, 16px); grid-template-rows:repeat(4, 16px); gap:10px;">
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+      <span class="grid-bg-dot" style="position:relative"></span>
+    </div>
+
+    <h1 style="position:absolute; left:80px; top:60px; font-size:80px; color:var(--white); font-weight:800; letter-spacing:8px;">GRACIAS</h1>
+
+    <div style="position:absolute; left:80px; top:180px; width:90px; height:6px; background:var(--yellow);"></div>
+
+    <!-- Mini-bio block -->
+    <div style="position:absolute; left:80px; right:80px; top:220px;">
+      <div style="font-size:42px; color:var(--white); font-weight:800;">Ramiro Carnicer Souble</div>
+      <div style="font-size:18px; color:var(--yellow); margin-top:6px;">Backend Engineer · Founder-minded Builder · Buenos Aires</div>
+      <div style="font-size:15px; color:#D5D7E0; margin-top:18px; line-height:1.5;">
+        Backend Software Engineer en <b style="color:var(--white);">MELI</b>. Building <b style="color:var(--white);">Khora</b>, Infer y experimentos varios.
+      </div>
+      <div style="font-size:14px; color:#B5B8C8; margin-top:6px; font-style:italic;">
+        Backend systems, AI products, and thoughtful internet experiments.
+      </div>
+    </div>
+
+    <!-- EL REPO — protagonista -->
+    <div style="position:absolute; left:80px; right:80px; top:430px; background:var(--yellow); padding:20px 32px;">
+      <div style="font-size:12px; font-weight:800; color:var(--text); letter-spacing:4px; margin-bottom:6px;">EL REPO</div>
+      <div class="mono" style="font-size:36px; font-weight:800; color:var(--text);">
+        github.com/ram4-dev/multi-sdd-team
+      </div>
+    </div>
+
+    <!-- Redes -->
+    <div style="position:absolute; left:80px; right:80px; bottom:80px;">
+      <div style="font-size:11px; font-weight:800; color:var(--yellow); letter-spacing:4px; margin-bottom:10px;">ENCONTRAME EN</div>
+      <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:14px;">
+        <a href="https://ram4.dev" target="_blank" style="text-decoration:none;">
+          <div style="background:var(--navy-soft); padding:12px 14px; border-left:6px solid var(--yellow);">
+            <div style="font-size:10px; font-weight:800; color:var(--yellow); letter-spacing:3px; margin-bottom:4px;">WEB</div>
+            <div class="mono" style="font-size:14px; color:var(--white);">ram4.dev</div>
+          </div>
+        </a>
+        <a href="https://x.com/ram4_dev" target="_blank" style="text-decoration:none;">
+          <div style="background:var(--navy-soft); padding:12px 14px; border-left:6px solid var(--yellow);">
+            <div style="font-size:10px; font-weight:800; color:var(--yellow); letter-spacing:3px; margin-bottom:4px;">X</div>
+            <div class="mono" style="font-size:14px; color:var(--white);">@ram4_dev</div>
+          </div>
+        </a>
+        <a href="https://github.com/ram4-dev" target="_blank" style="text-decoration:none;">
+          <div style="background:var(--navy-soft); padding:12px 14px; border-left:6px solid var(--yellow);">
+            <div style="font-size:10px; font-weight:800; color:var(--yellow); letter-spacing:3px; margin-bottom:4px;">GITHUB</div>
+            <div class="mono" style="font-size:14px; color:var(--white);">ram4-dev</div>
+          </div>
+        </a>
+        <a href="https://ar.linkedin.com/in/ramirocarnicersouble" target="_blank" style="text-decoration:none;">
+          <div style="background:var(--navy-soft); padding:12px 14px; border-left:6px solid var(--yellow);">
+            <div style="font-size:10px; font-weight:800; color:var(--yellow); letter-spacing:3px; margin-bottom:4px;">LINKEDIN</div>
+            <div class="mono" style="font-size:14px; color:var(--white);">ramirocarnicersouble</div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="nav-counter">
+  <span id="cur">1</span> / 18  ·  ← →  ·  <kbd>F</kbd> fullscreen
+</div>
+<div class="nav-controls">
+  <button id="btn-prev" title="Anterior">‹</button>
+  <button id="btn-next" title="Siguiente">›</button>
+  <button id="btn-fs" title="Fullscreen">⛶</button>
+</div>
+
+<div class="frag-hint" id="frag-hint"></div>
+
+<script>
+(function () {
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total = slides.length;
+  let idx = 0;
+
+  // ─────────────────────────────────────────────────────────────────────
+  // FRAGMENT PLAN — for each slide (1-indexed by data-n), an ordered list
+  // of CSS selectors. Each selector matches one or more elements that
+  // share a fragment step. Slides not listed here have NO fragments.
+  // Animation variant defaults to "fade-up". Override per-step by giving
+  // an object: {sel: '...', variant: 'fade-left'}.
+  // ─────────────────────────────────────────────────────────────────────
+  const FRAG_PLAN = {
+    1: [],  // title — show everything immediately
+    2: [
+      'div:nth-of-type(2) p:nth-of-type(1)',
+      'div:nth-of-type(2) p:nth-of-type(2)',
+      'div:nth-of-type(2) p:nth-of-type(3)',
+      'div:nth-of-type(2) p:nth-of-type(4)',
+    ],
+    3: [
+      { sel: 'div[style*="left:60px"][style*="top:280px"]', variant: 'fade-left' },
+      { sel: 'div[style*="left:720px"]',                    variant: 'fade-right' },
+      { sel: '.quote-banner',                               variant: 'fade-up' },
+    ],
+    4: [
+      { sel: '.sym-card:nth-child(1)', variant: 'fade-up' },
+      { sel: '.sym-card:nth-child(2)', variant: 'fade-up' },
+      { sel: '.sym-card:nth-child(3)', variant: 'fade-up' },
+      { sel: '.sym-card:nth-child(4)', variant: 'fade-up' },
+      { sel: '.quote-banner',          variant: 'fade-up' },
+    ],
+    5: [
+      'p[style*="top:270px"]',
+      { sel: '.compare-card.bad',  variant: 'fade-left' },
+      { sel: '.compare-card.good', variant: 'fade-right' },
+    ],
+    6: [
+      { sel: '.doc-card:nth-child(1)', variant: 'fade-up' },
+      { sel: '.doc-card:nth-child(2)', variant: 'fade-up' },
+      { sel: '.doc-card:nth-child(3)', variant: 'fade-up' },
+      { sel: '.doc-card:nth-child(4)', variant: 'fade-up' },
+      'p[style*="bottom:80px"]',
+    ],
+    7: [
+      'p[style*="top:270px"]',
+      'p[style*="top:380px"]',
+      'div[style*="top:455px"]',
+      '.quote-banner',
+    ],
+    8: [
+      { sel: 'div[style*="grid-template-columns:1fr 60px 1fr 60px 1.4fr"] > div:nth-child(1)', variant: 'fade-left' },
+      { sel: 'div[style*="grid-template-columns:1fr 60px 1fr 60px 1.4fr"] > div:nth-child(3)', variant: 'zoom-in' },
+      { sel: 'div[style*="grid-template-columns:1fr 60px 1fr 60px 1.4fr"] > div:nth-child(5)', variant: 'fade-right' },
+      { sel: 'div[style*="border:3px solid var(--yellow)"]',                                    variant: 'fade-up' },
+    ],
+    9: [
+      { sel: 'div[style*="background:var(--navy)"][style*="width:380px"]', variant: 'fade-left' },
+      { sel: 'div[style*="left:520px"] > div:nth-child(1)',                variant: 'fade-right' },
+      { sel: 'div[style*="left:520px"] > div:nth-child(2)',                variant: 'fade-right' },
+      { sel: 'div[style*="left:520px"] > div:nth-child(3)',                variant: 'fade-right' },
+    ],
+    10: [
+      // Sub-agente .md slide — explorer card, implementer card, bottom callout
+      { sel: 'div[style*="top:380px"] > div:nth-child(1)', variant: 'fade-left' },
+      { sel: 'div[style*="top:380px"] > div:nth-child(2)', variant: 'fade-right' },
+      { sel: 'div[style*="bottom:55px"]',                  variant: 'fade-up' },
+    ],
+    11: [
+      { sel: '.roles-table tbody tr:nth-child(1)', variant: 'fade-up' },
+      { sel: '.roles-table tbody tr:nth-child(2)', variant: 'fade-up' },
+      { sel: '.roles-table tbody tr:nth-child(3)', variant: 'fade-up' },
+      { sel: '.roles-table tbody tr:nth-child(4)', variant: 'fade-up' },
+      { sel: '.roles-table tbody tr:nth-child(5)', variant: 'fade-up' },
+      'div[style*="bottom:60px"][style*="background:var(--yellow)"]',
+    ],
+    12: [
+      { sel: '.fc-box.impl',  variant: 'fade-left' },
+      { sel: '.firewall',     variant: 'zoom-in' },
+      { sel: '.fc-box.review',variant: 'fade-right' },
+      { sel: '.verdict-box',  variant: 'fade-right' },
+      { sel: 'div[style*="top:485px"]', variant: 'fade-up' },
+    ],
+    13: [
+      { sel: '.stages > .stage:nth-child(1)',  variant: 'fade-up' },
+      { sel: '.stages > .stage:nth-child(3)',  variant: 'fade-up' },
+      { sel: '.stages > .stage:nth-child(5)',  variant: 'fade-up' },
+      { sel: '.stages > .stage:nth-child(7)',  variant: 'fade-up' },
+      { sel: '.stages > .stage:nth-child(9)',  variant: 'fade-up' },
+      { sel: '.stages > .stage:nth-child(11)', variant: 'fade-up' },
+      { sel: 'div[style*="bottom:80px"]',      variant: 'fade-up' },
+    ],
+    14: [],  // demo handoff — show everything
+    15: [
+      { sel: '.num-card:nth-child(1)', variant: 'fade-up' },
+      { sel: '.num-card:nth-child(2)', variant: 'fade-up' },
+      { sel: '.num-card:nth-child(3)', variant: 'fade-up' },
+      { sel: 'div[style*="bottom:55px"][style*="background:var(--yellow)"]', variant: 'fade-up' },
+    ],
+    16: [
+      'div[style*="top:200px"] p:nth-of-type(1)',
+      'div[style*="top:200px"] p:nth-of-type(2)',
+      'div[style*="top:200px"] p:nth-of-type(3)',
+    ],
+    17: [
+      // CTA slide — entran headline, sub-message y closing punch
+      { sel: 'h1',                         variant: 'fade-up' },
+      { sel: 'div[style*="top:470px"]',    variant: 'fade-up' },
+      { sel: 'div[style*="bottom:60px"]',  variant: 'zoom-in' },
+    ],
+    18: [
+      // Gracias slide — mini-bio, repo (zoom), redes
+      { sel: 'div[style*="top:220px"]',   variant: 'fade-up' },
+      { sel: 'div[style*="top:430px"]',   variant: 'zoom-in' },
+      { sel: 'div[style*="bottom:80px"]', variant: 'fade-up' },
+    ],
+  };
+
+  // Per-slide fragment state: how many fragments are currently visible.
+  const fragState = new Array(total).fill(0);
+  // Per-slide list of resolved DOM element groups (one entry per fragment step).
+  const fragGroups = new Array(total).fill(null);
+
+  function buildFragmentsForSlide(slideIdx) {
+    if (fragGroups[slideIdx] !== null) return fragGroups[slideIdx];
+    const slide = slides[slideIdx];
+    const n = parseInt(slide.dataset.n, 10);
+    const plan = FRAG_PLAN[n] || [];
+    const groups = [];
+    plan.forEach(step => {
+      const sel = typeof step === 'string' ? step : step.sel;
+      const variant = typeof step === 'string' ? 'fade-up' : (step.variant || 'fade-up');
+      const els = Array.from(slide.querySelectorAll(sel));
+      els.forEach(el => {
+        el.classList.add('fragment', variant);
+      });
+      if (els.length) groups.push(els);
+    });
+    fragGroups[slideIdx] = groups;
+    return groups;
+  }
+
+  function applyFragState(slideIdx, count) {
+    const groups = buildFragmentsForSlide(slideIdx);
+    groups.forEach((els, i) => {
+      els.forEach(el => el.classList.toggle('visible', i < count));
+    });
+    fragState[slideIdx] = count;
+    updateFragHint(groups.length, count);
+  }
+
+  function updateFragHint(totalFrags, currentCount) {
+    const hint = document.getElementById('frag-hint');
+    if (totalFrags === 0) {
+      hint.classList.add('empty');
+      hint.innerHTML = '';
+      return;
+    }
+    hint.classList.remove('empty');
+    let dots = '';
+    for (let i = 0; i < totalFrags; i++) {
+      dots += '<span class="dot' + (i < currentCount ? ' on' : '') + '"></span>';
+    }
+    hint.innerHTML = dots + '  ' + currentCount + ' / ' + totalFrags;
+  }
+
+  function show(n, opts) {
+    opts = opts || {};
+    n = ((n % total) + total) % total;
+    slides[idx].classList.remove('active');
+    idx = n;
+    slides[idx].classList.add('active');
+    document.getElementById('cur').textContent = idx + 1;
+    document.getElementById('progress-fill').style.width = ((idx + 1) / total * 100) + '%';
+    location.hash = String(idx + 1);
+    fitSlide();
+
+    const groups = buildFragmentsForSlide(idx);
+    // When entering a slide via "prev" we reveal all fragments (so the user
+    // sees the final state of the previous slide). Otherwise start at 0.
+    const initial = opts.revealAll ? groups.length : 0;
+    applyFragState(idx, initial);
+  }
+
+  function fitSlide() {
+    const sw = 1330, sh = 750;
+    const scale = Math.min(window.innerWidth / sw, window.innerHeight / sh) * 0.94;
+    slides.forEach(s => s.style.transform = `scale(${scale})`);
+  }
+
+  function next() {
+    const groups = buildFragmentsForSlide(idx);
+    if (fragState[idx] < groups.length) {
+      applyFragState(idx, fragState[idx] + 1);
+    } else if (idx < total - 1) {
+      show(idx + 1);
+    }
+  }
+
+  function prev() {
+    if (fragState[idx] > 0) {
+      applyFragState(idx, fragState[idx] - 1);
+    } else if (idx > 0) {
+      show(idx - 1, { revealAll: true });
+    }
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { next(); e.preventDefault(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp')                { prev(); e.preventDefault(); }
+    else if (e.key === 'ArrowDown')                                       { next(); e.preventDefault(); }
+    else if (e.key === 'ArrowUp')                                         { prev(); e.preventDefault(); }
+    else if (e.key === 'Home')                                            { show(0); }
+    else if (e.key === 'End')                                             { show(total - 1, { revealAll: true }); }
+    else if (e.key === 'f' || e.key === 'F')                              { toggleFullscreen(); }
+    else if (e.key === '.' || e.key === '0')                              { /* toggle blackout — future */ }
+  });
+
+  // Click on the slide also advances. Buttons keep working as before.
+  document.getElementById('stage').addEventListener('click', e => {
+    if (e.target.closest('.nav-controls') || e.target.closest('.nav-counter') || e.target.closest('.frag-hint')) return;
+    next();
+  });
+
+  document.getElementById('btn-prev').onclick = (e) => { e.stopPropagation(); prev(); };
+  document.getElementById('btn-next').onclick = (e) => { e.stopPropagation(); next(); };
+  document.getElementById('btn-fs').onclick   = (e) => { e.stopPropagation(); toggleFullscreen(); };
+
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+    else document.exitFullscreen();
+  }
+
+  window.addEventListener('resize', fitSlide);
+  window.addEventListener('hashchange', () => {
+    const h = parseInt(location.hash.replace('#',''), 10) || 1;
+    if (h - 1 !== idx) show(h - 1);
+  });
+
+  // Initial
+  const h = parseInt(location.hash.replace('#',''), 10) || 1;
+  show(h - 1);
+})();
+</script>
+
+</body>
+</html>
