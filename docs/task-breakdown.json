@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-05-08T00:00:00Z",
+  "goal": "Incorporar el último artículo/post publicado en X/Twitter a la sección de escritura del sitio personal.",
+  "status": "done",
+  "tasks": [
+    {
+      "id": "T1",
+      "title": "Identificar estructura de contenido y fuente del último post",
+      "owner": "orchestrator",
+      "status": "done",
+      "dependsOn": [],
+      "files": [
+        "index.html",
+        "content/writing.md"
+      ],
+      "acceptanceCriteria": [
+        "La sección de writing y el markdown fuente quedan identificados.",
+        "Se confirma si el último post de X está disponible desde el entorno o si hace falta que el usuario provea el enlace/texto."
+      ],
+      "evidence": [
+        "Identificada sección visible en index.html#writing.",
+        "Identificado markdown fuente content/writing.md.",
+        "Último post público en X detectado: tweet 2051629801891328240 enlaza el artículo 2049084602896064512."
+      ]
+    },
+    {
+      "id": "T2",
+      "title": "Actualizar el archivo de conocimiento del sitio",
+      "owner": "orchestrator",
+      "status": "done",
+      "dependsOn": [
+        "T1"
+      ],
+      "files": [
+        "content/writing.md"
+      ],
+      "acceptanceCriteria": [
+        "El post de X aparece como post destacado o parte del archivo de escritura.",
+        "Incluye plataforma, tema, resumen y enlace público."
+      ],
+      "evidence": [
+        "content/writing.md actualizado con título, resumen, plataforma, tema y link del artículo de X."
+      ]
+    },
+    {
+      "id": "T3",
+      "title": "Actualizar la sección visible de Writing",
+      "owner": "orchestrator",
+      "status": "done",
+      "dependsOn": [
+        "T1",
+        "T2"
+      ],
+      "files": [
+        "index.html"
+      ],
+      "acceptanceCriteria": [
+        "La landing muestra el artículo de X en la sección Writing.",
+        "Los enlaces externos abren en nueva pestaña con rel seguro."
+      ],
+      "evidence": [
+        "index.html actualizado: el artículo de X aparece primero en la sección Writing.",
+        "El link usa target=\"_blank\" y rel=\"noopener\"."
+      ]
+    },
+    {
+      "id": "T4",
+      "title": "Validar cambios",
+      "owner": "orchestrator",
+      "status": "done",
+      "dependsOn": [
+        "T2",
+        "T3"
+      ],
+      "files": [
+        "index.html",
+        "content/writing.md",
+        "docs/task-breakdown.json"
+      ],
+      "acceptanceCriteria": [
+        "Los archivos modificados no contienen errores obvios de HTML/Markdown.",
+        "Se ejecuta el check/build disponible o una validación equivalente si no hay build."
+      ],
+      "evidence": [
+        "python3 smoke test: JSON válido, HTMLParser sin error, título/link presentes en index.html y content/writing.md.",
+        "npm run confirmó que no hay script de build/test disponible; solo dev y vercel-dev."
+      ]
+    }
+  ]
+}
