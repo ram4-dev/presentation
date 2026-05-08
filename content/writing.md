@@ -36,6 +36,16 @@ El cuello de botella no es el tooling, es el modelo mental. Una mirada systems-t
 - Tema: HR · Systems
 - Link: https://es.linkedin.com/posts/ramirocarnicersouble_la-gente-de-rrhh-no-sirve-para-nada-eso-activity-7438310576201576448-6JqC
 
+## Charlas y presentaciones
+
+### "SDD + arquitectura multiagente" — primera meetup argentina de Codex
+
+Charla sobre spec-driven development, gestión de contexto y orquestación multiagente para construir agentes más confiables. La presentación conecta SDD como compresión semántica del contexto con una arquitectura de sub-agentes especializados.
+
+- Evento: primera meetup argentina de Codex
+- Tema: SDD · Arquitectura multiagente · Coding agents
+- Presentación: /presentations/04-charla-codex.html
+
 ## Temas que suelo tocar
 
 - Diseño de sistemas agentic y multi-agent sin complejidad innecesaria

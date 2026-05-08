@@ -1,90 +1,71 @@
 {
   "schemaVersion": 1,
   "updatedAt": "2026-05-08T00:00:00Z",
-  "goal": "Incorporar el último artículo/post publicado en X/Twitter a la sección de escritura del sitio personal.",
+  "goal": "Sumar la charla de SDD + arquitectura multiagente en la primera meetup argentina de Codex al sitio personal.",
   "status": "done",
   "tasks": [
     {
       "id": "T1",
-      "title": "Identificar estructura de contenido y fuente del último post",
+      "title": "Ubicar secciones de sitio donde corresponde mencionar la charla",
       "owner": "orchestrator",
       "status": "done",
       "dependsOn": [],
       "files": [
         "index.html",
-        "content/writing.md"
+        "content/*.md",
+        "presentations/04-charla-codex.html"
       ],
       "acceptanceCriteria": [
-        "La sección de writing y el markdown fuente quedan identificados.",
-        "Se confirma si el último post de X está disponible desde el entorno o si hace falta que el usuario provea el enlace/texto."
+        "La charla queda representada en el contenido fuente y, si corresponde, en la landing visible."
       ],
       "evidence": [
-        "Identificada sección visible en index.html#writing.",
-        "Identificado markdown fuente content/writing.md.",
-        "Último post público en X detectado: tweet 2051629801891328240 enlaza el artículo 2049084602896064512."
+        "La landing ya tiene una tarjeta de SDD Custom Kit con link a presentations/04-charla-codex.html.",
+        "content/projects.md contiene SDD Custom Kit; content/writing.md es el mejor lugar para registrar charlas/notas."
       ]
     },
     {
       "id": "T2",
-      "title": "Actualizar el archivo de conocimiento del sitio",
+      "title": "Actualizar contenido público con la charla",
       "owner": "orchestrator",
       "status": "done",
       "dependsOn": [
         "T1"
       ],
       "files": [
-        "content/writing.md"
+        "content/experience.md",
+        "content/writing.md",
+        "index.html"
       ],
       "acceptanceCriteria": [
-        "El post de X aparece como post destacado o parte del archivo de escritura.",
-        "Incluye plataforma, tema, resumen y enlace público."
+        "La charla menciona SDD, arquitectura multiagente, Codex y la primera meetup argentina.",
+        "Hay link local a la presentación si existe."
       ],
       "evidence": [
-        "content/writing.md actualizado con título, resumen, plataforma, tema y link del artículo de X."
+        "index.html: tarjeta SDD Custom Kit menciona la charla en la primera meetup argentina de Codex.",
+        "content/projects.md: SDD Custom Kit incluye charla y link a presentación local.",
+        "content/writing.md: nueva sección Charlas y presentaciones con SDD + arquitectura multiagente."
       ]
     },
     {
       "id": "T3",
-      "title": "Actualizar la sección visible de Writing",
-      "owner": "orchestrator",
-      "status": "done",
-      "dependsOn": [
-        "T1",
-        "T2"
-      ],
-      "files": [
-        "index.html"
-      ],
-      "acceptanceCriteria": [
-        "La landing muestra el artículo de X en la sección Writing.",
-        "Los enlaces externos abren en nueva pestaña con rel seguro."
-      ],
-      "evidence": [
-        "index.html actualizado: el artículo de X aparece primero en la sección Writing.",
-        "El link usa target=\"_blank\" y rel=\"noopener\"."
-      ]
-    },
-    {
-      "id": "T4",
       "title": "Validar cambios",
       "owner": "orchestrator",
       "status": "done",
       "dependsOn": [
-        "T2",
-        "T3"
+        "T2"
       ],
       "files": [
-        "index.html",
+        "docs/task-breakdown.json",
+        "content/experience.md",
         "content/writing.md",
-        "docs/task-breakdown.json"
+        "index.html"
       ],
       "acceptanceCriteria": [
-        "Los archivos modificados no contienen errores obvios de HTML/Markdown.",
-        "Se ejecuta el check/build disponible o una validación equivalente si no hay build."
+        "JSON válido, HTML parseable y strings clave presentes."
       ],
       "evidence": [
-        "python3 smoke test: JSON válido, HTMLParser sin error, título/link presentes en index.html y content/writing.md.",
-        "npm run confirmó que no hay script de build/test disponible; solo dev y vercel-dev."
+        "python3 smoke test: JSON válido, HTMLParser sin error, strings clave presentes.",
+        "npm run confirmó que no hay script build/test; solo dev y vercel-dev."
       ]
     }
   ]

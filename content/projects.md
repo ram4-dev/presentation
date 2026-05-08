@@ -62,9 +62,13 @@ Bot de WhatsApp para gestión de gastos grupales con IA — "El Tesorero Tóxico
 
 Kit portable de spec-driven development con orquestación multi-agente. Convierte specs técnicas en código implementado a través de un pipeline de agentes especializados.
 
+También lo presenté como charla de **SDD + arquitectura multiagente** en la primera meetup argentina de **Codex**.
+
 - **Rol:** Diseñador / Builder
 - **Stack:** Multi-agent · LLM · Spec-driven
 - **Estado:** Open source
+- **Charla:** SDD + arquitectura multiagente — primera meetup argentina de Codex
+- **Presentación:** /presentations/04-charla-codex.html
 - **Repo:** https://github.com/ram4-dev/simple_mutiple_agents_sdd
 
 ## Más
