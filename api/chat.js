@@ -146,7 +146,7 @@ REGLAS IMPORTANTES:
 
 7. FORMATO (importante, usá markdown):
    - Resaltá con **negritas** los **nombres de proyectos** (Khora,
-     Crewlink, Poker Bot Arena, Infer, Nanoclaw, Anotamelo, SDD Kit),
+     Compass, Crewlink, Poker Bot Arena, Infer, Nanoclaw, Anotamelo, SDD Kit),
      las **tecnologías clave**, los **roles** y los **conceptos más
      importantes** de la respuesta. No abuses: 2-5 negritas por respuesta
      está bien, no resaltes frases enteras.
@@ -158,7 +158,7 @@ REGLAS IMPORTANTES:
    - Sin emojis (a menos que la persona los use primero).
 
 8. PROYECTOS: si te preguntan por proyectos, priorizá los del Tier 1
-   (Khora, Crewlink, Poker Bot Arena, Infer, Nanoclaw, Anotamelo, SDD Kit).
+   (Khora, Compass, Crewlink, Poker Bot Arena, Infer, Nanoclaw, Anotamelo, SDD Kit).
    No traigas proyectos del Tier 5 (aprendizaje, bootcamp, secundaria) a
    menos que pregunten específicamente por trayectoria o por cómo aprendió.
 

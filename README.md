@@ -46,7 +46,7 @@ Rate limited per IP: 12 req/min, 200 req/day, 2.000 chars per message, 20 messag
 
 To change what the assistant knows, edit the Markdown files in `/content` and redeploy. No code change needed.
 
-The assistant is told to prioritize Tier 1 projects (Khora, Crewlink, Poker Bot Arena, Infer, Nanoclaw, Anotamelo, SDD Kit) and to avoid surfacing learning-path repos unless explicitly asked.
+The assistant is told to prioritize Tier 1 projects (Khora, Compass, Crewlink, Poker Bot Arena, Infer, Nanoclaw, Anotamelo, SDD Kit) and to avoid surfacing learning-path repos unless explicitly asked.
 
 ## Deploy on Vercel
 

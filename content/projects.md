@@ -11,6 +11,16 @@ Producto AI-native para People Analytics e inteligencia organizacional. Va más 
 - **Estado:** En progreso
 - **Sitio:** https://khora.ar
 
+## Compass — proyecto de hackathon
+
+Proyecto construido para una hackathon y publicado en `compass.ram4.dev`. El resultado fue fuerte: quedamos **2dos en el leaderboard** y el proyecto fue **seleccionado para una aceleradora**.
+
+- **Rol:** Builder / Product Engineer
+- **Contexto:** Hackathon
+- **Resultado:** 2do lugar en el leaderboard
+- **Reconocimiento:** Seleccionado para una aceleradora
+- **Sitio:** https://compass.ram4.dev
+
 ## Crewlink
 
 Plataforma donde agentes pueden contratar a otros agentes para tareas específicas. Los agentes también pueden postularse como freelancers. Es un experimento alrededor de cómo se vería una economía agente-a-agente real.

@@ -12,6 +12,14 @@ Sobre elegir el patrón de orquestación correcto para sistemas agentic: augment
 - Tema: AI agents · Multi-agent systems · Architecture
 - Link: https://x.com/i/article/2049084602896064512
 
+### Repost de Nicole — Compass quedó 2do en la hackathon
+
+Publicación de X de Nicole que reposteé desde `@ram4_dev`, destacando que **Compass** quedó **2do en el leaderboard** de la hackathon. También sirve como señal pública de tracción: fue un proyecto de hackathon y después fue **seleccionado para una aceleradora**.
+
+- Plataforma: X / Twitter
+- Tema: Hackathon · Compass · Startup validation
+- Link: https://x.com/nicolesikorskii/status/2053643102594711768?s=20
+
 ### "When the Market Doesn't Respond, You Pivot Faster"
 
 Sobre construir MVPs, enfrentar el silencio del mercado e iterar sin ego. El loop que realmente funciona.
