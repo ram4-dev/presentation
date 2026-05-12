@@ -14,7 +14,7 @@ Sobre elegir el patrón de orquestación correcto para sistemas agentic: augment
 
 ### Repost de Nicole — Compass quedó 2do en la hackathon
 
-Publicación de X de Nicole que reposteé desde `@ram4_dev`, destacando que **Compass** quedó **2do en el leaderboard** de la hackathon. También sirve como señal pública de tracción: fue un proyecto de hackathon y después fue **seleccionado para una aceleradora**.
+Publicación de X de Nicole que reposteé desde `@ram4_dev`, destacando que **Compass** quedó **2do en el leaderboard** de la hackathon. También sirve como señal pública de tracción: fue un proyecto de hackathon publicado en `compass.ram4.dev` y después entró al **programa de aceleración de Dev3pack**.
 
 - Plataforma: X / Twitter
 - Tema: Hackathon · Compass · Startup validation
