@@ -1,0 +1,20 @@
+index.html
+  s_68ac4a8c6eb48c::t_ba5b6f4b46ac74 289,410-411
+  s_68ac4a8c6eb48c::t_b5859960960a4d 287,409,412-413
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "05beef051729d5c7c6ee9236107b0b796c33b8e9",
+  "prompts": {},
+  "sessions": {
+    "s_68ac4a8c6eb48c": {
+      "agent_id": {
+        "tool": "pi",
+        "id": "019ed5aa-3ea1-7139-86cb-4a03e15920bc",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "ram4-dev <ramirocarnicersouble8@gmail.com>"
+    }
+  }
+}
