@@ -4,9 +4,28 @@
     "api/chat.js": {
       "maxDuration": 30,
       "memory": 256
+    },
+    "api/cv.js": {
+      "maxDuration": 10,
+      "memory": 128
+    },
+    "api/github-activity.js": {
+      "maxDuration": 10,
+      "memory": 128
     }
   },
+  "rewrites": [
+    { "source": "/cv", "destination": "/api/cv" },
+    { "source": "/cv/", "destination": "/api/cv" }
+  ],
   "headers": [
+    {
+      "source": "/api/github-activity",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, s-maxage=3600, stale-while-revalidate=86400" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" }
+      ]
+    },
     {
       "source": "/api/(.*)",
       "headers": [

@@ -241,6 +241,99 @@
     .hcard{flex:0 0 82vw;scroll-snap-align:start}
   }
 
+  /* GITHUB LIVE — profile widget + heatmap + repo grid */
+  .gh-live{padding:90px 0 70px;position:relative}
+  .gh-status{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;font-weight:700;
+    color:var(--ink-2);letter-spacing:.1em;text-transform:uppercase;
+    border:1.5px solid var(--ink);border-radius:999px;padding:6px 13px;background:var(--paper);margin-bottom:22px}
+  .gh-status .dot{width:8px;height:8px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 3px rgba(185,224,0,.25);animation:ghBlink 2s ease-in-out infinite}
+  .gh-status .gh-status-sep{color:var(--ink-3);opacity:.6}
+  .gh-status a{font-weight:700;color:var(--ink)}
+  .gh-status svg{color:var(--ink)}
+  @keyframes ghBlink{0%,100%{opacity:1}50%{opacity:.3}}
+  html.still .gh-status .dot{animation:none}
+  @media(prefers-reduced-motion:reduce){.gh-status .dot{animation:none}}
+
+  .gh-live h2{font-family:var(--disp);font-weight:800;font-size:clamp(32px,4.4vw,54px);letter-spacing:-.03em;line-height:1.02}
+  .gh-live h2 .gh-soft{color:var(--ink-3)}
+  .gh-lead{color:var(--ink-2);font-size:17px;line-height:1.5;max-width:60ch;margin:14px 0 36px}
+
+  /* Profile card */
+  .gh-profile{background:var(--paper);border:2px solid var(--ink);border-radius:18px;padding:28px;margin-bottom:36px;
+    display:grid;grid-template-columns:120px 1fr;gap:26px;align-items:start;box-shadow:5px 5px 0 var(--ink)}
+  @media(max-width:680px){.gh-profile{grid-template-columns:1fr;padding:22px}}
+  .gh-avatar{width:120px;height:120px;border-radius:14px;border:2px solid var(--ink);background:var(--line);object-fit:cover;display:block;flex-shrink:0}
+  @media(max-width:680px){.gh-avatar{width:88px;height:88px}}
+  .gh-info{display:flex;flex-direction:column;gap:6px;min-width:0}
+  .gh-info-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;width:100%}
+  .gh-info-handle{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--ink-3);letter-spacing:.04em}
+  .gh-info-name{font-family:var(--disp);font-weight:800;font-size:26px;letter-spacing:-.02em;line-height:1.1;margin-top:2px}
+  .gh-info-meta{font-family:var(--mono);font-size:12px;color:var(--ink-2);letter-spacing:.04em;margin-top:6px;display:flex;flex-wrap:wrap;gap:6px 14px}
+  .gh-info-meta span{display:inline-flex;align-items:center;gap:6px}
+  .gh-bio{color:var(--ink-2);font-size:15px;line-height:1.5;margin-top:14px;max-width:62ch}
+  .gh-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  .gh-pill{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+    padding:7px 11px;border-radius:999px;border:1.5px solid var(--ink);background:var(--paper);color:var(--ink);
+    display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+  .gh-pill.now{background:var(--cobalt);color:#fff;border-color:var(--cobalt)}
+  .gh-pill .pill-dot{width:7px;height:7px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 3px rgba(185,224,0,.3)}
+  .gh-pill .pill-num{color:var(--ink);font-weight:800}
+  .gh-pill.now .pill-num{color:#fff}
+
+  /* Contribution heatmap */
+  .gh-heatmap-wrap{margin-bottom:44px}
+  .gh-heatmap{background:var(--paper);border:2px solid var(--ink);border-radius:18px;padding:22px 24px 20px;overflow:hidden}
+  .gh-heatmap-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+  .gh-heatmap-title{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--ink-2);letter-spacing:.08em;text-transform:uppercase}
+  .gh-heatmap-total{font-family:var(--disp);font-weight:800;font-size:18px;letter-spacing:-.02em}
+  .gh-heatmap-total b{color:var(--cobalt);font-variant-numeric:tabular-nums}
+  .gh-heatmap-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:6px}
+  :root{--gh-lvl-0:#d8d4c6;--gh-lvl-1:#cfd4f8;--gh-lvl-2:#7e8cf5;--gh-lvl-3:#4a5cf2;--gh-lvl-4:#2c3df5;--gh-cell-border:rgba(20,19,15,.08)}
+  .gh-heatmap-grid{display:inline-grid;grid-template-rows:14px repeat(7,13px);grid-auto-flow:column;grid-auto-columns:13px;gap:3px;align-items:start;min-height:120px}
+  .gh-heatmap-grid .gh-month{font-family:var(--mono);font-size:10px;color:var(--ink-2);letter-spacing:.04em;text-transform:uppercase;grid-row:1;align-self:end;line-height:1;white-space:nowrap;overflow:visible}
+  .gh-heatmap-cell{width:13px;height:13px;border-radius:3px;background:var(--gh-lvl-0);outline:1px solid var(--gh-cell-border);outline-offset:-1px;display:block}
+  .gh-heatmap-cell.l0{background:var(--gh-lvl-0)}
+  .gh-heatmap-cell.l1{background:var(--gh-lvl-1)}
+  .gh-heatmap-cell.l2{background:var(--gh-lvl-2)}
+  .gh-heatmap-cell.l3{background:var(--gh-lvl-3)}
+  .gh-heatmap-cell.l4{background:var(--gh-lvl-4)}
+  .gh-heatmap-foot{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:14px;font-family:var(--mono);font-size:10px;color:var(--ink-3);letter-spacing:.06em;text-transform:uppercase;flex-wrap:wrap}
+  .gh-heatmap-legend{display:flex;align-items:center;gap:6px}
+  .gh-heatmap-legend .gh-heatmap-cell{width:10px;height:10px}
+  .gh-heatmap-stats{display:flex;gap:14px}
+  .gh-heatmap-stats b{color:var(--ink);font-variant-numeric:tabular-nums}
+
+  /* Repos grid (same as before, kept) */
+  .gh-repos-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:0 0 16px;flex-wrap:wrap}
+  .gh-repos-label{font-family:var(--mono);font-size:12px;color:var(--ink-2);letter-spacing:.06em}
+  .gh-repos-all{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+    border:1.5px solid var(--ink);padding:7px 12px;border-radius:8px;transition:.15s}
+  .gh-repos-all:hover{background:var(--ink);color:var(--paper)}
+
+  .gh-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  @media(max-width:880px){.gh-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:560px){.gh-grid{grid-template-columns:1fr}}
+
+  .gh-card{background:var(--paper);border:2px solid var(--ink);border-radius:14px;padding:18px 18px 16px;
+    display:flex;flex-direction:column;gap:10px;min-height:180px;position:relative;
+    transition:transform .16s,box-shadow .16s;overflow:hidden}
+  .gh-card:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--ink)}
+  .gh-card::before{content:"";position:absolute;top:0;left:0;right:0;height:5px;background:var(--cobalt)}
+  .gh-card.acc-coral::before{background:var(--coral)}
+  .gh-card.acc-sun::before{background:var(--sun)}
+  .gh-card.acc-lime::before{background:var(--lime)}
+  .gh-card .gh-name{font-family:var(--mono);font-weight:700;font-size:15px;letter-spacing:-.01em;color:var(--ink);
+    display:flex;align-items:center;gap:8px;word-break:break-word;margin-top:6px}
+  .gh-card .gh-name .lang-dot{width:10px;height:10px;border-radius:50%;background:var(--ink-3);flex-shrink:0}
+  .gh-card .gh-desc{font-family:var(--disp);font-weight:400;font-size:14px;line-height:1.45;color:var(--ink-2);flex:1}
+  .gh-card .gh-meta{display:flex;justify-content:space-between;align-items:center;gap:10px;
+    font-family:var(--mono);font-size:11px;font-weight:700;color:var(--ink-3);letter-spacing:.06em;text-transform:uppercase;margin-top:auto;padding-top:8px;border-top:1px dashed var(--line)}
+  .gh-card .gh-meta .gh-stars{color:var(--ink-2)}
+
+  .gh-loading,.gh-error{font-family:var(--mono);font-size:13px;color:var(--ink-3);text-align:center;padding:40px 0;letter-spacing:.05em}
+  .gh-error{color:var(--coral)}
+  .gh-footnote{margin-top:22px;font-family:var(--mono);font-size:11px;color:var(--ink-3);letter-spacing:.06em;text-align:right}
+
   /* DAY JOB — ticker tape style */
   .ticker-section{padding:50px 0;overflow:hidden}
   .ticker{display:flex;gap:32px;white-space:nowrap;animation:tickerSlide 18s linear infinite;width:max-content}
@@ -271,6 +364,7 @@
     <div class="nav-links">
       <a href="#notes" data-en="notes" data-es="notas">notes</a>
       <a href="#work" data-en="work" data-es="proyectos">work</a>
+      <a href="#github-live" data-en="live" data-es="en vivo">live</a>
       <a href="#contact" data-en="contact" data-es="contacto">contact</a>
     </div>
     <div class="lang">
@@ -376,6 +470,37 @@
   </div>
 </section>
 
+<!-- GITHUB LIVE — profile widget + contribution heatmap + recent repos -->
+<section id="github-live" class="wrap gh-live">
+  <div class="gh-status">
+    <span class="dot"></span><span class="gh-status-text" data-en="system.status · live" data-es="system.status · live">system.status · live</span>
+    <span class="gh-status-sep">·</span>
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" width="14" height="14"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.55v-1.94c-3.2.7-3.88-1.54-3.88-1.54-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.68 1.24 3.34.95.1-.74.4-1.24.72-1.53-2.55-.29-5.23-1.28-5.23-5.69 0-1.26.45-2.28 1.18-3.08-.12-.29-.51-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.78 0c2.21-1.49 3.18-1.18 3.18-1.18.62 1.59.23 2.76.11 3.05.73.8 1.18 1.82 1.18 3.08 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.05.78 2.13v3.16c0 .31.21.67.8.55C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5Z"/></svg>
+    <a href="https://github.com/ram4-dev" target="_blank">@ram4-dev</a>
+  </div>
+
+  <div class="sec-top" style="margin-bottom:6px"><span class="tag">03</span><h2><span data-en="What I'm building" data-es="Lo que vengo construyendo">What I'm building</span> <span class="gh-soft" data-en="in open source." data-es="en código abierto.">in open source.</span></h2></div>
+  <p class="gh-lead" data-en="Real GitHub activity, straight from the API. Cached hourly. No makeup — a dead week shows up dead." data-es="Actividad real de GitHub, traída directo de la API. Cacheada por hora. Sin maquillaje: si hay una semana muerta, se ve.">Real GitHub activity, straight from the API. Cached hourly. No makeup — a dead week shows up dead.</p>
+
+  <!-- Profile widget -->
+  <div id="ghProfile" class="gh-profile">
+    <div class="gh-loading" data-en="$ loading profile..." data-es="$ cargando perfil...">$ loading profile...</div>
+  </div>
+
+  <!-- Contribution heatmap -->
+  <div id="ghHeatmap" class="gh-heatmap-wrap"></div>
+
+  <!-- Top repos grid -->
+  <div class="gh-repos-head">
+    <span class="gh-repos-label mono" data-en="$ ls -la ./repos | head -9" data-es="$ ls -la ./repos | head -9">$ ls -la ./repos | head -9</span>
+    <a class="gh-repos-all" href="https://github.com/ram4-dev?tab=repositories" target="_blank" data-en="view all →" data-es="ver todos →">view all →</a>
+  </div>
+  <div id="ghGrid" class="gh-grid">
+    <div class="gh-loading" data-en="$ fetching git log..." data-es="$ trayendo git log...">$ fetching git log...</div>
+  </div>
+  <div id="ghFootnote" class="gh-footnote"></div>
+</section>
+
 <!-- TICKER — day job + skills as moving tape -->
 <div class="ticker-section">
   <div class="ticker" id="ticker"></div>
@@ -406,10 +531,22 @@
 <script>
 /* ======= DATA ======= */
 const PROJECTS=[
-  {name:'Compass',cat:'Current focus',result:{en:'🏆 2ND PLACE',es:'🏆 2º PUESTO'},rc:'st-cobalt',href:'https://compass.ram4.dev',
+  {name:'Compass',cat:'Current focus',result:{en:'🚀 DEV3PACK',es:'🚀 DEV3PACK'},rc:'st-cobalt',href:'https://compass.ram4.dev',
    en:'Current focus — AI-native product born at a hackathon (2nd place) and now part of the Dev3Pack accelerator. Shipping it as a real product.',
    es:'Foco actual — producto AI-native nacido en un hackathon (2º puesto) y ahora parte de la aceleradora Dev3Pack. Lo llevo a producto real.',
    go:{en:'See Compass',es:'Ver Compass'}},
+  {name:'multi-sdd-team',cat:'Open source',result:{en:'⭐ 15 STARS',es:'⭐ 15 STARS'},rc:'st-coral',href:'https://github.com/ram4-dev/multi-sdd-team',
+   en:'SDD multi-agent framework for the pi coding agent. Turns specs into code with coordinated agents. Most-starred public repo.',
+   es:'Framework SDD multi-agente para el pi coding agent. Convierte specs en código con agentes coordinados. Mi repo público más estrellado.',
+   go:{en:'View repo',es:'Ver repo'}},
+  {name:'Crewlink',cat:'AI experiment',result:{en:'LIVE',es:'EN VIVO'},rc:'st-coral',href:'https://crewlink-rho.vercel.app',
+   en:'A marketplace where AI agents hire other AI agents for specific tasks — and post themselves as freelancers.',
+   es:'Un marketplace donde agentes de IA contratan a otros agentes para tareas específicas — y se publican como freelancers.',
+   go:{en:'See Crewlink',es:'Ver Crewlink'}},
+  {name:'Infer',cat:'Infrastructure',result:{en:'IN PROGRESS',es:'EN PROGRESO'},rc:'st-cobalt',href:'https://github.com/ram4-dev/infer_platform',
+   en:'Community-powered LLM inference through an OpenAI-compatible API — written in Rust for speed and cost.',
+   es:'Inferencia de LLMs comunitaria vía una API compatible con OpenAI — escrito en Rust por performance y costo.',
+   go:{en:'View repo',es:'Ver repo'}},
   {name:'Khora',cat:'Side build',result:{en:'IN PROGRESS',es:'EN PROGRESO'},rc:'st-sun',href:'https://khora.ar',
    en:'AI-native People Analytics and organizational intelligence. Goes beyond dashboards — predicts, signals and acts.',
    es:'People Analytics AI-native e inteligencia organizacional. Va más allá de los dashboards — predice, señala y actúa.',
@@ -418,14 +555,6 @@ const PROJECTS=[
    en:'Competitive platform where autonomous agents play poker via REST API. Game-loop architecture and real-time state.',
    es:'Plataforma competitiva donde agentes autónomos juegan póker vía REST API. Game-loop y estado en tiempo real.',
    go:{en:'GitHub',es:'GitHub'}},
-  {name:'Infer',cat:'Infrastructure',result:{en:'IN PROGRESS',es:'EN PROGRESO'},rc:'st-cobalt',href:'https://infer.ram4.dev',
-   en:'Community-powered LLM inference through an OpenAI-compatible API — cheaper and more flexible.',
-   es:'Inferencia de LLMs comunitaria vía una API compatible con OpenAI — más barato y flexible.',
-   go:{en:'infer.ram4.dev',es:'infer.ram4.dev'}},
-  {name:'SDD Custom Kit',cat:'Dev tooling',result:{en:'OPEN SOURCE',es:'OPEN SOURCE'},rc:'st-coral',href:'https://github.com/ram4-dev/simple_mutiple_agents_sdd',
-   en:'Portable spec-driven dev kit with multi-agent orchestration. Turns specs into code. Talk at Codex Argentina.',
-   es:'Kit portátil spec-driven con orquestación multi-agente. Convierte specs en código. Charla en Codex Argentina.',
-   go:{en:'View repo',es:'Ver repo'}},
 ];
 
 const TICKER_ITEMS=[
@@ -450,6 +579,7 @@ function setLang(l){
   });
   document.querySelectorAll('.lang button').forEach(b=>b.classList.toggle('on',b.dataset.lang===l));
   buildWork();
+  renderGithubLive();
 }
 document.querySelectorAll('.lang button').forEach(b=>b.addEventListener('click',()=>setLang(b.dataset.lang)));
 
@@ -472,6 +602,222 @@ function buildTicker(){
   el.innerHTML=html+html; // doubled for seamless loop
 }
 buildTicker();
+
+/* ======= GITHUB LIVE ACTIVITY ======= */
+const LANG_COLORS={
+  TypeScript:'#3178c6', JavaScript:'#f1e05a', Python:'#3572a5',
+  Rust:'#dea584', Go:'#00add8', HTML:'#e34c26', Shell:'#89e051',
+  Java:'#b07219', Kotlin:'#a97bff', 'C++':'#f34b7d', Lua:'#000080',
+  Astro:'#ff5d01', CSS:'#563d7c'
+};
+const ACCENT_ROTATION=['','acc-coral','acc-sun','acc-lime'];
+const MONTHS_EN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const MONTHS_ES=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+
+function ghTimeAgo(iso, lang){
+  const t=new Date(iso).getTime();
+  if(isNaN(t))return '';
+  const diff=Math.max(0,Date.now()-t);
+  const mins=Math.floor(diff/60000);
+  const hrs=Math.floor(mins/60);
+  const days=Math.floor(hrs/24);
+  const isES=lang==='es';
+  if(days>=30){const mo=Math.floor(days/30);return isES?`hace ${mo} mes${mo>1?'es':''}`:`${mo}mo ago`;}
+  if(days>=1)return isES?`hace ${days}d`:`${days}d ago`;
+  if(hrs>=1)return isES?`hace ${hrs}h`:`${hrs}h ago`;
+  if(mins>=1)return isES?`hace ${mins}min`:`${mins}m ago`;
+  return isES?'recién':'just now';
+}
+
+function ghLevel(count){
+  if(!count)return 0;
+  if(count<=2)return 1;
+  if(count<=5)return 2;
+  if(count<=9)return 3;
+  return 4;
+}
+
+let GH_DATA=null;
+let GH_STATE='loading'; // loading | ready | error
+
+function renderProfile(){
+  const root=document.getElementById('ghProfile');
+  if(!root)return;
+  if(GH_STATE==='loading'){
+    root.innerHTML=`<div class="gh-loading">${LANG==='es'?'$ cargando perfil...':'$ loading profile...'}</div>`;
+    return;
+  }
+  const p=GH_DATA&&GH_DATA.profile;
+  if(!p){
+    // Fallback minimal profile when GraphQL/token unavailable.
+    root.innerHTML=`
+      <img class="gh-avatar" src="https://github.com/ram4-dev.png?size=240" alt="ram4-dev avatar" loading="lazy">
+      <div class="gh-info">
+        <div class="gh-info-head">
+          <div>
+            <div class="gh-info-handle">ram4-dev</div>
+            <div class="gh-info-name">Ramiro Carnicer Souble</div>
+          </div>
+        </div>
+        <div class="gh-info-meta">
+          <span>📍 Buenos Aires · AR</span>
+          <span>💼 Backend @ Mercado Libre</span>
+        </div>
+        <p class="gh-bio">${LANG==='es'?'Backend engineer y builder. Productos de IA, sistemas backend y experimentos de internet.':'Backend engineer and builder. AI products, backend systems and internet experiments.'}</p>
+        <div class="gh-pills">
+          <span class="gh-pill now"><span class="pill-dot"></span>${LANG==='es'?'ahora':'now'}: Compass · Dev3Pack</span>
+        </div>
+      </div>`;
+    return;
+  }
+  const followers=p.followers!=null?p.followers:'—';
+  const repos=p.public_repos!=null?p.public_repos:'—';
+  const topLang=GH_DATA.top_language||'—';
+  const a=p.activity||{};
+  const meta=[];
+  if(p.location)meta.push(`<span>📍 ${p.location}</span>`);
+  if(p.company)meta.push(`<span>💼 ${p.company}</span>`);
+  const fallbackBio=LANG==='es'?'Backend engineer y builder. Productos de IA, sistemas backend y experimentos de internet.':'Backend engineer and builder. AI products, backend systems and internet experiments.';
+  const bio=p.bio||fallbackBio;
+  root.innerHTML=`
+    <img class="gh-avatar" src="${p.avatar_url||('https://github.com/'+p.login+'.png?size=240')}" alt="${p.login} avatar" loading="lazy">
+    <div class="gh-info">
+      <div class="gh-info-head">
+        <div>
+          <div class="gh-info-handle">@${p.login}</div>
+          <div class="gh-info-name">${p.name||p.login}</div>
+        </div>
+      </div>
+      <div class="gh-info-meta">${meta.join('')}</div>
+      <p class="gh-bio">${bio}</p>
+      <div class="gh-pills">
+        <span class="gh-pill now"><span class="pill-dot"></span>${LANG==='es'?'ahora':'now'}: Compass · Dev3Pack</span>
+        <span class="gh-pill">${LANG==='es'?'repos públicos':'public repos'}: <span class="pill-num">${repos}</span></span>
+        <span class="gh-pill">${LANG==='es'?'seguidores':'followers'}: <span class="pill-num">${followers}</span></span>
+        <span class="gh-pill">${LANG==='es'?'commits 1año':'commits 1y'}: <span class="pill-num">${a.commits||0}</span></span>
+        <span class="gh-pill">${LANG==='es'?'lang top':'top lang'}: <span class="pill-num">${topLang}</span></span>
+      </div>
+    </div>`;
+}
+
+function renderHeatmap(){
+  const wrap=document.getElementById('ghHeatmap');
+  if(!wrap)return;
+  const p=GH_DATA&&GH_DATA.profile;
+  if(GH_STATE!=='ready'||!p||!p.calendar||!p.calendar.length){
+    wrap.innerHTML='';
+    return;
+  }
+  const weeks=p.calendar;
+  const months=LANG==='es'?MONTHS_ES:MONTHS_EN;
+  // Compute month labels: one label per week column, only on transition.
+  const monthCells=[];
+  let lastMonth=-1;
+  weeks.forEach((w,i)=>{
+    const firstDay=w.days&&w.days[0]&&w.days[0].date;
+    if(!firstDay){monthCells.push('');return;}
+    const m=new Date(firstDay+'T00:00:00').getMonth();
+    if(m!==lastMonth&&i>0){monthCells.push(months[m]);lastMonth=m;}
+    else if(i===0){monthCells.push(months[m]);lastMonth=m;}
+    else{monthCells.push('');}
+  });
+  // Build grid columns (each column = 1 week of 7 cells).
+  const cols=weeks.map((w,wi)=>{
+    const label=monthCells[wi]?`<span class="gh-month">${monthCells[wi]}</span>`:'<span class="gh-month"></span>';
+    const cells=Array.from({length:7},(_,di)=>{
+      const d=w.days&&w.days[di];
+      if(!d)return '<span class="gh-heatmap-cell" aria-hidden="true"></span>';
+      const lvl=ghLevel(d.count);
+      const title=`${d.date} · ${d.count} ${LANG==='es'?(d.count===1?'contribución':'contribuciones'):(d.count===1?'contribution':'contributions')}`;
+      return `<span class="gh-heatmap-cell l${lvl}" title="${title}"></span>`;
+    }).join('');
+    return label+cells;
+  }).join('');
+  const total=(p.activity&&p.activity.total_contributions)||0;
+  const a=p.activity||{};
+  const totalText=LANG==='es'?`<b>${total.toLocaleString('es-AR')}</b> contribuciones en el último año`:`<b>${total.toLocaleString('en-US')}</b> contributions in the last year`;
+  const legendLabel=LANG==='es'?'menos':'less';
+  const legendLabelMore=LANG==='es'?'más':'more';
+  wrap.innerHTML=`
+    <div class="gh-heatmap">
+      <div class="gh-heatmap-head">
+        <span class="gh-heatmap-title">contributions.year</span>
+        <span class="gh-heatmap-total">${totalText}</span>
+      </div>
+      <div class="gh-heatmap-scroll">
+        <div class="gh-heatmap-grid">${cols}</div>
+      </div>
+      <div class="gh-heatmap-foot">
+        <span class="gh-heatmap-stats">
+          <span>commits <b>${a.commits||0}</b></span>
+          <span>prs <b>${a.pull_requests||0}</b></span>
+          <span>issues <b>${a.issues||0}</b></span>
+        </span>
+        <span class="gh-heatmap-legend">
+          <span>${legendLabel}</span>
+          <span class="gh-heatmap-cell l0"></span>
+          <span class="gh-heatmap-cell l1"></span>
+          <span class="gh-heatmap-cell l2"></span>
+          <span class="gh-heatmap-cell l3"></span>
+          <span class="gh-heatmap-cell l4"></span>
+          <span>${legendLabelMore}</span>
+        </span>
+      </div>
+    </div>`;
+}
+
+function renderRepos(){
+  const grid=document.getElementById('ghGrid');
+  const foot=document.getElementById('ghFootnote');
+  if(!grid)return;
+  if(GH_STATE==='loading'){
+    grid.innerHTML=`<div class="gh-loading">${LANG==='es'?'$ trayendo git log...':'$ fetching git log...'}</div>`;
+    foot.textContent='';
+    return;
+  }
+  if(GH_STATE==='error'||!GH_DATA||!GH_DATA.repos||!GH_DATA.repos.length){
+    grid.innerHTML=`<div class="gh-error">${LANG==='es'?'$ git log falló — mostrá esto más tarde.':'$ git log failed — try again later.'}</div>`;
+    foot.textContent='';
+    return;
+  }
+  grid.innerHTML=GH_DATA.repos.map((r,i)=>{
+    const acc=ACCENT_ROTATION[i%ACCENT_ROTATION.length];
+    const langColor=LANG_COLORS[r.language]||'var(--ink-3)';
+    const desc=r.description||(LANG==='es'?'(sin descripción aún)':'(no description yet)');
+    const stars=r.stars>0?`★ ${r.stars}`:(LANG==='es'?'sin stars':'no stars');
+    const ago=ghTimeAgo(r.pushed_at,LANG);
+    const href=r.homepage||r.url;
+    return `<a class="gh-card ${acc}" href="${href}" target="_blank" rel="noopener">
+      <div class="gh-name"><span class="lang-dot" style="background:${langColor}"></span>${r.name}</div>
+      <div class="gh-desc">${desc}</div>
+      <div class="gh-meta"><span class="gh-stars">${stars} · ${r.language||'—'}</span><span>${ago}</span></div>
+    </a>`;
+  }).join('');
+  const fetchedAt=GH_DATA.fetched_at?new Date(GH_DATA.fetched_at):new Date();
+  const fetchedAgo=ghTimeAgo(fetchedAt.toISOString(),LANG);
+  const staleTag=GH_DATA.stale?(LANG==='es'?' · cache stale':' · stale cache'):'';
+  foot.textContent=LANG==='es'?`$ último fetch: ${fetchedAgo}${staleTag}`:`$ last fetch: ${fetchedAgo}${staleTag}`;
+}
+
+function renderGithubLive(){
+  renderProfile();
+  renderHeatmap();
+  renderRepos();
+}
+
+async function loadGithubLive(){
+  try{
+    const r=await fetch('/api/github-activity',{headers:{'Accept':'application/json'}});
+    if(!r.ok)throw new Error('http '+r.status);
+    GH_DATA=await r.json();
+    GH_STATE=(GH_DATA&&GH_DATA.repos&&GH_DATA.repos.length)?'ready':'error';
+  }catch(err){
+    GH_DATA=null;
+    GH_STATE='error';
+  }
+  renderGithubLive();
+}
+loadGithubLive();
 
 /* ======= HORIZONTAL SCROLL TIED TO VERTICAL ======= */
 function setupHScroll(){

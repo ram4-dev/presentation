@@ -34,6 +34,8 @@ if (!process.env.LLM_API_KEY && !process.env.OPENCODE_API_KEY) {
 }
 
 const chatHandler = require(path.join(ROOT, "api/chat.js"));
+const cvHandler = require(path.join(ROOT, "api/cv.js"));
+const githubActivityHandler = require(path.join(ROOT, "api/github-activity.js"));
 
 // ── Static + API routing ──────────────────────────────────────────────────
 const MIME = {
@@ -46,6 +48,7 @@ const MIME = {
   ".svg": "image/svg+xml",
   ".ico": "image/x-icon",
   ".webp": "image/webp",
+  ".pdf": "application/pdf",
   ".md": "text/markdown; charset=utf-8",
 };
 
@@ -53,6 +56,12 @@ const server = http.createServer((req, res) => {
   // API routes go to the real handler.
   if (req.url.startsWith("/api/chat")) {
     return chatHandler(req, res);
+  }
+  if (req.url.startsWith("/api/github-activity")) {
+    return githubActivityHandler(req, res);
+  }
+  if (req.url === "/cv" || req.url === "/cv/" || req.url.startsWith("/cv?")) {
+    return cvHandler(req, res);
   }
 
   // Static: serve files from project root.
