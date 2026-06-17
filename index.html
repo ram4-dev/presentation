@@ -1,974 +1,636 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>Ramiro Carnicer — Backend Engineer & Builder</title>
-  <meta name="description" content="Backend engineer at Mercado Libre. Founder building AI products, backend systems, and internet experiments from Buenos Aires."/>
-  <link rel="icon" type="image/png" href="favicon.png"/>
-  <link href="https://fonts.googleapis.com" rel="preconnect"/>
-  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            parchment: '#f5f4ed',
-            ivory: '#faf9f5',
-            sand: '#e8e6dc',
-            cream: '#f0eee6',
-            ink: '#141413',
-            charcoal: '#30302e',
-            olive: '#5e5d59',
-            stone: '#87867f',
-            warm: '#4d4c48',
-            terracotta: '#c96442',
-            coral: '#d97757',
-            silver: '#b0aea5',
-            focus: '#3898ec'
-          },
-          fontFamily: {
-            serif: ['Georgia', 'serif'],
-            sans: ['Inter', 'system-ui', 'sans-serif']
-          },
-          boxShadow: {
-            ringwarm: '0 0 0 1px #d1cfc5',
-            ringsoft: '0 0 0 1px #f0eee6',
-            ringdark: '0 0 0 1px #30302e',
-            whisper: 'rgba(0,0,0,0.05) 0px 4px 24px'
-          }
-        }
-      }
-    }
-  </script>
-  <style>
-    :root {
-      --parchment: #f5f4ed;
-      --ivory: #faf9f5;
-      --sand: #e8e6dc;
-      --cream: #f0eee6;
-      --ink: #141413;
-      --charcoal: #30302e;
-      --olive: #5e5d59;
-      --stone: #87867f;
-      --warm: #4d4c48;
-      --terracotta: #c96442;
-      --coral: #d97757;
-      --silver: #b0aea5;
-      --ring: #d1cfc5;
-      --focus: #3898ec;
-    }
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="darkreader-lock">
+<meta name="color-scheme" content="light only">
+<title>Ramiro Carnicer — Backend Engineer & Builder</title>
+<meta name="description" content="Backend engineer at Mercado Libre. Founder building AI products, backend systems, and internet experiments from Buenos Aires.">
+<script>if(location.search.indexOf('still')>-1)document.documentElement.classList.add('still');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Space+Mono:wght@400;700&family=Caveat:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="favicon.png">
+<style>
+  :root{
+    --paper:#f1efe8;
+    --ink:#14130f;
+    --ink-2:#4d4a40;
+    --ink-3:#8a8578;
+    --line:#d8d4c6;
+    --cobalt:#2c3df5;
+    --coral:#ff5a3c;
+    --sun:#ffc23d;
+    --lime:#b9e000;
+    --disp:'Bricolage Grotesque',system-ui,sans-serif;
+    --mono:'Space Mono',ui-monospace,monospace;
+    --hand:'Caveat',cursive;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:auto}
+  body{background:var(--paper);color:var(--ink);font-family:var(--disp);-webkit-font-smoothing:antialiased;line-height:1.4;overflow-x:hidden}
+  ::selection{background:var(--cobalt);color:#fff}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1160px;margin:0 auto;padding:0 30px}
+  .mono{font-family:var(--mono)}
 
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      background: var(--parchment);
-      color: var(--ink);
-      font-family: 'Inter', system-ui, sans-serif;
-      -webkit-font-smoothing: antialiased;
-      text-rendering: optimizeLegibility;
-    }
+  @keyframes pop{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}
+  .pop{animation:pop .6s cubic-bezier(.2,.8,.2,1) both}
+  html.still .pop{animation:none!important;opacity:1!important;transform:none!important}
+  @media(prefers-reduced-motion:reduce){.pop{animation:none}}
 
-    h1, h2, h3, h4 {
-      font-family: Georgia, serif;
-      font-weight: 500;
-      letter-spacing: normal;
-    }
+  /* NAV */
+  nav{position:sticky;top:0;z-index:60;background:rgba(241,239,232,.85);backdrop-filter:blur(8px);border-bottom:2px solid var(--ink)}
+  .nav-in{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .brand{font-family:var(--disp);font-weight:800;font-size:21px;letter-spacing:-.02em;display:flex;align-items:center;gap:9px}
+  .brand .sq{width:18px;height:18px;background:var(--cobalt);border-radius:5px;transform:rotate(-8deg)}
+  .nav-links{display:flex;gap:8px}
+  .nav-links a{font-family:var(--mono);font-size:13px;padding:7px 12px;border-radius:8px;color:var(--ink-2);transition:.15s}
+  .nav-links a:hover{background:var(--ink);color:var(--paper)}
+  .lang{display:flex;border:2px solid var(--ink);border-radius:9px;overflow:hidden;font-family:var(--mono);font-size:12px;font-weight:700}
+  .lang button{background:transparent;border:0;padding:6px 10px;cursor:pointer;font-family:inherit;font-size:inherit;transition:.15s}
+  .lang button.on{background:var(--cobalt);color:#fff}
+  @media(max-width:860px){.nav-links{display:none}}
 
-    a { transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease; }
-    a:focus-visible, button:focus-visible {
-      outline: 2px solid var(--focus);
-      outline-offset: 2px;
-    }
+  /* HERO */
+  .hero{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:36px;align-items:center;padding-top:60px;padding-bottom:56px;min-height:600px}
+  .hero-inner{position:relative;z-index:5;order:1}
+  .board{order:2;position:relative;height:100%;min-height:520px}
+  @media(max-width:880px){.hero{display:flex;flex-direction:column;min-height:0;padding:48px 0 32px}.board{display:flex;flex-wrap:wrap;gap:12px;min-height:0}}
+  .kicker{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:12px;font-weight:700;background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:999px;margin-bottom:26px;text-transform:uppercase;letter-spacing:.08em}
+  .kicker .blink{width:8px;height:8px;border-radius:50%;background:var(--lime);animation:bk 1.2s steps(1) infinite}
+  @keyframes bk{50%{opacity:.25}}
+  h1.head{font-family:var(--disp);font-weight:800;font-size:clamp(40px,5.4vw,74px);line-height:1.0;letter-spacing:-.03em}
+  h1.head .cobalt{color:var(--cobalt)}
+  h1.head .hl{position:relative;display:inline;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+  h1.head .hl::after{content:"";position:absolute;left:-4px;right:-4px;bottom:.05em;height:.32em;background:var(--sun);z-index:-1;transform:rotate(-1deg)}
+  .lead{margin-top:28px;font-size:19px;color:var(--ink-2);max-width:34em;line-height:1.55}
+  .hero-cta{margin-top:32px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+  .btn{font-family:var(--disp);font-weight:700;font-size:15px;padding:13px 22px;border-radius:12px;border:2px solid var(--ink);cursor:pointer;transition:.18s;display:inline-flex;align-items:center;gap:9px;white-space:nowrap}
+  .btn.prime{background:var(--cobalt);color:#fff;box-shadow:4px 4px 0 var(--ink)}
+  .btn.prime:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+  .btn.ghost{background:var(--paper)}
+  .btn.ghost:hover{background:var(--ink);color:var(--paper)}
 
-    .material-symbols-outlined {
-      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
-    }
+  /* STICKERS — peel & stick from corner */
+  .sticker{position:absolute;pointer-events:auto;cursor:grab;font-weight:700;
+    border-radius:14px;padding:13px 16px;user-select:none;touch-action:none;
+    will-change:transform;
+    /* stuck flat */
+    box-shadow:0 1px 2px rgba(0,0,0,.10), 0 1px 1px rgba(0,0,0,.06);
+    transition:transform .5s cubic-bezier(.2,.8,.2,1), box-shadow .5s cubic-bezier(.2,.8,.2,1);
+  }
+  /* tape strip */
+  .sticker::before{
+    content:"";position:absolute;top:-7px;left:50%;width:44px;height:15px;margin-left:-22px;
+    background:rgba(255,255,255,.5);border-radius:2px;
+    box-shadow:0 1px 2px rgba(0,0,0,.06);
+    transition:opacity .4s;
+  }
+  /* inner card that tilts for 3D peel */
+  .sticker-inner{
+    transform-origin:top left;
+    transition:transform .5s cubic-bezier(.2,.8,.2,1), box-shadow .5s cubic-bezier(.2,.8,.2,1);
+    transform:rotateX(0deg) rotateY(0deg);
+    position:relative;
+  }
+  /* peel-corner curl hint */
+  .sticker .peel-corner{
+    position:absolute;bottom:-1px;right:-1px;width:32px;height:32px;
+    background:linear-gradient(135deg,transparent 40%,rgba(0,0,0,.04) 50%,rgba(0,0,0,.08) 100%);
+    border-radius:0 0 14px 0;opacity:0;transition:opacity .3s;
+    pointer-events:none;
+  }
+  /* auto-peel states (from bottom-right corner) */
+  .sticker.auto-peel{
+    box-shadow:4px 12px 28px rgba(0,0,0,.18), 2px 4px 8px rgba(0,0,0,.08);
+    transform-origin:top left;
+  }
+  .sticker.auto-peel .peel-corner{opacity:1}
+  .sticker.auto-peel::before{opacity:.3}
+  /* hover peel hint */
+  .sticker:hover:not(.peeled):not(.auto-peel) .peel-corner{opacity:.8}
+  .sticker:hover:not(.peeled):not(.auto-peel){
+    box-shadow:2px 5px 12px rgba(0,0,0,.14), 0 1px 2px rgba(0,0,0,.08);
+  }
+  /* grabbed peel */
+  .sticker.peeled{
+    box-shadow:8px 20px 40px rgba(0,0,0,.24), 3px 6px 12px rgba(0,0,0,.10);
+    cursor:grabbing;
+    z-index:100!important;
+    transition:box-shadow .15s;
+  }
+  .sticker.peeled::before{opacity:.2}
+  .sticker.peeled .peel-corner{opacity:0}
+  /* stick-down bounce */
+  @keyframes stickBounce{
+    0%{box-shadow:6px 16px 32px rgba(0,0,0,.22),3px 6px 12px rgba(0,0,0,.12)}
+    50%{box-shadow:0 1px 1px rgba(0,0,0,.08),0 0 0 rgba(0,0,0,.04)}
+    100%{box-shadow:0 1px 2px rgba(0,0,0,.10),0 1px 1px rgba(0,0,0,.06)}
+  }
+  .sticker.sticking{animation:stickBounce .35s cubic-bezier(.2,.8,.2,1) forwards}
+  .sticker .s-mono{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.05em;opacity:.7;display:block;margin-bottom:3px}
+  .sticker .s-big{font-family:var(--disp);font-weight:800;font-size:19px;line-height:1.05}
+  .st-cobalt{background:var(--cobalt);color:#fff}
+  .st-sun{background:var(--sun);color:var(--ink)}
+  .st-coral{background:var(--coral);color:#fff}
+  .st-lime{background:var(--lime);color:var(--ink)}
+  .st-paper{background:var(--paper);color:var(--ink);border:2px solid var(--line)}
+  .st-ink{background:var(--ink);color:var(--paper)}
+  @media(max-width:880px){
+    .sticker{position:static!important;transform:none!important;cursor:default}
+    .sticker::before{display:none}
+    .sticker .peel-corner{display:none}
+  }
+  .hint{position:absolute;bottom:6px;right:16px;font-family:var(--mono);font-size:11px;color:var(--ink-3);display:flex;align-items:center;gap:6px;z-index:5}
+  @media(max-width:880px){.hint{display:none}}
 
-    .eyebrow {
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      font-size: 0.75rem;
-      line-height: 1.6;
-    }
+  /* SECTIONS */
+  section{padding:80px 0}
+  .sec-top{display:flex;align-items:center;gap:16px;margin-bottom:38px}
+  .sec-top .tag{font-family:var(--mono);font-size:12px;font-weight:700;background:var(--ink);color:var(--paper);padding:6px 11px;border-radius:7px}
+  .sec-top h2{font-family:var(--disp);font-weight:800;font-size:clamp(28px,4vw,46px);letter-spacing:-.03em}
 
-    .editorial-lead {
-      font-size: 1.25rem;
-      line-height: 1.6;
-      color: var(--olive);
-    }
+  /* NOTES — CASSETTE TAPES */
+  .notes-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:28px}
+  @media(max-width:780px){.notes-grid{grid-template-columns:1fr;gap:20px}}
+  .cas{position:relative;display:block;border-radius:10px;padding:18px 22px 24px;
+    box-shadow:2px 4px 0 rgba(0,0,0,.2), 5px 12px 24px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.18);
+    transition:transform .22s cubic-bezier(.2,.8,.2,1), box-shadow .22s;
+    overflow:hidden;
+    min-height:235px;
+  }
+  .cas:hover{transform:translate(-3px,-5px) rotate(-.4deg);box-shadow:4px 6px 0 rgba(0,0,0,.22), 8px 18px 32px rgba(0,0,0,.24)}
+  /* faux screws */
+  .cas::before, .cas::after{content:"";position:absolute;width:7px;height:7px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, rgba(255,255,255,.5), rgba(0,0,0,.45) 70%);
+    box-shadow:inset 0 1px 1px rgba(0,0,0,.4)}
+  .cas::before{top:9px;left:9px}
+  .cas::after{top:9px;right:9px}
+  .cas .scr-bl{position:absolute;bottom:9px;left:9px;width:7px;height:7px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, rgba(255,255,255,.5), rgba(0,0,0,.45) 70%);
+    box-shadow:inset 0 1px 1px rgba(0,0,0,.4)}
+  .cas .scr-br{position:absolute;bottom:9px;right:9px;width:7px;height:7px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, rgba(255,255,255,.5), rgba(0,0,0,.45) 70%);
+    box-shadow:inset 0 1px 1px rgba(0,0,0,.4)}
 
-    .ring-button {
-      box-shadow: 0 0 0 1px var(--ring);
-    }
+  /* label sticker on the cassette */
+  .cas .cas-label{background:#fbf9f0;color:#1a1815;
+    border:1.5px solid rgba(0,0,0,.18);border-radius:4px;
+    padding:14px 16px 12px;margin:8px 10px 14px;position:relative;
+    box-shadow:inset 0 -1px 0 rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.12);
+    background-image:
+      linear-gradient(180deg,rgba(0,0,0,.04) 0 18px, transparent 18px),
+      repeating-linear-gradient(180deg, transparent 0 22px, rgba(0,0,0,.04) 22px 23px);
+  }
+  .cas .cas-label::before{content:"";position:absolute;top:6px;left:14px;right:14px;height:2px;
+    background:rgba(0,0,0,.12);border-radius:1px}
+  .cas .cas-src{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#5b574e}
+  .cas .cas-title{font-family:var(--hand);font-size:23px;font-weight:600;line-height:1.05;color:#1a1815;margin-top:8px;
+    text-wrap:balance;letter-spacing:.005em}
+  .cas .cas-foot{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:#5b574e;margin-top:10px;padding-top:8px;border-top:1px dashed #c9c4b3}
+  .cas .cas-foot .side{font-weight:700;letter-spacing:.08em}
 
-    .nav-active {
-      color: var(--ink) !important;
-      border-bottom: 1px solid var(--terracotta);
-      padding-bottom: 6px;
-    }
+  /* reels + tape window row */
+  .cas .reels-row{display:flex;align-items:center;justify-content:space-between;padding:0 14px;gap:10px;position:relative;height:64px}
+  .cas .reel{width:54px;height:54px;border-radius:50%;background:#1a1815;flex-shrink:0;
+    box-shadow:inset 0 0 0 3px rgba(255,255,255,.08), inset 0 0 0 12px rgba(255,255,255,.05), 0 2px 5px rgba(0,0,0,.4);
+    position:relative;display:grid;place-items:center;
+    animation:reelSpin 4s linear infinite;animation-play-state:paused;
+  }
+  .cas:hover .reel{animation-play-state:running}
+  .cas .reel::after{content:"";width:16px;height:16px;background:rgba(255,255,255,.18);border-radius:50%;box-shadow:0 0 0 2px rgba(0,0,0,.4)}
+  .cas .reel::before{content:"";position:absolute;inset:18%;border-radius:50%;
+    background:repeating-conic-gradient(rgba(255,255,255,.08) 0 30deg, transparent 30deg 60deg)}
+  @keyframes reelSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+  .cas .tape-window{flex:1;height:14px;background:linear-gradient(180deg,#2a261f,#0e0c08);
+    border-radius:2px;border:1px solid rgba(0,0,0,.5);position:relative;overflow:hidden;margin:0 4px;
+    box-shadow:inset 0 1px 2px rgba(0,0,0,.6)}
+  .cas .tape-window::before{content:"";position:absolute;left:0;right:0;top:38%;height:24%;background:#3a3328;border-radius:1px}
+  .cas .play-arrow{position:absolute;top:50%;right:14px;transform:translateY(-50%);font-family:var(--mono);font-size:11px;font-weight:700;
+    color:var(--ink);opacity:0;transition:opacity .2s, transform .2s;letter-spacing:.06em;display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.85);padding:4px 8px;border-radius:6px}
+  .cas:hover .play-arrow{opacity:1;transform:translateY(-50%) translateX(-3px)}
 
-    .section-dark .nav-active {
-      color: var(--ivory) !important;
-    }
+  .cas-cobalt{background:linear-gradient(180deg,#3b4cf8 0%,#1f2db0 100%)}
+  .cas-coral {background:linear-gradient(180deg,#ff6e4f 0%,#c33620 100%)}
+  .cas-sun   {background:linear-gradient(180deg,#ffcb56 0%,#d68f15 100%)}
+  .cas-lime  {background:linear-gradient(180deg,#caec38 0%,#7faa0d 100%)}
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+  /* WORK — horizontal scroll pinned to page scroll */
+  .hscroll-outer{position:relative}
+  .hscroll-pin{position:sticky;top:64px;height:100vh;display:flex;flex-direction:column;justify-content:center;overflow:hidden}
+  .hscroll-head{padding:0 30px;margin-bottom:26px}
+  .hscroll-track{display:flex;gap:20px;padding:0 30px;will-change:transform;transition:transform .06s linear}
+  .hcard{flex:0 0 420px;background:var(--paper);border:2px solid var(--ink);border-radius:18px;padding:28px;
+    display:flex;flex-direction:column;min-height:310px;
+    transition:transform .18s,box-shadow .18s;position:relative;overflow:hidden}
+  .hcard:hover{transform:translate(-3px,-3px);box-shadow:7px 7px 0 var(--ink)}
+  .hcard .c-top{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:auto}
+  .hcard .c-cat{font-family:var(--mono);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-2)}
+  .hcard .c-result{font-family:var(--mono);font-size:12px;font-weight:700;padding:6px 10px;border-radius:8px;white-space:nowrap}
+  .hcard h3{font-family:var(--disp);font-weight:800;font-size:32px;letter-spacing:-.02em;margin:22px 0 10px}
+  .hcard p{color:var(--ink-2);font-size:15px;line-height:1.55}
+  .hcard .c-go{margin-top:18px;font-family:var(--mono);font-size:13px;font-weight:700;display:inline-flex;align-items:center;gap:7px;transition:.18s}
+  .hcard:hover .c-go{gap:12px}
+  .scroll-prog{position:absolute;bottom:20px;left:30px;right:30px;height:4px;background:var(--line);border-radius:2px;overflow:hidden}
+  .scroll-prog i{display:block;height:100%;background:var(--cobalt);border-radius:2px;width:0%;transition:width .06s linear}
+  @media(max-width:680px){
+    .hscroll-outer{height:auto!important}
+    .hscroll-pin{position:static;height:auto}
+    .hscroll-track{overflow-x:auto;padding-bottom:16px;scroll-snap-type:x proximity}
+    .hcard{flex:0 0 82vw;scroll-snap-align:start}
+  }
 
-    .fade-up { animation: fadeUp 0.9s cubic-bezier(0.23, 1, 0.32, 1) both; }
-    .delay-1 { animation-delay: 0.15s; }
-    .delay-2 { animation-delay: 0.3s; }
-    .delay-3 { animation-delay: 0.45s; }
-    .delay-4 { animation-delay: 0.6s; }
+  /* DAY JOB — ticker tape style */
+  .ticker-section{padding:50px 0;overflow:hidden}
+  .ticker{display:flex;gap:32px;white-space:nowrap;animation:tickerSlide 18s linear infinite;width:max-content}
+  @keyframes tickerSlide{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+  .ticker-item{display:flex;align-items:center;gap:14px;font-family:var(--disp);font-weight:800;font-size:clamp(24px,3.4vw,42px);letter-spacing:-.02em}
+  .ticker-item .sep{width:12px;height:12px;border-radius:50%;flex-shrink:0}
 
-    #mobile-menu {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.35s cubic-bezier(0.23, 1, 0.32, 1);
-    }
-    #mobile-menu.open { max-height: 420px; }
+  /* CONTACT — full bleed */
+  .contact{background:var(--ink);color:var(--paper);border-radius:28px;margin:0 30px 60px;padding:84px 40px;text-align:center;position:relative;overflow:hidden}
+  .contact h2{font-family:var(--disp);font-weight:800;font-size:clamp(38px,6.5vw,82px);line-height:.98;letter-spacing:-.035em}
+  .contact h2 .sun{color:var(--sun)}
+  .contact p{margin:22px auto 0;max-width:36ch;color:#cfccc2;font-size:18px;line-height:1.55}
+  .contact .btn.prime{margin-top:34px;background:var(--sun);color:var(--ink);box-shadow:4px 4px 0 var(--cobalt);font-size:17px;border-color:var(--paper)}
+  .contact .btn.prime:hover{box-shadow:6px 6px 0 var(--cobalt)}
+  .socials{margin-top:30px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  .socials a{font-family:var(--mono);font-size:13px;font-weight:700;border:2px solid #43413a;border-radius:9px;padding:9px 15px;transition:.16s}
+  .socials a:hover{background:var(--paper);color:var(--ink);border-color:var(--paper)}
 
-    #hamburger-icon { transition: transform 0.3s ease; }
-    .menu-open #hamburger-icon { transform: rotate(90deg); }
-
-    ::selection {
-      background: var(--terracotta);
-      color: var(--ivory);
-    }
-
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: var(--parchment); }
-    ::-webkit-scrollbar-thumb {
-      background: #cbc8bb;
-      border-radius: 999px;
-      border: 2px solid var(--parchment);
-    }
-    ::-webkit-scrollbar-thumb:hover { background: var(--terracotta); }
-
-    /* ─── Chat ────────────────────────────────────────────────── */
-    .typing-dot {
-      display: inline-block;
-      width: 7px; height: 7px;
-      border-radius: 999px;
-      background: var(--terracotta);
-      animation: typingDot 1.2s infinite ease-in-out;
-    }
-    .typing-dot:nth-child(2) { animation-delay: 0.15s; }
-    .typing-dot:nth-child(3) { animation-delay: 0.3s; }
-    @keyframes typingDot {
-      0%, 60%, 100% { opacity: 0.25; transform: translateY(0); }
-      30%           { opacity: 1;    transform: translateY(-3px); }
-    }
-    #chat-messages {
-      scrollbar-width: thin;
-      scrollbar-color: #cbc8bb transparent;
-    }
-    .chat-bubble-assistant a {
-      color: var(--terracotta);
-      text-decoration: underline;
-      text-underline-offset: 2px;
-    }
-    .chat-bubble-assistant a:hover { color: var(--coral); }
-    .chat-bubble-assistant strong { font-weight: 600; }
-    .chat-bubble-assistant code {
-      background: var(--sand);
-      padding: 0.05em 0.4em;
-      border-radius: 4px;
-      font-size: 0.88em;
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-    }
-    .chat-bubble-assistant ul { margin: 0.25rem 0; padding-left: 1.25rem; list-style: disc; }
-    .chat-bubble-assistant li + li { margin-top: 0.15rem; }
-    .chat-bubble-assistant p + p { margin-top: 0.5rem; }
-    #chat-input::-webkit-scrollbar { width: 6px; }
-  </style>
-  <script defer src="/_vercel/insights/script.js"></script>
+  footer{padding:8px 0 50px}
+  .foot-in{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;color:var(--ink-3);flex-wrap:wrap;gap:12px;padding:0 30px}
+</style>
 </head>
 <body>
 
-<nav class="sticky top-0 z-50 border-b border-cream/90 bg-parchment/90 backdrop-blur-xl">
-  <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5 md:px-8">
-    <a href="#" class="font-serif text-[1.35rem] leading-none text-ink">Ramiro<span class="text-terracotta">.</span></a>
-
-    <div class="hidden items-center gap-8 md:flex">
-      <a href="#work" class="nav-active text-sm text-olive">Work</a>
-      <a href="#writing" class="text-sm text-olive hover:text-ink">Writing</a>
-      <a href="#philosophy" class="text-sm text-olive hover:text-ink">Philosophy</a>
-      <a href="#contact" class="text-sm text-olive hover:text-ink">Contact</a>
+<nav>
+  <div class="wrap nav-in">
+    <a href="#top" class="brand"><span class="sq"></span>ram4.dev</a>
+    <div class="nav-links">
+      <a href="#notes" data-en="notes" data-es="notas">notes</a>
+      <a href="#work" data-en="work" data-es="proyectos">work</a>
+      <a href="#contact" data-en="contact" data-es="contacto">contact</a>
     </div>
-
-    <a href="#contact" class="hidden rounded-xl bg-terracotta px-5 py-2.5 text-sm text-ivory shadow-[0_0_0_1px_#c96442] md:inline-flex hover:bg-coral">Connect</a>
-
-    <button id="hamburger-btn" onclick="toggleMenu()" aria-label="Toggle menu" class="rounded-xl border border-cream bg-ivory p-2 text-warm shadow-[0_0_0_1px_#f0eee6] md:hidden">
-      <span id="hamburger-icon" class="material-symbols-outlined text-2xl">menu</span>
-    </button>
-  </div>
-
-  <div id="mobile-menu" class="border-t border-cream bg-ivory md:hidden">
-    <div class="mx-auto flex max-w-6xl flex-col gap-5 px-6 py-6">
-      <a href="#work" onclick="closeMenu()" class="nav-active w-fit text-sm text-ink">Work</a>
-      <a href="#writing" onclick="closeMenu()" class="text-sm text-olive hover:text-ink">Writing</a>
-      <a href="#philosophy" onclick="closeMenu()" class="text-sm text-olive hover:text-ink">Philosophy</a>
-      <a href="#contact" onclick="closeMenu()" class="text-sm text-olive hover:text-ink">Contact</a>
-      <a href="#contact" onclick="closeMenu()" class="mt-2 inline-flex justify-center rounded-xl bg-terracotta px-5 py-3 text-sm text-ivory shadow-[0_0_0_1px_#c96442] hover:bg-coral">Connect</a>
+    <div class="lang">
+      <button data-lang="en" class="on">EN</button><button data-lang="es">ES</button>
     </div>
   </div>
 </nav>
 
-<header class="relative overflow-hidden px-6 pb-20 pt-14 md:px-8 md:pb-28 md:pt-20">
-  <div class="pointer-events-none absolute right-0 top-0 h-72 w-72 rounded-full bg-terracotta/10 blur-3xl"></div>
-  <div class="mx-auto max-w-5xl">
-
-    <div class="fade-up eyebrow mb-6 flex items-center gap-3 text-terracotta">
-      <span class="inline-block h-px w-8 bg-terracotta"></span>
-      Backend Engineer · Founder-minded Builder · Buenos Aires
-    </div>
-
-    <h1 class="fade-up delay-1 max-w-4xl text-[clamp(2.25rem,5.5vw,4rem)] leading-[1.1] text-ink">
-      Backend systems, AI products, and thoughtful internet experiments.
+<a id="top"></a>
+<header class="wrap hero">
+  <div class="board" id="board">
+    <div class="sticker st-ink" style="top:2px;left:20px" data-rot="-3"><span class="s-mono">who</span><span class="s-big">Ramiro C.</span><span class="peel-corner"></span></div>
+    <div class="sticker st-sun" style="top:88px;left:170px" data-rot="5"><span class="s-mono">since 2020</span><span class="s-big">builder mode: ON</span><span class="peel-corner"></span></div>
+    <div class="sticker st-cobalt" style="top:180px;left:50px" data-rot="-4"><span class="s-mono">currently</span><span class="s-big">🛠 building Khora</span><span class="peel-corner"></span></div>
+    <div class="sticker st-paper" style="top:268px;left:180px" data-rot="3"><span class="s-mono">day job</span><span class="s-big">Backend @ Meli</span><span class="peel-corner"></span></div>
+    <div class="sticker st-coral" style="top:352px;left:10px" data-rot="-5"><span class="s-mono">compass · hackathon</span><span class="s-big">🏆 2nd place</span><span class="peel-corner"></span></div>
+    <div class="sticker st-lime" style="top:432px;left:140px" data-rot="4"><span class="s-mono">based in</span><span class="s-big">Buenos Aires 🇦🇷</span><span class="peel-corner"></span></div>
+    <span class="hint">✦ <span data-en="peel &amp; stick them" data-es="despegalos y pegalos">peel &amp; stick them</span></span>
+  </div>
+  <div class="hero-inner">
+    <h1 class="head pop" style="animation-delay:.05s">
+      <span data-en="I build" data-es="Construyo">I build</span> <span class="cobalt" data-en="backend systems," data-es="sistemas backend,">backend systems,</span> <span class="hl" data-en="AI products" data-es="productos de IA">AI products</span> <span data-en="&amp; internet experiments." data-es="y experimentos de internet.">&amp; internet experiments.</span>
     </h1>
-
-    <p class="fade-up delay-2 mt-5 max-w-2xl text-base leading-7 text-olive md:text-lg md:leading-8">
-      I’m Ramiro Carnicer Souble. Ask the assistant anything about my experience, projects or how I work.
-    </p>
-
-    <!-- ─── CHAT PANEL ─────────────────────────────────────────── -->
-    <div class="fade-up delay-3 mt-10 rounded-[1.75rem] border border-cream bg-ivory shadow-[0_0_0_1px_#f0eee6] md:mt-12">
-
-      <div class="flex items-center justify-between gap-4 border-b border-cream px-5 py-3.5 md:px-6">
-        <div class="flex items-center gap-3">
-          <span class="relative inline-flex h-2.5 w-2.5">
-            <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-terracotta/40"></span>
-            <span class="relative inline-flex h-2.5 w-2.5 rounded-full bg-terracotta"></span>
-          </span>
-          <span class="text-sm font-medium text-ink">Ramiro’s assistant</span>
-          <span class="hidden text-xs text-stone md:inline">· Ask anything</span>
-        </div>
-        <button id="chat-reset" type="button" class="text-[0.7rem] uppercase tracking-[0.12em] text-stone hover:text-terracotta">New conversation</button>
-      </div>
-
-      <div id="chat-messages" class="flex max-h-[440px] min-h-[260px] flex-col gap-4 overflow-y-auto px-5 py-5 md:max-h-[480px] md:px-6 md:py-6" aria-live="polite"></div>
-
-      <div id="chat-suggestions" class="flex flex-wrap gap-2 px-5 pb-3 md:px-6">
-        <button type="button" data-q="Who is Ramiro?" class="rounded-full bg-sand px-3.5 py-1.5 text-xs text-warm shadow-[0_0_0_1px_#d1cfc5] hover:bg-[#ece9df] hover:text-ink">Who is Ramiro?</button>
-        <button type="button" data-q="What is he working on right now?" class="rounded-full bg-sand px-3.5 py-1.5 text-xs text-warm shadow-[0_0_0_1px_#d1cfc5] hover:bg-[#ece9df] hover:text-ink">Current projects</button>
-        <button type="button" data-q="Tell me about Khora" class="rounded-full bg-sand px-3.5 py-1.5 text-xs text-warm shadow-[0_0_0_1px_#d1cfc5] hover:bg-[#ece9df] hover:text-ink">Khora</button>
-        <button type="button" data-q="Is he open to new opportunities?" class="rounded-full bg-sand px-3.5 py-1.5 text-xs text-warm shadow-[0_0_0_1px_#d1cfc5] hover:bg-[#ece9df] hover:text-ink">Available?</button>
-        <button type="button" data-q="How can I reach him?" class="rounded-full bg-sand px-3.5 py-1.5 text-xs text-warm shadow-[0_0_0_1px_#d1cfc5] hover:bg-[#ece9df] hover:text-ink">Contact</button>
-        <button type="button" data-q="Resumime en una frase quién es Ramiro" class="rounded-full bg-sand px-3.5 py-1.5 text-xs text-warm shadow-[0_0_0_1px_#d1cfc5] hover:bg-[#ece9df] hover:text-ink">Resumen en español</button>
-      </div>
-
-      <form id="chat-form" class="border-t border-cream px-3 py-3 md:px-4 md:py-4">
-        <div class="flex items-end gap-2">
-          <textarea id="chat-input" rows="1" placeholder="Ask Ramiro anything..." maxlength="2000" class="flex-1 resize-none rounded-xl bg-parchment px-4 py-3 text-[0.95rem] leading-6 text-ink placeholder:text-stone shadow-[0_0_0_1px_#e8e6dc] focus:outline-none focus:shadow-[0_0_0_1px_#c96442] max-h-40"></textarea>
-          <button id="chat-send" type="submit" aria-label="Send" class="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-terracotta text-ivory shadow-[0_0_0_1px_#c96442] hover:bg-coral disabled:opacity-50 disabled:cursor-not-allowed">
-            <span class="material-symbols-outlined text-xl">arrow_upward</span>
-          </button>
-        </div>
-        <div class="mt-2 flex items-center justify-between px-1 text-[0.7rem] text-stone">
-          <span>AI assistant. May make mistakes.</span>
-          <span class="hidden md:inline">Enter to send · Shift + Enter for a new line</span>
-        </div>
-      </form>
-
+    <p class="lead pop" style="animation-delay:.1s" data-en="Hey, I'm Ramiro 👋 — backend engineer at Mercado Libre and a builder who ships. I turn ideas into real systems and products people actually use." data-es="Hola, soy Ramiro 👋 — backend engineer en Mercado Libre y un builder que shippea. Convierto ideas en sistemas y productos reales que la gente usa.">Hey, I'm Ramiro 👋 — backend engineer at Mercado Libre and a builder who ships. I turn ideas into real systems and products people actually use.</p>
+    <div class="hero-cta pop" style="animation-delay:.15s">
+      <a class="btn prime" href="#work"><span data-en="See what I build" data-es="Ver qué construyo">See what I build</span> →</a>
+      <a class="btn ghost" href="/cv" target="_blank" data-en="Download CV" data-es="Descargar CV">Download CV</a>
     </div>
-    <!-- ─── /CHAT PANEL ────────────────────────────────────────── -->
-
-    <div class="fade-up delay-4 mt-10 flex flex-col items-start justify-between gap-6 md:mt-12 md:flex-row md:items-center">
-      <div class="flex flex-wrap items-center gap-5 text-sm text-olive">
-        <a href="https://github.com/ram4-dev" target="_blank" rel="noopener" class="hover:text-terracotta">GitHub</a>
-        <span class="h-4 w-px bg-cream"></span>
-        <a href="https://x.com/ram4_dev" target="_blank" rel="noopener" class="hover:text-terracotta">X / Twitter</a>
-        <span class="h-4 w-px bg-cream"></span>
-        <a href="https://ar.linkedin.com/in/ramirocarnicersouble" target="_blank" rel="noopener" class="hover:text-terracotta">LinkedIn</a>
-      </div>
-
-      <span class="inline-flex items-center gap-3 rounded-full bg-sand px-4 py-2 text-xs uppercase tracking-[0.12em] text-warm shadow-[0_0_0_1px_#d1cfc5]">
-        <span class="inline-block h-2 w-2 rounded-full bg-terracotta"></span>
-        Currently building Khora
-      </span>
-    </div>
-
-    <div class="mt-12 flex justify-center text-stone md:mt-16">
-      <a href="#work" class="inline-flex flex-col items-center gap-2 text-[0.7rem] uppercase tracking-[0.12em] hover:text-terracotta">
-        <span>More about Ramiro</span>
-        <span class="material-symbols-outlined text-base">keyboard_arrow_down</span>
-      </a>
-    </div>
-
   </div>
 </header>
 
-<section id="work" class="border-y border-charcoal bg-ink px-6 py-24 text-ivory md:px-8 md:py-28 section-dark">
-  <div class="mx-auto max-w-6xl">
-    <div class="mb-16 flex flex-col gap-4 md:mb-20 md:flex-row md:items-end md:justify-between">
-      <div>
-        <div class="eyebrow mb-4 text-silver">Selected work</div>
-        <h2 class="text-[clamp(2.5rem,6vw,4.2rem)] leading-[1.15]">A few things I’m building.</h2>
+<!-- WORK — horizontal scroll tied to vertical page scroll -->
+<div class="hscroll-outer" id="hscrollOuter">
+  <div class="hscroll-pin" id="hscrollPin">
+    <div class="hscroll-head">
+      <div class="sec-top" style="margin-bottom:0"><span class="tag">01</span><h2 data-en="Stuff I've built." data-es="Cosas que construí.">Stuff I've built.</h2></div>
+    </div>
+    <div class="hscroll-track" id="hscrollTrack"></div>
+    <div class="scroll-prog"><i id="hscrollProg"></i></div>
+  </div>
+</div>
+
+<!-- NOTES — cassette tapes -->
+<section id="notes" class="wrap">
+  <div class="sec-top"><span class="tag">02</span><h2 data-en="Notes — hit play." data-es="Notas — dale play.">Notes — hit play.</h2></div>
+  <div class="notes-grid">
+    <a class="cas cas-cobalt" href="https://x.com/i/article/2049084602896064512" target="_blank">
+      <span class="scr-bl"></span><span class="scr-br"></span>
+      <div class="cas-label">
+        <div class="cas-src" data-en="X · AI Architecture" data-es="X · Arquitectura de IA">X · AI Architecture</div>
+        <div class="cas-title" data-en="Complexity ≠ Intelligence: multi-agent systems that actually work" data-es="Complejidad ≠ Inteligencia: sistemas multi-agente que funcionan">Complexity ≠ Intelligence: multi-agent systems that actually work</div>
+        <div class="cas-foot"><span class="side">SIDE A</span><span>04:32</span></div>
       </div>
-      <span class="text-sm text-silver">01 / Archive</span>
-    </div>
+      <div class="reels-row">
+        <span class="reel"></span>
+        <span class="tape-window"></span>
+        <span class="reel"></span>
+      </div>
+      <span class="play-arrow">▶ PLAY</span>
+    </a>
+    <a class="cas cas-coral" href="https://es.linkedin.com/posts/ramirocarnicersouble_los-dashboards-de-datos-van-a-morir-cuando-activity-7442544569130541056-E18R" target="_blank">
+      <span class="scr-bl"></span><span class="scr-br"></span>
+      <div class="cas-label">
+        <div class="cas-src" data-en="LinkedIn · AI" data-es="LinkedIn · IA">LinkedIn · AI</div>
+        <div class="cas-title" data-en="Dashboards are dying. Prediction is next." data-es="Los dashboards se mueren. La predicción es lo que viene.">Dashboards are dying. Prediction is next.</div>
+        <div class="cas-foot"><span class="side">SIDE A</span><span>03:18</span></div>
+      </div>
+      <div class="reels-row">
+        <span class="reel"></span>
+        <span class="tape-window"></span>
+        <span class="reel"></span>
+      </div>
+      <span class="play-arrow">▶ PLAY</span>
+    </a>
+    <a class="cas cas-sun" href="https://es.linkedin.com/posts/ramirocarnicersouble_entrepreneurship-startuplife-mvp-activity-7440781755235725312-UQkK" target="_blank">
+      <span class="scr-bl"></span><span class="scr-br"></span>
+      <div class="cas-label">
+        <div class="cas-src" data-en="LinkedIn · Startups" data-es="LinkedIn · Startups">LinkedIn · Startups</div>
+        <div class="cas-title" data-en="When the market doesn't respond, you pivot faster" data-es="Cuando el mercado no responde, pivoteás más rápido">When the market doesn't respond, you pivot faster</div>
+        <div class="cas-foot"><span class="side">SIDE B</span><span>05:11</span></div>
+      </div>
+      <div class="reels-row">
+        <span class="reel"></span>
+        <span class="tape-window"></span>
+        <span class="reel"></span>
+      </div>
+      <span class="play-arrow">▶ PLAY</span>
+    </a>
+    <a class="cas cas-lime" href="https://es.linkedin.com/posts/ramirocarnicersouble_la-gente-de-rrhh-no-sirve-para-nada-eso-activity-7438310576201576448-6JqC" target="_blank">
+      <span class="scr-bl"></span><span class="scr-br"></span>
+      <div class="cas-label">
+        <div class="cas-src" data-en="LinkedIn · HR Systems" data-es="LinkedIn · Sistemas de HR">LinkedIn · HR Systems</div>
+        <div class="cas-title" data-en="Why People teams fail at data" data-es="Por qué los equipos de People fallan con los datos">Why People teams fail at data</div>
+        <div class="cas-foot"><span class="side">SIDE B</span><span>02:47</span></div>
+      </div>
+      <div class="reels-row">
+        <span class="reel"></span>
+        <span class="tape-window"></span>
+        <span class="reel"></span>
+      </div>
+      <span class="play-arrow">▶ PLAY</span>
+    </a>
+  </div>
+</section>
 
-    <div class="grid gap-6 md:grid-cols-2">
-      <a href="https://khora.ar" target="_blank" rel="noopener" class="rounded-2xl border border-charcoal bg-charcoal p-8 shadow-[0_0_0_1px_#30302e] transition hover:-translate-y-0.5 hover:border-[#4a4946] hover:bg-[#373734]">
-        <div class="mb-8 flex items-start justify-between gap-4">
-          <span class="rounded-full bg-[#3b312d] px-3 py-1 text-xs uppercase tracking-[0.12em] text-[#efc0af]">Current focus</span>
-          <span class="material-symbols-outlined text-silver">north_east</span>
-        </div>
-        <h3 class="text-3xl leading-tight text-ivory">Khora</h3>
-        <p class="mt-3 text-base leading-7 text-silver">AI-native product for People Analytics and organizational intelligence. Goes beyond dashboards — it predicts, signals, and acts.</p>
-        <dl class="mt-8 space-y-3 text-sm">
-          <div class="flex gap-4"><dt class="w-16 text-silver">Role</dt><dd class="text-ivory">Founder / Product Engineer</dd></div>
-          <div class="flex gap-4"><dt class="w-16 text-silver">Focus</dt><dd class="text-ivory">AI · HR Tech · Agent Workflows</dd></div>
-          <div class="flex gap-4"><dt class="w-16 text-silver">Status</dt><dd class="text-[#efc0af]">In Progress</dd></div>
-        </dl>
-      </a>
+<!-- TICKER — day job + skills as moving tape -->
+<div class="ticker-section">
+  <div class="ticker" id="ticker"></div>
+</div>
 
-      <a href="https://compass.ram4.dev" target="_blank" rel="noopener" class="rounded-2xl border border-charcoal bg-charcoal p-8 shadow-[0_0_0_1px_#30302e] transition hover:-translate-y-0.5 hover:border-[#4a4946] hover:bg-[#373734]">
-        <div class="mb-8 flex items-start justify-between gap-4">
-          <span class="rounded-full bg-[#3b312d] px-3 py-1 text-xs uppercase tracking-[0.12em] text-[#efc0af]">Hackathon</span>
-          <span class="material-symbols-outlined text-silver">north_east</span>
-        </div>
-        <h3 class="text-3xl leading-tight text-ivory">Compass</h3>
-        <p class="mt-3 text-base leading-7 text-silver">Hackathon project that placed 2nd on the leaderboard and was selected for an accelerator. Built and shipped as a focused product sprint.</p>
-        <dl class="mt-8 space-y-3 text-sm">
-          <div class="flex gap-4"><dt class="w-20 text-silver">Role</dt><dd class="text-ivory">Builder / Product Engineer</dd></div>
-          <div class="flex gap-4"><dt class="w-20 text-silver">Result</dt><dd class="text-[#efc0af]">2nd on leaderboard</dd></div>
-          <div class="flex gap-4"><dt class="w-20 text-silver">Selected</dt><dd class="text-ivory">Accelerator</dd></div>
-        </dl>
-      </a>
-
-      <a href="https://github.com/ram4-dev/poker_bot_arena" target="_blank" rel="noopener" class="rounded-2xl border border-charcoal bg-charcoal p-8 shadow-[0_0_0_1px_#30302e] transition hover:-translate-y-0.5 hover:border-[#4a4946] hover:bg-[#373734]">
-        <div class="mb-8 flex items-start justify-between gap-4">
-          <span class="rounded-full bg-[#353432] px-3 py-1 text-xs uppercase tracking-[0.12em] text-silver">Systems</span>
-          <span class="material-symbols-outlined text-silver">north_east</span>
-        </div>
-        <h3 class="text-3xl leading-tight text-ivory">Poker Bot Arena</h3>
-        <p class="mt-3 text-base leading-7 text-silver">Competitive platform where autonomous agents play poker via REST API. Built around game loop architecture, agent isolation, and real-time state management.</p>
-        <dl class="mt-8 space-y-3 text-sm">
-          <div class="flex gap-4"><dt class="w-16 text-silver">Role</dt><dd class="text-ivory">Creator / Architect</dd></div>
-          <div class="flex gap-4"><dt class="w-16 text-silver">Stack</dt><dd class="text-ivory">Python · REST API · Agent Design</dd></div>
-          <div class="flex gap-4"><dt class="w-16 text-silver">Status</dt><dd class="text-ivory">Experiment</dd></div>
-        </dl>
-      </a>
-
-      <a href="https://infer.ram4.dev" target="_blank" rel="noopener" class="rounded-2xl border border-charcoal bg-charcoal p-8 shadow-[0_0_0_1px_#30302e] transition hover:-translate-y-0.5 hover:border-[#4a4946] hover:bg-[#373734]">
-        <div class="mb-8 flex items-start justify-between gap-4">
-          <span class="rounded-full bg-[#353432] px-3 py-1 text-xs uppercase tracking-[0.12em] text-silver">Infrastructure</span>
-          <span class="material-symbols-outlined text-silver">north_east</span>
-        </div>
-        <h3 class="text-3xl leading-tight text-ivory">Infer</h3>
-        <p class="mt-3 text-base leading-7 text-silver">Community-powered LLM inference. Access specialized, community-hosted models through an OpenAI-compatible API — cheaper and more flexible than cloud defaults.</p>
-        <dl class="mt-8 space-y-3 text-sm">
-          <div class="flex gap-4"><dt class="w-16 text-silver">Role</dt><dd class="text-ivory">Creator / Architect</dd></div>
-          <div class="flex gap-4"><dt class="w-16 text-silver">Stack</dt><dd class="text-ivory">OpenAI API · Community · LLM</dd></div>
-          <div class="flex gap-4"><dt class="w-16 text-silver">Status</dt><dd class="text-ivory">In Progress</dd></div>
-        </dl>
-      </a>
-
-      <article class="rounded-2xl border border-charcoal bg-charcoal p-8 shadow-[0_0_0_1px_#30302e] transition hover:-translate-y-0.5 hover:border-[#4a4946] hover:bg-[#373734]">
-        <div class="mb-8 flex items-start justify-between gap-4">
-          <span class="rounded-full bg-[#353432] px-3 py-1 text-xs uppercase tracking-[0.12em] text-silver">Dev tooling</span>
-          <span class="material-symbols-outlined text-silver">auto_stories</span>
-        </div>
-        <h3 class="text-3xl leading-tight text-ivory">SDD Custom Kit</h3>
-        <p class="mt-3 text-base leading-7 text-silver">Portable, spec-driven development kit with multi-agent orchestration. Turns technical specs into implemented code using a structured pipeline of specialized agents. Presented as a talk on SDD + multi-agent architecture at the first Codex Argentina meetup.</p>
-        <dl class="mt-8 space-y-3 text-sm">
-          <div class="flex gap-4"><dt class="w-16 text-silver">Role</dt><dd class="text-ivory">Designer / Builder</dd></div>
-          <div class="flex gap-4"><dt class="w-16 text-silver">Stack</dt><dd class="text-ivory">Multi-agent · LLM · Spec-driven</dd></div>
-          <div class="flex gap-4"><dt class="w-16 text-silver">Status</dt><dd class="text-ivory">Open Source</dd></div>
-          <div class="flex gap-4"><dt class="w-16 text-silver">Talk</dt><dd class="text-ivory">First Codex Argentina meetup</dd></div>
-        </dl>
-        <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-          <a href="presentations/04-charla-codex.html" target="_blank" rel="noopener" class="inline-flex items-center justify-center gap-2 rounded-xl bg-terracotta px-4 py-3 text-sm text-ivory shadow-[0_0_0_1px_#c96442] hover:bg-coral" aria-label="Visualizar la presentación SDD">
-            <span class="material-symbols-outlined text-base">visibility</span>
-            Ver presentación
-          </a>
-          <a href="presentations/04-charla-codex.html" download="sdd-presentation.html" class="inline-flex items-center justify-center gap-2 rounded-xl border border-[#4a4946] px-4 py-3 text-sm text-silver hover:border-[#efc0af] hover:text-[#efc0af]" aria-label="Descargar la presentación SDD en HTML">
-            <span class="material-symbols-outlined text-base">download</span>
-            Descargar HTML
-          </a>
-          <a href="https://github.com/ram4-dev/simple_mutiple_agents_sdd" target="_blank" rel="noopener" class="inline-flex items-center justify-center gap-2 rounded-xl border border-[#4a4946] px-4 py-3 text-sm text-silver hover:border-[#efc0af] hover:text-[#efc0af]" aria-label="Abrir el repositorio de SDD Custom Kit">
-            <span class="material-symbols-outlined text-base">north_east</span>
-            Repo
-          </a>
-        </div>
-      </article>
-    </div>
-
-    <div class="mt-10 text-center">
-      <a href="https://github.com/ram4-dev?tab=repositories" target="_blank" rel="noopener" class="inline-flex items-center gap-2 text-sm text-silver hover:text-[#efc0af]">
-        View all repositories
-        <span class="material-symbols-outlined text-base">arrow_forward</span>
-      </a>
+<!-- CONTACT -->
+<section id="contact" style="border:0;padding:0">
+  <div class="contact">
+    <h2><span data-en="Let's build" data-es="Construyamos">Let's build</span> <span class="sun" data-en="something real." data-es="algo real.">something real.</span></h2>
+    <p data-en="Building something ambitious in AI, backend infra or early-stage product? Let's talk." data-es="¿Construyendo algo ambicioso en IA, infra backend o producto early-stage? Hablemos.">Building something ambitious in AI, backend infra or early-stage product? Let's talk.</p>
+    <a class="btn prime" href="mailto:ramirocarnicersouble8@gmail.com"><span data-en="Say hi" data-es="Escribime">Say hi</span> 👋</a>
+    <div class="socials">
+      <a href="https://x.com/ram4_dev" target="_blank">X / TWITTER</a>
+      <a href="https://github.com/ram4-dev" target="_blank">GITHUB</a>
+      <a href="https://ar.linkedin.com/in/ramirocarnicersouble" target="_blank">LINKEDIN</a>
+      <a href="https://www.instagram.com/ram4.dev/" target="_blank">INSTAGRAM</a>
     </div>
   </div>
 </section>
 
-<section class="px-6 py-24 md:px-8 md:py-28">
-  <div class="mx-auto max-w-6xl">
-    <div class="grid gap-12 md:grid-cols-4">
-      <div>
-        <div class="eyebrow text-terracotta">What I do</div>
-      </div>
-      <div class="grid gap-10 md:col-span-3 md:grid-cols-2 md:gap-12">
-        <div class="rounded-2xl bg-ivory p-7 shadow-[0_0_0_1px_#f0eee6]">
-          <h3 class="text-[1.8rem] leading-[1.2] text-ink">Backend Systems</h3>
-          <p class="mt-3 text-base leading-7 text-olive">Scalable APIs, microservices, and distributed architecture. Reliability is not optional when the systems need to hold under real load.</p>
-        </div>
-        <div class="rounded-2xl bg-ivory p-7 shadow-[0_0_0_1px_#f0eee6]">
-          <h3 class="text-[1.8rem] leading-[1.2] text-ink">AI Products</h3>
-          <p class="mt-3 text-base leading-7 text-olive">Agent workflows, applied LLMs, and productized AI. The interesting part is making these systems useful enough to deploy.</p>
-        </div>
-        <div class="rounded-2xl bg-ivory p-7 shadow-[0_0_0_1px_#f0eee6]">
-          <h3 class="text-[1.8rem] leading-[1.2] text-ink">Product Engineering</h3>
-          <p class="mt-3 text-base leading-7 text-olive">From zero to shipped MVP. Technical judgment and product taste are part of the same craft.</p>
-        </div>
-        <div class="rounded-2xl bg-ivory p-7 shadow-[0_0_0_1px_#f0eee6]">
-          <h3 class="text-[1.8rem] leading-[1.2] text-ink">Technical Strategy</h3>
-          <p class="mt-3 text-base leading-7 text-olive">Architecture decisions, stack selection, and pragmatic tradeoffs for products that need to move fast without collapsing later.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="mt-16 flex flex-col justify-between gap-6 rounded-[2rem] bg-sand p-8 shadow-[0_0_0_1px_#d1cfc5] md:flex-row md:items-center md:p-10">
-      <div>
-        <div class="eyebrow text-stone">Day job</div>
-        <p class="mt-2 text-[1.35rem] leading-[1.3] text-ink">Backend Software Engineer at Mercado Libre</p>
-        <p class="mt-2 max-w-2xl text-sm leading-6 text-olive">Scalable backend systems at Latin America's largest e-commerce and fintech platform.</p>
-      </div>
-      <div class="flex items-center gap-3 text-xs uppercase tracking-[0.12em] text-stone">
-        <span>Buenos Aires</span>
-        <span class="h-1 w-1 rounded-full bg-stone"></span>
-        <span>Argentina</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="writing" class="border-y border-charcoal bg-ink px-6 py-24 text-ivory md:px-8 md:py-28 section-dark">
-  <div class="mx-auto max-w-6xl">
-    <div class="mb-16 flex flex-col gap-4 md:mb-20 md:flex-row md:items-end md:justify-between">
-      <div>
-        <div class="eyebrow mb-4 text-silver">Writing</div>
-        <h2 class="text-[clamp(2.5rem,6vw,4.2rem)] leading-[1.15]">Notes with a point of view.</h2>
-      </div>
-      <a class="text-sm text-[#efc0af] hover:text-ivory" href="https://x.com/ram4_dev" target="_blank" rel="noopener">View latest on X</a>
-    </div>
-
-    <div class="divide-y divide-charcoal rounded-[2rem] border border-charcoal bg-charcoal/60">
-      <a href="https://x.com/i/article/2049084602896064512" target="_blank" rel="noopener" class="group block px-6 py-8 md:px-8 md:py-10">
-        <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div class="flex-1">
-            <div class="mb-4 flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.12em] text-silver">
-              <span>X / Twitter</span>
-              <span class="text-[#efc0af]">AI agents · Architecture</span>
-            </div>
-            <h3 class="text-[1.9rem] leading-[1.2] text-ivory group-hover:text-[#efc0af]">Complexity ≠ Intelligence: How to Design Multi-Agent Systems That Actually Work in 2026</h3>
-            <p class="mt-3 max-w-3xl text-sm leading-6 text-silver">A practical take on choosing the least complex orchestration pattern that solves the task — from augmented LLMs and routing to orchestrator-workers and autonomous agents.</p>
-          </div>
-          <span class="material-symbols-outlined shrink-0 text-silver group-hover:text-ivory">arrow_forward</span>
-        </div>
-      </a>
-
-      <a href="https://x.com/nicolesikorskii/status/2053643102594711768?s=20" target="_blank" rel="noopener" class="group block px-6 py-8 md:px-8 md:py-10">
-        <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div class="flex-1">
-            <div class="mb-4 flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.12em] text-silver">
-              <span>X / Twitter</span>
-              <span class="text-[#efc0af]">Hackathon · Compass</span>
-            </div>
-            <h3 class="text-[1.9rem] leading-[1.2] text-ivory group-hover:text-[#efc0af]">Nicole’s post: Compass placed 2nd in the hackathon</h3>
-            <p class="mt-3 max-w-3xl text-sm leading-6 text-silver">Reposted from @ram4_dev: Compass was a hackathon project, finished 2nd on the leaderboard, and was selected for an accelerator.</p>
-          </div>
-          <span class="material-symbols-outlined shrink-0 text-silver group-hover:text-ivory">arrow_forward</span>
-        </div>
-      </a>
-
-      <a href="https://es.linkedin.com/posts/ramirocarnicersouble_entrepreneurship-startuplife-mvp-activity-7440781755235725312-UQkK" target="_blank" rel="noopener" class="group block px-6 py-8 md:px-8 md:py-10">
-        <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div class="flex-1">
-            <div class="mb-4 flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.12em] text-silver">
-              <span>LinkedIn</span>
-              <span class="text-[#efc0af]">Startups</span>
-            </div>
-            <h3 class="text-[1.9rem] leading-[1.2] text-ivory group-hover:text-[#efc0af]">When the Market Doesn't Respond, You Pivot Faster</h3>
-            <p class="mt-3 max-w-3xl text-sm leading-6 text-silver">On building MVPs, confronting market silence, and iterating without ego. The loop that actually works.</p>
-          </div>
-          <span class="material-symbols-outlined shrink-0 text-silver group-hover:text-ivory">arrow_forward</span>
-        </div>
-      </a>
-
-      <a href="https://es.linkedin.com/posts/ramirocarnicersouble_los-dashboards-de-datos-van-a-morir-cuando-activity-7442544569130541056-E18R" target="_blank" rel="noopener" class="group block px-6 py-8 md:px-8 md:py-10">
-        <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div class="flex-1">
-            <div class="mb-4 flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.12em] text-silver">
-              <span>LinkedIn</span>
-              <span class="text-[#efc0af]">AI · People Analytics</span>
-            </div>
-            <h3 class="text-[1.9rem] leading-[1.2] text-ivory group-hover:text-[#efc0af]">Dashboards Are Dying. Prediction Is Next.</h3>
-            <p class="mt-3 max-w-3xl text-sm leading-6 text-silver">Data reporting is not strategy. Real analytical value is forward-looking — signal detection, not passive charts.</p>
-          </div>
-          <span class="material-symbols-outlined shrink-0 text-silver group-hover:text-ivory">arrow_forward</span>
-        </div>
-      </a>
-
-      <a href="https://es.linkedin.com/posts/ramirocarnicersouble_la-gente-de-rrhh-no-sirve-para-nada-eso-activity-7438310576201576448-6JqC" target="_blank" rel="noopener" class="group block px-6 py-8 md:px-8 md:py-10">
-        <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div class="flex-1">
-            <div class="mb-4 flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.12em] text-silver">
-              <span>LinkedIn</span>
-              <span class="text-[#efc0af]">HR · Systems</span>
-            </div>
-            <h3 class="text-[1.9rem] leading-[1.2] text-ivory group-hover:text-[#efc0af]">Why People Teams Fail at Data (and What Actually Fixes It)</h3>
-            <p class="mt-3 max-w-3xl text-sm leading-6 text-silver">The real bottleneck isn't tooling — it's the mental model. A systems-thinking take on HR and organizational intelligence.</p>
-          </div>
-          <span class="material-symbols-outlined shrink-0 text-silver group-hover:text-ivory">arrow_forward</span>
-        </div>
-      </a>
-    </div>
-  </div>
-</section>
-
-<section id="philosophy" class="px-6 py-24 md:px-8 md:py-28">
-  <div class="mx-auto max-w-6xl grid gap-14 md:grid-cols-12">
-    <div class="md:col-span-5">
-      <div class="eyebrow mb-4 text-terracotta">Philosophy</div>
-      <h2 class="text-[clamp(2.5rem,5vw,4rem)] leading-[1.12] text-ink">Building with intent, not noise.</h2>
-      <p class="mt-6 text-lg leading-8 text-olive">Software is craft. I care about systems that work in the real world — not just in demos. Technical depth is leverage, not identity theater.</p>
-    </div>
-
-    <div class="space-y-6 md:col-span-7">
-      <div class="rounded-[1.5rem] bg-ivory p-7 shadow-[0_0_0_1px_#f0eee6]">
-        <h4 class="text-[1.55rem] leading-[1.2] text-ink">01. Ship, learn, iterate</h4>
-        <p class="mt-3 text-sm leading-6 text-olive">Shipping beats planning theater. I prefer a live product with rough edges over a perfect spec with no users.</p>
-      </div>
-      <div class="rounded-[1.5rem] bg-ivory p-7 shadow-[0_0_0_1px_#f0eee6]">
-        <h4 class="text-[1.55rem] leading-[1.2] text-ink">02. Ownership at every level</h4>
-        <p class="mt-3 text-sm leading-6 text-olive">I want to understand the product vision and the technical constraints at the same time. Engineers who only see code miss half the problem.</p>
-      </div>
-      <div class="rounded-[1.5rem] bg-ivory p-7 shadow-[0_0_0_1px_#f0eee6]">
-        <h4 class="text-[1.55rem] leading-[1.2] text-ink">03. AI when it moves from novelty to execution</h4>
-        <p class="mt-3 text-sm leading-6 text-olive">I’m interested in AI when it connects to real workflows and changes how work actually gets done.</p>
-      </div>
-      <div class="rounded-[1.5rem] bg-ivory p-7 shadow-[0_0_0_1px_#f0eee6]">
-        <h4 class="text-[1.55rem] leading-[1.2] text-ink">04. Product taste is an engineering skill</h4>
-        <p class="mt-3 text-sm leading-6 text-olive">Choosing the right abstraction and choosing the right feature are closer than most people think.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="contact" class="border-y border-charcoal bg-ink px-6 py-28 text-center text-ivory md:px-8 md:py-36">
-  <div class="mx-auto max-w-3xl">
-    <div class="inline-flex rounded-full bg-[#3b312d] px-4 py-2 text-xs uppercase tracking-[0.12em] text-[#efc0af] shadow-[0_0_0_1px_#5a443d]">Open to interesting conversations</div>
-    <h2 class="mt-8 text-[clamp(2.7rem,6vw,4.8rem)] leading-[1.12]">Let’s build something real.</h2>
-    <p class="mx-auto mt-6 max-w-2xl text-base leading-7 text-silver">If you're building something ambitious in AI, backend infrastructure, or early-stage product, I’m always interested in a good conversation.</p>
-
-    <div class="mt-10 flex flex-col items-center justify-center gap-5 sm:flex-row">
-      <a href="mailto:ramirocarnicersouble8@gmail.com" class="inline-flex w-full justify-center rounded-xl bg-terracotta px-8 py-4 text-base text-ivory shadow-[0_0_0_1px_#c96442] hover:bg-coral sm:w-auto">ramirocarnicersouble8@gmail.com</a>
-      <div class="flex items-center gap-5 text-sm text-silver">
-        <a href="https://x.com/ram4_dev" target="_blank" rel="noopener" class="hover:text-[#efc0af]">X</a>
-        <a href="https://github.com/ram4-dev" target="_blank" rel="noopener" class="hover:text-[#efc0af]">GitHub</a>
-        <a href="https://ar.linkedin.com/in/ramirocarnicersouble" target="_blank" rel="noopener" class="hover:text-[#efc0af]">LinkedIn</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<footer class="bg-parchment px-6 py-10 md:px-8">
-  <div class="mx-auto flex max-w-6xl flex-col gap-6 border-t border-cream pt-10 text-sm text-stone md:flex-row md:items-center md:justify-between">
-    <div>Ramiro Carnicer Souble — Ram4 — Buenos Aires</div>
-    <div>
-      © 2026 · Built from zero, shipped on purpose. ·
-      <a href="https://huevsite.io/ramadan" target="_blank" rel="noopener" class="hover:text-terracotta">huevsite.io/ramadan</a>
-    </div>
-    <div class="flex gap-5">
-      <a href="https://github.com/ram4-dev" target="_blank" rel="noopener" class="hover:text-terracotta">GitHub</a>
-      <a href="https://x.com/ram4_dev" target="_blank" rel="noopener" class="hover:text-terracotta">X</a>
-      <a href="https://ar.linkedin.com/in/ramirocarnicersouble" target="_blank" rel="noopener" class="hover:text-terracotta">LinkedIn</a>
-      <a href="https://www.instagram.com/ram4.dev/" target="_blank" rel="noopener" class="hover:text-terracotta">Instagram</a>
-    </div>
+<footer>
+  <div class="foot-in">
+    <span>© 2026 Ramiro Carnicer Souble — Buenos Aires</span>
+    <span data-en="built from zero, shipped on purpose" data-es="hecho desde cero, shippeado a propósito">built from zero, shipped on purpose</span>
   </div>
 </footer>
 
 <script>
-  function toggleMenu() {
-    const menu = document.getElementById('mobile-menu');
-    const btn  = document.getElementById('hamburger-btn');
-    const icon = document.getElementById('hamburger-icon');
-    const open = menu.classList.toggle('open');
-    btn.classList.toggle('menu-open', open);
-    icon.textContent = open ? 'close' : 'menu';
+/* ======= DATA ======= */
+const PROJECTS=[
+  {name:'Khora',cat:'Current focus',result:{en:'IN PROGRESS',es:'EN PROGRESO'},rc:'st-cobalt',href:'https://khora.ar',
+   en:'AI-native People Analytics and organizational intelligence. Goes beyond dashboards — predicts, signals and acts.',
+   es:'People Analytics AI-native e inteligencia organizacional. Va más allá de los dashboards — predice, señala y actúa.',
+   go:{en:'khora.ar',es:'khora.ar'}},
+  {name:'Compass',cat:'Hackathon',result:{en:'🏆 2ND PLACE',es:'🏆 2º PUESTO'},rc:'st-sun',href:'https://compass.ram4.dev',
+   en:'Hackathon project as a focused sprint. 2nd on the leaderboard and selected for an accelerator.',
+   es:'Proyecto de hackathon como sprint enfocado. 2º en el leaderboard y seleccionado para aceleradora.',
+   go:{en:'See Compass',es:'Ver Compass'}},
+  {name:'Poker Bot Arena',cat:'Systems',result:{en:'EXPERIMENT',es:'EXPERIMENTO'},rc:'st-lime',href:'https://github.com/ram4-dev/poker_bot_arena',
+   en:'Competitive platform where autonomous agents play poker via REST API. Game-loop architecture and real-time state.',
+   es:'Plataforma competitiva donde agentes autónomos juegan póker vía REST API. Game-loop y estado en tiempo real.',
+   go:{en:'GitHub',es:'GitHub'}},
+  {name:'Infer',cat:'Infrastructure',result:{en:'IN PROGRESS',es:'EN PROGRESO'},rc:'st-cobalt',href:'https://infer.ram4.dev',
+   en:'Community-powered LLM inference through an OpenAI-compatible API — cheaper and more flexible.',
+   es:'Inferencia de LLMs comunitaria vía una API compatible con OpenAI — más barato y flexible.',
+   go:{en:'infer.ram4.dev',es:'infer.ram4.dev'}},
+  {name:'SDD Custom Kit',cat:'Dev tooling',result:{en:'OPEN SOURCE',es:'OPEN SOURCE'},rc:'st-coral',href:'https://github.com/ram4-dev/simple_mutiple_agents_sdd',
+   en:'Portable spec-driven dev kit with multi-agent orchestration. Turns specs into code. Talk at Codex Argentina.',
+   es:'Kit portátil spec-driven con orquestación multi-agente. Convierte specs en código. Charla en Codex Argentina.',
+   go:{en:'View repo',es:'Ver repo'}},
+];
+
+const TICKER_ITEMS=[
+  {t:'Backend @ Mercado Libre',c:'var(--cobalt)'},
+  {t:'AI Products',c:'var(--coral)'},
+  {t:'Scalable Systems',c:'var(--sun)'},
+  {t:'Product Engineering',c:'var(--lime)'},
+  {t:'Buenos Aires 🇦🇷',c:'var(--cobalt)'},
+  {t:'Founder-minded Builder',c:'var(--coral)'},
+];
+
+let LANG=localStorage.getItem('ram4_lang_c3v2')||'en';
+
+/* ======= LANG ======= */
+function setLang(l){
+  LANG=l;localStorage.setItem('ram4_lang_c3v2',l);
+  document.documentElement.lang=l;
+  document.querySelectorAll('[data-en]').forEach(el=>{
+    const v=el.getAttribute('data-'+l);
+    if(v===null)return;
+    if(v.includes('<b>'))el.innerHTML=v;else el.textContent=v;
+  });
+  document.querySelectorAll('.lang button').forEach(b=>b.classList.toggle('on',b.dataset.lang===l));
+  buildWork();
+}
+document.querySelectorAll('.lang button').forEach(b=>b.addEventListener('click',()=>setLang(b.dataset.lang)));
+
+/* ======= BUILD WORK CARDS ======= */
+function buildWork(){
+  const t=document.getElementById('hscrollTrack');
+  t.innerHTML=PROJECTS.map(p=>`
+    <a class="hcard" href="${p.href}" target="_blank">
+      <div class="c-top"><span class="c-cat">${p.cat}</span><span class="c-result ${p.rc}">${p.result[LANG]}</span></div>
+      <h3>${p.name}</h3><p>${p[LANG]}</p>
+      <span class="c-go">${p.go[LANG]} →</span>
+    </a>`).join('');
+  setupHScroll();
+}
+
+/* ======= BUILD TICKER ======= */
+function buildTicker(){
+  const el=document.getElementById('ticker');
+  const html=TICKER_ITEMS.map(it=>`<span class="ticker-item"><span class="sep" style="background:${it.c}"></span>${it.t}</span>`).join('');
+  el.innerHTML=html+html; // doubled for seamless loop
+}
+buildTicker();
+
+/* ======= HORIZONTAL SCROLL TIED TO VERTICAL ======= */
+function setupHScroll(){
+  const outer=document.getElementById('hscrollOuter');
+  const pin=document.getElementById('hscrollPin');
+  const track=document.getElementById('hscrollTrack');
+  const prog=document.getElementById('hscrollProg');
+  if(!outer||!track)return;
+  const isMobile=()=>window.innerWidth<=680;
+
+  function measure(){
+    if(isMobile()){outer.style.height='auto';return;}
+    const trackW=track.scrollWidth;
+    const viewW=pin.clientWidth-60;
+    const travel=Math.max(0,trackW-viewW);
+    const scrollHeight=travel+window.innerHeight;
+    outer.style.height=scrollHeight+'px';
   }
 
-  function closeMenu() {
-    const menu = document.getElementById('mobile-menu');
-    const btn  = document.getElementById('hamburger-btn');
-    const icon = document.getElementById('hamburger-icon');
-    menu.classList.remove('open');
-    btn.classList.remove('menu-open');
-    icon.textContent = 'menu';
+  function onScroll(){
+    if(isMobile())return;
+    const rect=outer.getBoundingClientRect();
+    const trackW=track.scrollWidth;
+    const viewW=pin.clientWidth-60;
+    const travel=Math.max(1,trackW-viewW);
+    const scrollRange=outer.clientHeight-window.innerHeight;
+    const scrolled=Math.max(0,Math.min(scrollRange,-rect.top));
+    const pct=scrollRange>0?scrolled/scrollRange:0;
+    track.style.transform=`translateX(${-pct*travel}px)`;
+    if(prog)prog.style.width=(pct*100)+'%';
   }
 
-  const sections = ['work', 'writing', 'philosophy', 'contact'];
-  const navLinks = {};
+  measure();
+  window.addEventListener('resize',measure);
+  window.addEventListener('scroll',onScroll,{passive:true});
+  onScroll();
+}
 
-  sections.forEach(id => {
-    navLinks[id] = document.querySelector(`nav a[href="#${id}"]`);
+/* ======= PEEL & STICK STICKERS ======= */
+function initStickers(){
+  const board=document.getElementById('board');
+  if(!board)return;
+  const isMobile=()=>window.innerWidth<=880;
+  let z=10;
+  const stickers=[...board.querySelectorAll('.sticker')];
+
+  // Each sticker's state
+  const items=stickers.map(st=>{
+    const rot=parseFloat(st.dataset.rot||0);
+    return {el:st, rot, x:0, y:0, dragging:false, autoPeeling:false, lastX:0, lastY:0};
   });
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      const link = navLinks[entry.target.id];
-      if (!link || !entry.isIntersecting) return;
-      Object.values(navLinks).forEach(l => l && l.classList.remove('nav-active', 'text-ink'));
-      link.classList.add('nav-active');
-    });
-  }, { rootMargin: '-30% 0px -60% 0px' });
+  function setTransform(it,scale){
+    const s=scale||1;
+    it.el.style.transform=`translate(${it.x.toFixed(1)}px,${it.y.toFixed(1)}px) rotate(${it.rot}deg) scale(${s})`;
+  }
 
-  sections.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) observer.observe(el);
-  });
-</script>
+  // init transforms
+  items.forEach(it=>setTransform(it));
 
-<script>
-  // ─── Chat client ──────────────────────────────────────────────
-  (function () {
-    const messagesEl    = document.getElementById('chat-messages');
-    const formEl        = document.getElementById('chat-form');
-    const inputEl       = document.getElementById('chat-input');
-    const sendBtn       = document.getElementById('chat-send');
-    const suggestionsEl = document.getElementById('chat-suggestions');
-    const resetBtn      = document.getElementById('chat-reset');
-
-    const INITIAL_GREETING = "Hi, I’m Ramiro’s assistant. I can tell you about his experience, projects, how he works, or how to reach him. What would you like to know?";
-
-    /** @type {{role:'user'|'assistant', content:string}[]} */
-    let history = [];
-    let busy = false;
-
-    function escapeHtml(s) {
-      return s.replace(/[&<>"']/g, c => ({
-        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-      }[c]));
-    }
-
-    // Minimal, safe-ish markdown -> HTML for assistant bubbles.
-    function renderMarkdown(text) {
-      let s = escapeHtml(text);
-      // Inline code first (so we don't catch its contents below).
-      s = s.replace(/`([^`\n]+)`/g, '<code>$1</code>');
-      // Bold **text**
-      s = s.replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>');
-      // Italic *text* (single, not part of **)
-      s = s.replace(/(^|[^*])\*([^*\n]+)\*(?!\*)/g, '$1<em>$2</em>');
-      // Markdown links [text](url)
-      s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
-        '<a href="$2" target="_blank" rel="noopener">$1</a>');
-      // Bare URLs (not already in href)
-      s = s.replace(/(^|[\s(])(https?:\/\/[^\s<)]+)/g,
-        '$1<a href="$2" target="_blank" rel="noopener">$2</a>');
-
-      // Block-level: paragraphs and bullet lists.
-      const lines = s.split('\n');
-      const out = [];
-      let inList = false;
-      let buf = [];
-      const flushBuf = () => {
-        if (buf.length) {
-          out.push('<p>' + buf.join(' ') + '</p>');
-          buf = [];
-        }
-      };
-      for (const line of lines) {
-        const isBullet = /^\s*[-*]\s+/.test(line);
-        if (isBullet) {
-          flushBuf();
-          if (!inList) { out.push('<ul>'); inList = true; }
-          out.push('<li>' + line.replace(/^\s*[-*]\s+/, '') + '</li>');
-        } else if (line.trim() === '') {
-          flushBuf();
-          if (inList) { out.push('</ul>'); inList = false; }
-        } else {
-          if (inList) { out.push('</ul>'); inList = false; }
-          buf.push(line);
-        }
-      }
-      flushBuf();
-      if (inList) out.push('</ul>');
-      return out.join('');
-    }
-
-    function appendUser(text) {
-      const wrap = document.createElement('div');
-      wrap.className = 'flex justify-end';
-      const bubble = document.createElement('div');
-      bubble.className = 'max-w-[85%] rounded-2xl bg-sand px-4 py-3 text-[0.95rem] leading-6 text-ink shadow-[0_0_0_1px_#d1cfc5] whitespace-pre-wrap break-words';
-      bubble.textContent = text;
-      wrap.appendChild(bubble);
-      messagesEl.appendChild(wrap);
-      scrollToBottom();
-    }
-
-    function appendAssistant(text) {
-      const wrap = document.createElement('div');
-      wrap.className = 'flex justify-start';
-      const bubble = document.createElement('div');
-      bubble.className = 'chat-bubble-assistant max-w-[88%] rounded-2xl bg-parchment px-4 py-3 text-[0.95rem] leading-7 text-ink shadow-[0_0_0_1px_#e8e6dc] break-words';
-      bubble.innerHTML = renderMarkdown(text);
-      wrap.appendChild(bubble);
-      messagesEl.appendChild(wrap);
-      scrollToBottom();
-    }
-
-    // Creates an empty assistant bubble that can be updated as tokens stream in.
-    function createStreamingAssistant() {
-      const wrap = document.createElement('div');
-      wrap.className = 'flex justify-start';
-      const bubble = document.createElement('div');
-      bubble.className = 'chat-bubble-assistant max-w-[88%] rounded-2xl bg-parchment px-4 py-3 text-[0.95rem] leading-7 text-ink shadow-[0_0_0_1px_#e8e6dc] break-words';
-      bubble.innerHTML = '';
-      wrap.appendChild(bubble);
-      messagesEl.appendChild(wrap);
-      scrollToBottom();
-      let lastRender = 0;
-      return {
-        update(rawText) {
-          // Throttle markdown re-render to ~30 fps; always update on long pauses.
-          const now = performance.now();
-          if (now - lastRender > 32) {
-            bubble.innerHTML = renderMarkdown(rawText);
-            lastRender = now;
-            scrollToBottom();
-          }
-        },
-        finalize(rawText) {
-          bubble.innerHTML = renderMarkdown(rawText);
-          scrollToBottom();
-        },
-        remove() {
-          wrap.remove();
-        },
-      };
-    }
-
-    function appendError(text) {
-      const wrap = document.createElement('div');
-      wrap.className = 'flex justify-start';
-      wrap.innerHTML = '<div class="max-w-[85%] rounded-2xl bg-[#fbecea] px-4 py-3 text-[0.9rem] leading-6 text-[#8a3a25] shadow-[0_0_0_1px_#ecd2cc]">' + escapeHtml(text) + '</div>';
-      messagesEl.appendChild(wrap);
-      scrollToBottom();
-    }
-
-    function appendTyping() {
-      const wrap = document.createElement('div');
-      wrap.className = 'flex justify-start';
-      wrap.id = 'chat-typing';
-      wrap.innerHTML = '<div class="rounded-2xl bg-parchment px-4 py-3 shadow-[0_0_0_1px_#e8e6dc]"><span class="inline-flex items-end gap-1.5"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></span></div>';
-      messagesEl.appendChild(wrap);
-      scrollToBottom();
-    }
-
-    function removeTyping() {
-      const t = document.getElementById('chat-typing');
-      if (t) t.remove();
-    }
-
-    function scrollToBottom() {
-      messagesEl.scrollTop = messagesEl.scrollHeight;
-    }
-
-    function setBusy(b) {
-      busy = b;
-      sendBtn.disabled = b;
-      inputEl.disabled = b;
-    }
-
-    function autoResize() {
-      inputEl.style.height = 'auto';
-      inputEl.style.height = Math.min(inputEl.scrollHeight, 160) + 'px';
-    }
-
-    async function sendMessage(rawText) {
-      if (busy) return;
-      const text = (rawText || '').trim();
-      if (!text) return;
-      if (text.length > 2000) {
-        appendError('Your message is too long. Try a shorter one.');
-        return;
-      }
-
-      suggestionsEl.classList.add('hidden');
-      appendUser(text);
-      history.push({ role: 'user', content: text });
-      inputEl.value = '';
-      autoResize();
-      setBusy(true);
-      appendTyping();
-
-      let assistant = null;
-      let answer = '';
-
-      try {
-        const resp = await fetch('/api/chat', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'text/event-stream',
-          },
-          body: JSON.stringify({ messages: history }),
-        });
-
-        if (!resp.ok) {
-          removeTyping();
-          let errMsg = 'Something went wrong. Please try again in a moment.';
-          try {
-            const data = await resp.json();
-            if (data && data.error) errMsg = data.error;
-          } catch {}
-          appendError(errMsg);
-          history.pop();
-          return;
-        }
-
-        const ctype = resp.headers.get('content-type') || '';
-
-        if (!ctype.includes('text/event-stream')) {
-          // Backend chose JSON mode: parse as a single message.
-          removeTyping();
-          const data = await resp.json();
-          answer = (data && data.answer) ? String(data.answer) : '';
-          if (!answer) {
-            appendError('No response received. Please try again.');
-            history.pop();
-            return;
-          }
-          appendAssistant(answer);
-          history.push({ role: 'assistant', content: answer });
-          return;
-        }
-
-        // SSE streaming branch.
-        const reader = resp.body.getReader();
-        const decoder = new TextDecoder();
-        let buffer = '';
-        let streamError = null;
-        let ended = false;
-
-        outer: while (true) {
-          const { value, done } = await reader.read();
-          if (done) break;
-          buffer += decoder.decode(value, { stream: true });
-
-          let sep;
-          while ((sep = buffer.indexOf('\n\n')) !== -1) {
-            const event = buffer.slice(0, sep);
-            buffer = buffer.slice(sep + 2);
-
-            // Take the data: line(s); concat in case of multi-line data.
-            const dataLines = event
-              .split('\n')
-              .filter((l) => l.startsWith('data:'))
-              .map((l) => l.slice(5).replace(/^ /, ''));
-            if (dataLines.length === 0) continue;
-            const payload = dataLines.join('\n');
-
-            let obj;
-            try { obj = JSON.parse(payload); } catch { continue; }
-
-            if (typeof obj.t === 'string' && obj.t.length > 0) {
-              if (!assistant) {
-                removeTyping();
-                assistant = createStreamingAssistant();
-              }
-              answer += obj.t;
-              assistant.update(answer);
-            } else if (obj.err) {
-              streamError = String(obj.err);
-              break outer;
-            } else if (obj.end) {
-              ended = true;
-              break outer;
-            }
-          }
-        }
-
-        if (assistant && answer) assistant.finalize(answer);
-
-        if (streamError) {
-          if (!assistant) removeTyping();
-          appendError(streamError);
-          history.pop();
-          return;
-        }
-
-        if (!answer) {
-          removeTyping();
-          appendError('No response received. Please try again.');
-          history.pop();
-          return;
-        }
-
-        history.push({ role: 'assistant', content: answer });
-        // 'ended' is informational; we already have the full answer.
-        void ended;
-      } catch (e) {
-        removeTyping();
-        if (assistant && answer) {
-          // Stream broke mid-flight but we did receive partial content.
-          assistant.finalize(answer);
-          history.push({ role: 'assistant', content: answer });
-        } else {
-          if (assistant) assistant.remove();
-          appendError('Connection failed. Check your network and try again.');
-          history.pop();
-        }
-      } finally {
-        setBusy(false);
-        inputEl.focus();
-      }
-    }
-
-    // Initial greeting (not pushed to history; it's a UI-only welcome).
-    appendAssistant(INITIAL_GREETING);
-
-    formEl.addEventListener('submit', (e) => {
+  // ---- MANUAL DRAG ----
+  items.forEach(it=>{
+    const st=it.el;
+    st.addEventListener('pointerdown',e=>{
+      if(isMobile())return;
+      it.dragging=true;
+      stopAutoPeel(it);
+      st.classList.remove('sticking','auto-peel');
+      st.classList.add('peeled');
+      st.style.zIndex=++z;
+      it.lastX=e.clientX;it.lastY=e.clientY;
+      setTransform(it,1.06);
+      st.setPointerCapture(e.pointerId);
       e.preventDefault();
-      sendMessage(inputEl.value);
     });
-
-    inputEl.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        sendMessage(inputEl.value);
-      }
+    st.addEventListener('pointermove',e=>{
+      if(!it.dragging)return;
+      it.x+=e.clientX-it.lastX;
+      it.y+=e.clientY-it.lastY;
+      it.lastX=e.clientX;it.lastY=e.clientY;
+      setTransform(it,1.06);
     });
-    inputEl.addEventListener('input', autoResize);
+    const end=()=>{
+      if(!it.dragging)return;
+      it.dragging=false;
+      st.classList.remove('peeled');
+      st.classList.add('sticking');
+      setTransform(it,1);
+      st.addEventListener('animationend',()=>st.classList.remove('sticking'),{once:true});
+    };
+    st.addEventListener('pointerup',end);
+    st.addEventListener('pointercancel',end);
+  });
 
-    suggestionsEl.querySelectorAll('button[data-q]').forEach((btn) => {
-      btn.addEventListener('click', () => sendMessage(btn.getAttribute('data-q')));
-    });
+  // ---- AUTO PEEL/STICK LOOP ----
+  // Random corners to peel from: each has a transform-origin and a tilt
+  const PEELS=[
+    {origin:'top left',    rx:8,  ry:-6},   // lift bottom-right
+    {origin:'top right',   rx:8,  ry:6},    // lift bottom-left
+    {origin:'bottom left', rx:-6, ry:-5},   // lift top-right
+    {origin:'bottom right',rx:-6, ry:5},    // lift top-left
+  ];
 
-    if (resetBtn) {
-      resetBtn.addEventListener('click', () => {
-        if (busy) return;
-        history = [];
-        messagesEl.innerHTML = '';
-        appendAssistant(INITIAL_GREETING);
-        suggestionsEl.classList.remove('hidden');
-        inputEl.focus();
-      });
-    }
-  })();
+  function stopAutoPeel(it){
+    it.autoPeeling=false;
+    it.el.classList.remove('auto-peel');
+    it.el.style.transformOrigin='';
+  }
+
+  function autoPeelOne(){
+    if(isMobile())return;
+    // pick a random sticker that isn't being dragged or auto-peeling
+    const candidates=items.filter(it=>!it.dragging&&!it.autoPeeling);
+    if(!candidates.length)return;
+    const it=candidates[Math.floor(Math.random()*candidates.length)];
+    const peel=PEELS[Math.floor(Math.random()*PEELS.length)];
+    const st=it.el;
+
+    it.autoPeeling=true;
+    st.style.transformOrigin=peel.origin;
+
+    // Phase 1: peel up from corner
+    st.classList.add('auto-peel');
+    st.style.transform=`translate(${it.x.toFixed(1)}px,${it.y.toFixed(1)}px) rotate(${it.rot}deg) perspective(500px) rotateX(${peel.rx}deg) rotateY(${peel.ry}deg)`;
+    st.style.zIndex=++z;
+
+    // Phase 2: hold, then stick back
+    setTimeout(()=>{
+      if(!it.autoPeeling||it.dragging)return; // user grabbed it
+      st.classList.remove('auto-peel');
+      st.classList.add('sticking');
+      st.style.transform=`translate(${it.x.toFixed(1)}px,${it.y.toFixed(1)}px) rotate(${it.rot}deg)`;
+      st.style.transformOrigin='';
+      st.addEventListener('animationend',()=>{
+        st.classList.remove('sticking');
+        it.autoPeeling=false;
+      },{once:true});
+      // fallback if animationend doesn't fire
+      setTimeout(()=>{it.autoPeeling=false;st.classList.remove('sticking');},500);
+    }, 900+Math.random()*600);
+  }
+
+  // stagger start, then loop
+  if(!isMobile()){
+    // initial stagger: peel a few on load
+    setTimeout(()=>autoPeelOne(), 1200);
+    setTimeout(()=>autoPeelOne(), 2400);
+    setTimeout(()=>autoPeelOne(), 3800);
+    // ongoing loop
+    setInterval(autoPeelOne, 2800);
+  }
+  // expose for debug
+  //window.__autoPeel=autoPeelOne;
+}
+
+/* ======= INIT ======= */
+setLang(LANG);
+initStickers();
 </script>
 
-</body>
-</html>
+
+</body></html>
