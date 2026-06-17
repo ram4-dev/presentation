@@ -1,0 +1,19 @@
+index.html
+  s_9a034a86d15f2f::t_c80a988d8dd3a4 2-264,268-274,276-277,282-295,297-300,305-309,311-312,314-325,327-330,332-339,341-344,346-353,355-358,360-367,369-372,374-375,379-394,399-402,407-491,494-504,507-524,527-530,532-547,550-555,557-567,569-582,584-632,635-636
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "2dc59638188432b6d6984b915fce880fe5089928",
+  "prompts": {},
+  "sessions": {
+    "s_9a034a86d15f2f": {
+      "agent_id": {
+        "tool": "pi",
+        "id": "019ed2df-3127-7edb-afda-3e38e2187df8",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "ram4-dev <ramirocarnicersouble8@gmail.com>"
+    }
+  }
+}
