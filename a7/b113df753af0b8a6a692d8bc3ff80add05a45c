@@ -1,0 +1,34 @@
+scripts/dev.js
+  s_68ac4a8c6eb48c::t_0dfc3965cdd533 38,51,60-61
+index.html
+  s_68ac4a8c6eb48c::t_9db682df16618a 611,614-615,632-639,642-769,800-805
+  s_68ac4a8c6eb48c::t_9b03822d11caf0 582
+  s_68ac4a8c6eb48c::t_9614716a7e967e 606-610,612-613,616-631,640,770-772,779-799,806-812,814-815,817-821
+  s_68ac4a8c6eb48c::t_c420c76e307ad6 641,773-778,813,816
+  s_68ac4a8c6eb48c::t_13eaf1aa126612 244,246-255,257-290,295-312,333
+  s_68ac4a8c6eb48c::t_6f2fc1170900ae 245,256,313-332,334-336,367,474,497-501
+  s_68ac4a8c6eb48c::t_2ebf151e08a687 291-294
+  s_68ac4a8c6eb48c::t_4a2d332bc23738 473,475-496
+  s_68ac4a8c6eb48c::t_732558b59c042e 534,538-549
+vercel.json
+  s_68ac4a8c6eb48c::t_3d871d7dea5f54 11-14,17-20,22-28
+api/github-activity.js
+  s_68ac4a8c6eb48c::t_43482f722905d4 2-9,13,25,27,29,31-92,95-96,98,100-143,146-163,185-191,194-211,222
+  s_68ac4a8c6eb48c::t_74f5f5904be7df 1,10-12,14-24,26,28,30,93-94,97,99,144-145,164-184,192-193,212-221,223-224
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "a7b113df753af0b8a6a692d8bc3ff80add05a45c",
+  "prompts": {},
+  "sessions": {
+    "s_68ac4a8c6eb48c": {
+      "agent_id": {
+        "tool": "pi",
+        "id": "019ed5aa-3ea1-7139-86cb-4a03e15920bc",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "ram4-dev <ramirocarnicersouble8@gmail.com>"
+    }
+  }
+}
