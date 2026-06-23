@@ -44,6 +44,18 @@ El cuello de botella no es el tooling, es el modelo mental. Una mirada systems-t
 - Tema: HR · Systems
 - Link: https://es.linkedin.com/posts/ramirocarnicersouble_la-gente-de-rrhh-no-sirve-para-nada-eso-activity-7438310576201576448-6JqC
 
+## Papers
+
+### "S-OWMI: A Perimeter Auditing Framework for Open-Weight Models in Latin American Institutions"
+
+Paper co-autorado para el **Apart Research Global South AI Safety Hackathon (junio 2026)**, junto con Mauricio Genta, Federico Hörl y Nicolás Adrián Oroz. Introducimos el **Spanish Open-Weight Maturity Index (S-OWMI)**: un framework auditable de evaluación perimetral para LLMs open-weight pensado para instituciones de LATAM que adoptan modelos locales por soberanía de datos y cumplimiento regulatorio (LGPD, Ley 25.326, Ley 1581).
+
+Evaluamos Llama-3.1-8B y Qwen2.5-7B sobre un dataset *español-diverso* (español neutro, Spanglish, coloquialismos regionales) versus un baseline en inglés. Hallazgo central: el refusal de prompts peligrosos transfiere bien entre idiomas, pero la consistencia en detección de sesgos cae **+13.3pp en español** y ~80% de las respuestas factuales sobre LATAM quedan incompletas — un readiness gap invisible para auditorías sólo-en-español. El scorecard L1/L2/L3 le da a las instituciones del Global South una herramienta accionable antes de comprometer GPU en fine-tuning local.
+
+- Venue: Apart Research — Global South AI Safety Hackathon 2026
+- Temas: AI Safety · Open-weight LLMs · Multilingual evaluation · Global South
+- Repo: https://github.com/fede-h/SOWMI
+
 ## Charlas y presentaciones
 
 ### "SDD + arquitectura multiagente" — primera meetup argentina de Codex

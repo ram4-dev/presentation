@@ -10,6 +10,11 @@
 
 const GH_USER = "ram4-dev";
 const REPO_LIMIT = 9;
+// Repos pinned to a fixed position regardless of push date (1-indexed).
+const PINNED = [
+  { name: 'security_agent_middleware', position: 2 },
+];
+
 const HIDE_REPOS = new Set([
   "presentation",
   "khora-landing",
@@ -93,11 +98,10 @@ async function fetchProfileGraphQL() {
 }
 
 function shapeRepos(repos) {
-  return repos
+  const shaped = repos
     .filter((r) => !r.fork && !r.archived && !r.private)
     .filter((r) => !HIDE_REPOS.has(r.name))
     .sort((a, b) => new Date(b.pushed_at) - new Date(a.pushed_at))
-    .slice(0, REPO_LIMIT)
     .map((r) => ({
       name: r.name,
       description: r.description || null,
@@ -109,7 +113,20 @@ function shapeRepos(repos) {
       homepage: r.homepage || null,
       topics: r.topics || [],
     }));
+
+  // Apply pinned positions.
+  for (const pin of PINNED) {
+    const idx = shaped.findIndex((r) => r.name === pin.name);
+    if (idx === -1) continue;
+    const [item] = shaped.splice(idx, 1);
+    const insertAt = Math.min(pin.position - 1, shaped.length);
+    shaped.splice(insertAt, 0, item);
+  }
+
+  return shaped.slice(0, REPO_LIMIT);
 }
+
+
 
 function shapeProfile(gqlUser) {
   if (!gqlUser) return null;

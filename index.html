@@ -354,6 +354,21 @@
 
   footer{padding:8px 0 50px}
   .foot-in{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;color:var(--ink-3);flex-wrap:wrap;gap:12px;padding:0 30px}
+
+  /* PDF MODAL */
+  #pdf-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s ease;backdrop-filter:blur(4px)}
+  #pdf-modal.open{opacity:1;pointer-events:auto}
+  .pdf-modal-box{background:var(--surface,#fff);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;width:min(920px,95vw);height:min(88vh,1100px);box-shadow:0 24px 80px rgba(0,0,0,.35);transform:translateY(20px);transition:transform .25s ease}
+  #pdf-modal.open .pdf-modal-box{transform:translateY(0)}
+  .pdf-modal-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border,#e5e5e5);gap:12px;flex-shrink:0}
+  .pdf-modal-title{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--ink,#111);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .pdf-modal-actions{display:flex;align-items:center;gap:10px;flex-shrink:0}
+  .pdf-modal-dl{font-family:var(--mono);font-size:12px;color:var(--ink-2,#555);text-decoration:none;padding:4px 10px;border:1px solid var(--border,#ddd);border-radius:6px;transition:background .15s}
+  .pdf-modal-dl:hover{background:var(--ink,#111);color:#fff}
+  .pdf-modal-close{background:none;border:none;font-size:18px;cursor:pointer;color:var(--ink-2,#555);line-height:1;padding:4px 8px;border-radius:6px;transition:background .15s}
+  .pdf-modal-close:hover{background:var(--ink,#111);color:#fff}
+  #pdf-iframe{flex:1;width:100%;border:none}
+  @media(max-width:600px){.pdf-modal-box{width:100vw;height:100dvh;border-radius:0}}
 </style>
 </head>
 <body>
@@ -417,6 +432,20 @@
         <div class="cas-src" data-en="X · AI Architecture" data-es="X · Arquitectura de IA">X · AI Architecture</div>
         <div class="cas-title" data-en="Complexity ≠ Intelligence: multi-agent systems that actually work" data-es="Complejidad ≠ Inteligencia: sistemas multi-agente que funcionan">Complexity ≠ Intelligence: multi-agent systems that actually work</div>
         <div class="cas-foot"><span class="side">SIDE A</span><span>04:32</span></div>
+      </div>
+      <div class="reels-row">
+        <span class="reel"></span>
+        <span class="tape-window"></span>
+        <span class="reel"></span>
+      </div>
+      <span class="play-arrow">▶ PLAY</span>
+    </a>
+    <a class="cas cas-lime" href="/paper-sowmi.pdf" data-pdf="/paper-sowmi.pdf">
+      <span class="scr-bl"></span><span class="scr-br"></span>
+      <div class="cas-label">
+        <div class="cas-src" data-en="Paper · AI Safety" data-es="Paper · AI Safety">Paper · AI Safety</div>
+        <div class="cas-title" data-en="S-OWMI: auditing open-weight LLMs for Latin American institutions" data-es="S-OWMI: auditoría de LLMs open-weight para instituciones de LATAM">S-OWMI: auditing open-weight LLMs for Latin American institutions</div>
+        <div class="cas-foot"><span class="side">SIDE A</span><span>08:00</span></div>
       </div>
       <div class="reels-row">
         <span class="reel"></span>
@@ -535,6 +564,10 @@ const PROJECTS=[
    en:'Current focus — AI-native product born at a hackathon (2nd place) and now part of the Dev3Pack accelerator. Shipping it as a real product.',
    es:'Foco actual — producto AI-native nacido en un hackathon (2º puesto) y ahora parte de la aceleradora Dev3Pack. Lo llevo a producto real.',
    go:{en:'See Compass',es:'Ver Compass'}},
+  {name:'S-OWMI',cat:'Paper · AI Safety',result:{en:'📄 PAPER',es:'📄 PAPER'},rc:'st-lime',href:'https://github.com/fede-h/SOWMI',
+   en:'Co-authored paper for Apart Research Global South AI Safety Hackathon 2026. A perimeter auditing framework (S-OWMI) for open-weight LLMs in LATAM institutions — surfaces the Spanish dialect failures English-only audits miss.',
+   es:'Paper co-autorado para el Apart Research Global South AI Safety Hackathon 2026. Un framework de auditoría perimetral (S-OWMI) para LLMs open-weight en instituciones de LATAM — detecta las fallas de dialecto en español que las auditorías sólo en inglés pasan por alto.',
+   go:{en:'View paper',es:'Ver paper'}},
   {name:'multi-sdd-team',cat:'Open source',result:{en:'⭐ 15 STARS',es:'⭐ 15 STARS'},rc:'st-coral',href:'https://github.com/ram4-dev/multi-sdd-team',
    en:'SDD multi-agent framework for the pi coding agent. Turns specs into code with coordinated agents. Most-starred public repo.',
    es:'Framework SDD multi-agente para el pi coding agent. Convierte specs en código con agentes coordinados. Mi repo público más estrellado.',
@@ -972,6 +1005,49 @@ function initStickers(){
   // expose for debug
   //window.__autoPeel=autoPeelOne;
 }
+
+/* ======= PDF MODAL ======= */
+(function(){
+  const overlay=document.createElement('div');
+  overlay.id='pdf-modal';
+  overlay.innerHTML=`
+    <div class="pdf-modal-box">
+      <div class="pdf-modal-bar">
+        <span class="pdf-modal-title">S-OWMI &mdash; AI Safety Paper</span>
+        <div class="pdf-modal-actions">
+          <a class="pdf-modal-dl" href="/paper-sowmi.pdf" download="S-OWMI-paper.pdf" title="Download PDF">⤓ Download</a>
+          <button class="pdf-modal-close" aria-label="Close">✕</button>
+        </div>
+      </div>
+      <iframe src="" id="pdf-iframe" title="S-OWMI paper"></iframe>
+    </div>`;
+  document.body.appendChild(overlay);
+
+  const iframe=document.getElementById('pdf-iframe');
+  const close=overlay.querySelector('.pdf-modal-close');
+
+  function openPdf(src){
+    iframe.src=src;
+    overlay.classList.add('open');
+    document.body.style.overflow='hidden';
+  }
+  function closePdf(){
+    overlay.classList.remove('open');
+    document.body.style.overflow='';
+    setTimeout(()=>{iframe.src='';},300);
+  }
+
+  close.addEventListener('click',closePdf);
+  overlay.addEventListener('click',function(e){if(e.target===overlay)closePdf();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')closePdf();});
+
+  document.querySelectorAll('[data-pdf]').forEach(function(el){
+    el.addEventListener('click',function(e){
+      e.preventDefault();
+      openPdf(el.dataset.pdf);
+    });
+  });
+})();
 
 /* ======= INIT ======= */
 setLang(LANG);

@@ -2,7 +2,31 @@
 
 Estos son los que más me representan hoy. Para el catálogo completo de mis 49 repos públicos, ver `repositories.md`.
 
-## Khora — foco actual
+## Compass — foco actual
+
+Capa de seguridad para pagos de agentes. La tesis: si los agentes empiezan a mover plata por su cuenta, hace falta una capa que valide, autorice y limite esos pagos antes de que toquen el rail real. Publicado en `compass.ram4.dev`.
+
+Nació como proyecto de hackathon y el resultado validó la dirección: **2dos en el leaderboard** y entrada al **programa de aceleración de Dev3pack**.
+
+- **Rol:** Builder / Product Engineer
+- **Foco:** Agent payments · Security · AI
+- **Estado:** En progreso
+- **Reconocimiento:** 2do en hackathon · Aceleración Dev3pack
+- **Sitio:** https://compass.ram4.dev
+
+## S-OWMI — research / AI safety
+
+Paper co-autorado para el **Apart Research Global South AI Safety Hackathon (junio 2026)**. Propone el **Spanish Open-Weight Maturity Index (S-OWMI)**, un framework auditable de evaluación perimetral para LLMs open-weight desplegados por instituciones de Latinoamérica (hospitales, fintechs, gobierno) que necesitan soberanía de datos y cumplimiento con LGPD / Ley 25.326 / Ley 1581.
+
+Evaluamos Llama-3.1-8B y Qwen2.5-7B contra un dataset *español-diverso* (español neutro, Spanglish, coloquialismos regionales) versus un baseline en inglés. Resultado clave: el refusal de prompts peligrosos transfiere bien entre idiomas, pero la **consistencia en detección de sesgos se degrada +13.3pp en español** y ~80% de las respuestas factuales sobre LATAM quedan incompletas — un readiness gap que una auditoría sólo-en-español no detectaría. Entregamos un scorecard L1/L2/L3 accionable para auditar antes del fine-tuning local.
+
+- **Rol:** Co-autor / Investigador
+- **Co-autores:** Mauricio Genta, Federico Hörl, Nicolás Adrián Oroz
+- **Foco:** AI Safety · Open-weight LLMs · Multilingual evaluation · Global South
+- **Venue:** Apart Research — Global South AI Safety Hackathon 2026
+- **Repo:** https://github.com/fede-h/SOWMI
+
+## Khora — producto propio
 
 Producto AI-native para People Analytics e inteligencia organizacional. Va más allá del dashboard: predice, da señales y actúa.
 
@@ -10,16 +34,6 @@ Producto AI-native para People Analytics e inteligencia organizacional. Va más 
 - **Foco:** AI · HR Tech · Agent Workflows
 - **Estado:** En progreso
 - **Sitio:** https://khora.ar
-
-## Compass — proyecto de hackathon
-
-Proyecto construido para una hackathon y publicado en `compass.ram4.dev`. El resultado fue fuerte: quedamos **2dos en el leaderboard** y Compass entró al **programa de aceleración de Dev3pack**.
-
-- **Rol:** Builder / Product Engineer
-- **Contexto:** Hackathon
-- **Resultado:** 2do lugar en el leaderboard
-- **Reconocimiento:** Entró al programa de aceleración de Dev3pack
-- **Sitio:** https://compass.ram4.dev
 
 ## Crewlink
 
