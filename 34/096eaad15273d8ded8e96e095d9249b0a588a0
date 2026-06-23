@@ -1,0 +1,39 @@
+content/projects.md
+  s_63f7cb15120376::t_5db89ce5e0846e 5-16,29
+  s_c7ce314c8aa2c7::t_774c3965c2f8ef 17-28
+content/writing.md
+  s_c7ce314c8aa2c7::t_2b21aa98d26ade 47-58
+index.html
+  s_c7ce314c8aa2c7::t_36cb5464b9e3d6 443,1009-1050
+  s_c7ce314c8aa2c7::t_ab70e5d4ca9034 357-371
+  s_c7ce314c8aa2c7::t_2334aa5ff91528 567-570
+  s_c7ce314c8aa2c7::t_b635769f78ddbb 444-456
+api/github-activity.js
+  s_c7ce314c8aa2c7::t_107af0a2c26eb1 13-17
+  s_c7ce314c8aa2c7::t_cd2c70ce0213a2 101,116-126
+  s_c7ce314c8aa2c7::t_3648ce845cb2c9 129
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.10",
+  "base_commit_sha": "34096eaad15273d8ded8e96e095d9249b0a588a0",
+  "prompts": {},
+  "sessions": {
+    "s_63f7cb15120376": {
+      "agent_id": {
+        "tool": "pi",
+        "id": "019ec90d-d921-7c50-8808-b2bd209d6749",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "ram4-dev <ramirocarnicersouble8@gmail.com>"
+    },
+    "s_c7ce314c8aa2c7": {
+      "agent_id": {
+        "tool": "pi",
+        "id": "019eeff3-d50c-7078-ab6c-edbcc28acc54",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "ram4-dev <ramirocarnicersouble8@gmail.com>"
+    }
+  }
+}
