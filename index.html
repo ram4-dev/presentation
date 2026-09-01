@@ -589,6 +589,9 @@ function ghLevel(count){
 
 let GH_DATA=null;
 let GH_STATE='loading'; // loading | ready | error
+const GH_REFRESH_MS=60*60*1000;
+let GH_LAST_LOAD_AT=0;
+let GH_LOAD_IN_FLIGHT=false;
 
 function renderProfile(){
   const root=document.getElementById('ghProfile');
@@ -808,6 +811,8 @@ function renderGithubLive(){
 }
 
 async function loadGithubLive(){
+  if(GH_LOAD_IN_FLIGHT)return;
+  GH_LOAD_IN_FLIGHT=true;
   try{
     const r=await fetch('/api/github-activity',{headers:{'Accept':'application/json'}});
     if(!r.ok)throw new Error('http '+r.status);
@@ -816,10 +821,19 @@ async function loadGithubLive(){
   }catch(err){
     GH_DATA=null;
     GH_STATE='error';
+  }finally{
+    GH_LAST_LOAD_AT=Date.now();
+    GH_LOAD_IN_FLIGHT=false;
+    renderGithubLive();
   }
-  renderGithubLive();
 }
 loadGithubLive();
+window.setInterval(loadGithubLive,GH_REFRESH_MS);
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='visible'&&Date.now()-GH_LAST_LOAD_AT>=GH_REFRESH_MS){
+    loadGithubLive();
+  }
+});
 /* ======= PDF MODAL ======= */
 (function(){
   const overlay=document.createElement('div');
