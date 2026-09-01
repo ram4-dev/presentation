@@ -223,6 +223,24 @@
   .gh-error{color:var(--accent)}
   .gh-footnote{margin-top:22px;font-family:var(--sans);font-size:11px;color:var(--ink-3);letter-spacing:.05em;text-align:right}
 
+  /* Featured repo clone traffic */
+  .gh-clones{margin-top:54px;padding-top:32px;border-top:1px solid var(--line)}
+  .gh-clones-head{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:18px;flex-wrap:wrap}
+  .gh-clones-title{font-family:var(--serif);font-weight:500;font-size:clamp(24px,3vw,34px);letter-spacing:-.015em}
+  .gh-clones-copy{max-width:54ch;color:var(--ink-2);font-size:14px;line-height:1.5}
+  .gh-clones-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+  @media(max-width:880px){.gh-clones-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media(max-width:560px){.gh-clones-grid{grid-template-columns:1fr}}
+  .gh-clone-card{display:flex;flex-direction:column;gap:16px;background:var(--paper);border:1px solid var(--line);border-radius:4px;padding:18px;transition:border-color .16s}
+  .gh-clone-card:hover{border-color:var(--accent)}
+  .gh-clone-name{font-family:var(--sans);font-size:13px;font-weight:700;line-height:1.3;color:var(--ink)}
+  .gh-clone-repo{display:block;margin-top:3px;color:var(--ink-3);font-size:10px;font-weight:500;letter-spacing:.03em;word-break:break-word}
+  .gh-clone-metrics{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding-top:14px;border-top:1px dashed var(--line)}
+  .gh-clone-number{display:block;color:var(--accent);font-family:var(--serif);font-size:28px;font-weight:500;line-height:1;font-variant-numeric:tabular-nums}
+  .gh-clone-label{display:block;margin-top:6px;color:var(--ink-3);font-family:var(--sans);font-size:9px;font-weight:600;letter-spacing:.07em;text-transform:uppercase}
+  .gh-clone-unavailable{padding-top:14px;border-top:1px dashed var(--line);color:var(--ink-3);font-family:var(--sans);font-size:11px;letter-spacing:.04em}
+  .gh-clones-foot{margin-top:16px;color:var(--ink-3);font-family:var(--sans);font-size:11px;line-height:1.45;text-align:right}
+
   /* DAY JOB — ticker tape style */
   .ticker-section{padding:50px 0;overflow:hidden}
   .ticker{display:flex;gap:32px;white-space:nowrap;animation:tickerSlide 18s linear infinite;width:max-content}
@@ -314,8 +332,17 @@
       </span>
       <span class="p-status" data-en="In progress" data-es="En progreso">In progress</span>
     </a>
-    <a class="project-row" href="https://khora.ar" target="_blank">
+    <a class="project-row" href="https://github.com/rober8b/aleph-hackathon" target="_blank">
       <span class="p-index">02</span>
+      <span class="p-main">
+        <h3>Nana Wallet</h3>
+        <p data-en="Accessible agentic wallet built for the Aleph Hackathon. It turns everyday-language transfer requests into a preview, explicit confirmation and WDK execution, with recipient memory that keeps addresses out of search results." data-es="Wallet agéntica accesible construida para el Aleph Hackathon. Convierte pedidos cotidianos en una vista previa, confirmación explícita y ejecución con WDK; la memoria de destinatarios mantiene las direcciones fuera de los resultados de búsqueda.">Accessible agentic wallet built for the Aleph Hackathon. It turns everyday-language transfer requests into a preview, explicit confirmation and WDK execution, with recipient memory that keeps addresses out of search results.</p>
+        <span class="p-meta" data-en="Co-builder · Tether WDK · React · Capacitor · Fastify" data-es="Co-builder · Tether WDK · React · Capacitor · Fastify">Co-builder · Tether WDK · React · Capacitor · Fastify</span>
+      </span>
+      <span class="p-status" data-en="Hackathon project" data-es="Proyecto de hackathon">Hackathon project</span>
+    </a>
+    <a class="project-row" href="https://khora.ar" target="_blank">
+      <span class="p-index">03</span>
       <span class="p-main">
         <span class="p-thumb"><img src="assets/projects/khora.jpg" alt="" loading="lazy"></span>
         <h3>Khora</h3>
@@ -325,7 +352,7 @@
       <span class="p-status" data-en="In progress" data-es="En progreso">In progress</span>
     </a>
     <a class="project-row" href="https://github.com/ram4-dev/memory_contagion_research" target="_blank">
-      <span class="p-index">03</span>
+      <span class="p-index">04</span>
       <span class="p-main">
         <h3>Memory Contagion Research</h3>
         <p data-en="Measures how poisoned experience retrieval changes an agent's behavior. The current pilot compares five presentation strategies with blinded judging." data-es="Mide cómo la recuperación de experiencias contaminadas cambia el comportamiento de un agente. El piloto compara cinco estrategias con evaluación ciega.">Measures how poisoned experience retrieval changes an agent's behavior. The current pilot compares five presentation strategies with blinded judging.</p>
@@ -334,60 +361,13 @@
       <span class="p-status" data-en="Active research" data-es="Investigación activa">Active research</span>
     </a>
     <a class="project-row" href="https://github.com/ram4-dev/esp32-hermes-voice" target="_blank">
-      <span class="p-index">04</span>
+      <span class="p-index">05</span>
       <span class="p-main">
         <h3>ESP32 Voice Agent</h3>
         <p data-en="Push-to-talk voice agent built on an ESP32-S3. The firmware records and plays audio while a FastAPI bridge handles speech, persistent Hermes sessions and short-lived TTS files." data-es="Agente de voz push-to-talk sobre ESP32-S3. El firmware graba y reproduce audio; un bridge en FastAPI resuelve voz, sesiones persistentes de Hermes y archivos TTS temporales.">Push-to-talk voice agent built on an ESP32-S3. The firmware records and plays audio while a FastAPI bridge handles speech, persistent Hermes sessions and short-lived TTS files.</p>
         <span class="p-meta" data-en="ESP-IDF · C · FastAPI · Proxmox · Embedded audio" data-es="ESP-IDF · C · FastAPI · Proxmox · Audio embebido">ESP-IDF · C · FastAPI · Proxmox · Embedded audio</span>
       </span>
       <span class="p-status" data-en="Hardware prototype" data-es="Prototipo físico">Hardware prototype</span>
-    </a>
-    <a class="project-row" href="https://github.com/ram4-dev/pears-vault" target="_blank">
-      <span class="p-index">05</span>
-      <span class="p-main">
-        <h3>Hackvault</h3>
-        <p data-en="Peer-to-peer secret vault with encrypted persistence and bidirectional .env sync. Teams connect directly through HyperDHT and keep offline encrypted replicas." data-es="Bóveda P2P de secretos con persistencia cifrada y sincronización bidireccional de .env. Los equipos se conectan por HyperDHT y conservan réplicas cifradas offline.">Peer-to-peer secret vault with encrypted persistence and bidirectional .env sync. Teams connect directly through HyperDHT and keep offline encrypted replicas.</p>
-        <span class="p-meta" data-en="TypeScript · HyperDHT · Hypercore · AES-256-GCM" data-es="TypeScript · HyperDHT · Hypercore · AES-256-GCM">TypeScript · HyperDHT · Hypercore · AES-256-GCM</span>
-      </span>
-      <span class="p-status" data-en="Open source" data-es="Open source">Open source</span>
-    </a>
-    <a class="project-row" href="https://github.com/ram4-dev/herdr-automations" target="_blank">
-      <span class="p-index">06</span>
-      <span class="p-main">
-        <h3>Herdr Automations</h3>
-        <p data-en="Cron, interval and event automations for persistent agent sessions. A durable worker owns scheduling, concurrency and recovery; a popup TUI exposes runs and diagnostics." data-es="Automatizaciones por cron, intervalo y eventos para sesiones persistentes de agentes. Un worker durable controla scheduling, concurrencia y recuperación; una TUI muestra ejecuciones y diagnósticos.">Cron, interval and event automations for persistent agent sessions. A durable worker owns scheduling, concurrency and recovery; a popup TUI exposes runs and diagnostics.</p>
-        <span class="p-meta" data-en="TypeScript · Bun · SQLite · Agent infrastructure" data-es="TypeScript · Bun · SQLite · Infraestructura de agentes">TypeScript · Bun · SQLite · Agent infrastructure</span>
-      </span>
-      <span class="p-status" data-en="Open source" data-es="Open source">Open source</span>
-    </a>
-    <a class="project-row" href="https://finance-agent-sigma.vercel.app" target="_blank">
-      <span class="p-index">07</span>
-      <span class="p-main">
-        <span class="p-thumb"><img src="assets/projects/anotamelo.jpg" alt="" loading="lazy"></span>
-        <h3>Anotamelo</h3>
-        <p data-en="WhatsApp bot for group expense management powered by AI — the 'toxic treasurer' that keeps the tab for you." data-es="Bot de WhatsApp para gestión de gastos grupales con IA — el tesorero tóxico que lleva la cuenta por vos.">WhatsApp bot for group expense management powered by AI — the 'toxic treasurer' that keeps the tab for you.</p>
-        <span class="p-meta" data-en="Creator · WhatsApp · Python · LLM" data-es="Creador · WhatsApp · Python · LLM">Creator · WhatsApp · Python · LLM</span>
-      </span>
-      <span class="p-status" data-en="Live" data-es="Live">Live</span>
-    </a>
-    <a class="project-row" href="https://github.com/ram4-dev/simple_mutiple_agents_sdd" target="_blank">
-      <span class="p-index">08</span>
-      <span class="p-main">
-        <span class="p-thumb"><img src="assets/projects/sdd_kit.jpg" alt="" loading="lazy"></span>
-        <h3>SDD Custom Kit</h3>
-        <p data-en="Portable spec-driven development kit with multi-agent orchestration — turns technical specs into code through a pipeline of specialized agents." data-es="Kit portable de spec-driven development con orquestación multi-agente — convierte specs técnicas en código a través de un pipeline de agentes.">Portable spec-driven development kit with multi-agent orchestration — turns technical specs into code through a pipeline of specialized agents.</p>
-        <span class="p-meta" data-en="Designer · Multi-agent · Open source · Codex talk" data-es="Diseñador · Multi-agent · Open source · Charla Codex">Designer · Multi-agent · Open source · Codex talk</span>
-      </span>
-      <span class="p-status" data-en="Open source" data-es="Open source">Open source</span>
-    </a>
-    <a class="project-row" href="https://github.com/rober8b/aleph-hackathon" target="_blank">
-      <span class="p-index">09</span>
-      <span class="p-main">
-        <h3>Nana Wallet</h3>
-        <p data-en="Accessible agentic wallet built for the Aleph Hackathon. It turns everyday-language transfer requests into a preview, explicit confirmation and WDK execution, with recipient memory that keeps addresses out of search results." data-es="Wallet agéntica accesible construida para el Aleph Hackathon. Convierte pedidos cotidianos en una vista previa, confirmación explícita y ejecución con WDK; la memoria de destinatarios mantiene las direcciones fuera de los resultados de búsqueda.">Accessible agentic wallet built for the Aleph Hackathon. It turns everyday-language transfer requests into a preview, explicit confirmation and WDK execution, with recipient memory that keeps addresses out of search results.</p>
-        <span class="p-meta" data-en="Co-builder · Tether WDK · React · Capacitor · Fastify" data-es="Co-builder · Tether WDK · React · Capacitor · Fastify">Co-builder · Tether WDK · React · Capacitor · Fastify</span>
-      </span>
-      <span class="p-status" data-en="Hackathon project" data-es="Proyecto de hackathon">Hackathon project</span>
     </a>
   </div>
 </section>
@@ -493,6 +473,17 @@
     <div class="gh-loading" data-en="$ fetching git log..." data-es="$ trayendo git log...">$ fetching git log...</div>
   </div>
   <div id="ghFootnote" class="gh-footnote"></div>
+
+  <div class="gh-clones">
+    <div class="gh-clones-head">
+      <h3 class="gh-clones-title" data-en="How many people clone these projects?" data-es="¿Cuántas personas clonan estos proyectos?">How many people clone these projects?</h3>
+      <p class="gh-clones-copy" data-en="GitHub reports full clones and unique cloners for each featured repository." data-es="GitHub informa los clones completos y los clonadores únicos de cada repositorio seleccionado.">GitHub reports full clones and unique cloners for each featured repository.</p>
+    </div>
+    <div id="ghClonesGrid" class="gh-clones-grid">
+      <div class="gh-loading" data-en="$ fetching clone traffic..." data-es="$ cargando clonaciones...">$ fetching clone traffic...</div>
+    </div>
+    <p class="gh-clones-foot" data-en="Rolling 14-day window · updated hourly by GitHub · not a lifetime total" data-es="Ventana móvil de 14 días · GitHub actualiza cada hora · no es un total histórico">Rolling 14-day window · updated hourly by GitHub · not a lifetime total</p>
+  </div>
 </section>
 
 <!-- TICKER — day job + skills as moving tape -->
@@ -747,10 +738,37 @@ function renderRepos(){
   foot.textContent=LANG==='es'?`$ último fetch: ${fetchedAgo}${staleTag}`:`$ last fetch: ${fetchedAgo}${staleTag}`;
 }
 
+function renderCloneTraffic(){
+  const grid=document.getElementById('ghClonesGrid');
+  if(!grid)return;
+  if(GH_STATE==='loading'){
+    grid.innerHTML=`<div class="gh-loading">${LANG==='es'?'$ cargando clonaciones...':'$ fetching clone traffic...'}</div>`;
+    return;
+  }
+  const rows=GH_DATA&&GH_DATA.clone_traffic;
+  if(!rows||!rows.length){
+    grid.innerHTML=`<div class="gh-error">${LANG==='es'?'$ métricas de clonación no disponibles':'$ clone traffic unavailable'}</div>`;
+    return;
+  }
+  grid.innerHTML=rows.map((r)=>{
+    const repo=`${r.owner}/${r.name}`;
+    const metrics=r.available?`
+      <div class="gh-clone-metrics">
+        <div><span class="gh-clone-number">${Number(r.count).toLocaleString(LANG==='es'?'es-AR':'en-US')}</span><span class="gh-clone-label">${LANG==='es'?'clones':'clones'}</span></div>
+        <div><span class="gh-clone-number">${Number(r.uniques).toLocaleString(LANG==='es'?'es-AR':'en-US')}</span><span class="gh-clone-label">${LANG==='es'?'clonadores únicos':'unique cloners'}</span></div>
+      </div>`:`<div class="gh-clone-unavailable">${LANG==='es'?'sin acceso a la métrica':'metric unavailable'}</div>`;
+    return `<a class="gh-clone-card" href="${r.url}" target="_blank" rel="noopener">
+      <div class="gh-clone-name">${r.label}<span class="gh-clone-repo">${repo}</span></div>
+      ${metrics}
+    </a>`;
+  }).join('');
+}
+
 function renderGithubLive(){
   renderProfile();
   renderHeatmap();
   renderRepos();
+  renderCloneTraffic();
 }
 
 async function loadGithubLive(){

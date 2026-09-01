@@ -7,7 +7,7 @@ The home is a chat-first interface backed by an LLM that answers questions about
 ## Stack
 
 - Static `index.html` with Tailwind via CDN (no build step).
-- One Vercel serverless function: `/api/chat.js`.
+- Three Vercel serverless functions: chat, CV rendering and GitHub activity.
 - LLM provider: any OpenAI-compatible `/chat/completions` endpoint. Default: **[Groq](https://groq.com)** with `llama-3.1-8b-instant`. Also tested with **[OpenCode Go](https://opencode.ai/go)**.
 - Profile content lives as plain Markdown files in `/content`.
 
@@ -60,8 +60,10 @@ The assistant prioritizes Compass, Khora, Memory Contagion Research, ESP32 Voice
    | `LLM_API_KEY` | yes | — |
    | `LLM_MODEL` | no | `llama-3.1-8b-instant` |
    | `LLM_BASE_URL` | no | `https://api.groq.com/openai/v1` |
+   | `GITHUB_TOKEN` | for live GitHub metrics | — |
 
    The legacy names `OPENCODE_API_KEY` / `OPENCODE_MODEL` / `OPENCODE_BASE_URL` are still accepted as fallbacks.
+   The GitHub token stays in the serverless function. A fine-grained token needs `Administration: read` for every featured repository whose clone traffic should appear.
 
 5. Deploy. Done.
 

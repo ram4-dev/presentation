@@ -2,7 +2,8 @@
 // Live GitHub activity widget for ram4-dev.
 //
 // Returns: profile (avatar/name/bio/location), contributions calendar
-// (53-week heatmap with totals), and the most recently-pushed public repos.
+// (53-week heatmap with totals), recently-pushed public repos, and 14-day clone
+// traffic for the projects featured on the landing page.
 //
 // Uses GraphQL v4 for profile+contributions (requires GITHUB_TOKEN) and falls
 // back to REST-only data when no token is available (no heatmap then).
@@ -10,6 +11,13 @@
 
 const GH_USER = "ram4-dev";
 const REPO_LIMIT = 9;
+const FEATURED_REPOS = [
+  { owner: "ram4-dev", name: "solana_hackathon", label: "Compass" },
+  { owner: "rober8b", name: "aleph-hackathon", label: "Nana Wallet" },
+  { owner: "ram4-dev", name: "khora-landing", label: "Khora" },
+  { owner: "ram4-dev", name: "memory_contagion_research", label: "Memory Contagion Research" },
+  { owner: "ram4-dev", name: "esp32-hermes-voice", label: "ESP32 Voice Agent" },
+];
 // Repos pinned to a fixed position regardless of push date (1-indexed).
 const PINNED = [
   { name: 'security_agent_middleware', position: 2 },
@@ -95,6 +103,47 @@ async function fetchProfileGraphQL() {
   const json = await r.json();
   if (json.errors) throw new Error(`graphql errors: ${JSON.stringify(json.errors).slice(0, 200)}`);
   return json.data && json.data.user;
+}
+
+async function fetchCloneTraffic() {
+  if (!authHeader().Authorization) {
+    return FEATURED_REPOS.map((repo) => ({
+      ...repo,
+      url: `https://github.com/${repo.owner}/${repo.name}`,
+      available: false,
+    }));
+  }
+
+  return Promise.all(FEATURED_REPOS.map(async (repo) => {
+    const url = `https://api.github.com/repos/${repo.owner}/${repo.name}/traffic/clones`;
+    try {
+      const r = await fetch(url, { headers: { ...COMMON_HEADERS, ...authHeader() } });
+      if (!r.ok) {
+        console.error(`[github-activity] clone traffic unavailable for ${repo.owner}/${repo.name}: ${r.status}`);
+        return {
+          ...repo,
+          url: `https://github.com/${repo.owner}/${repo.name}`,
+          available: false,
+        };
+      }
+      const data = await r.json();
+      return {
+        ...repo,
+        url: `https://github.com/${repo.owner}/${repo.name}`,
+        available: true,
+        count: Number(data.count) || 0,
+        uniques: Number(data.uniques) || 0,
+        window_days: 14,
+      };
+    } catch (err) {
+      console.error(`[github-activity] clone traffic failed for ${repo.owner}/${repo.name}: ${err.message}`);
+      return {
+        ...repo,
+        url: `https://github.com/${repo.owner}/${repo.name}`,
+        available: false,
+      };
+    }
+  }));
 }
 
 function shapeRepos(repos) {
@@ -208,13 +257,14 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    // Fetch profile (with calendar) and repos in parallel.
-    const [profile, rawRepos] = await Promise.all([
+    // Fetch profile, repos and featured-project traffic in parallel.
+    const [profile, rawRepos, cloneTraffic] = await Promise.all([
       fetchProfileGraphQL().catch((e) => {
         console.error("[github-activity] graphql failed:", e.message);
         return null;
       }),
       fetchReposREST(),
+      fetchCloneTraffic(),
     ]);
 
     const repos = shapeRepos(rawRepos);
@@ -224,6 +274,7 @@ module.exports = async function handler(req, res) {
       profile: shapeProfile(profile),
       top_language: computeTopLanguage(rawRepos),
       repos,
+      clone_traffic: cloneTraffic,
     };
     MEM = { at: now, payload };
     res.statusCode = 200;
