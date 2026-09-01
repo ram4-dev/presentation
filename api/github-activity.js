@@ -15,7 +15,7 @@ const FEATURED_REPOS = [
   { owner: "ram4-dev", name: "solana_hackathon", label: "Compass" },
   { owner: "rober8b", name: "aleph-hackathon", label: "Nana Wallet" },
   { owner: "ram4-dev", name: "khora-landing", label: "Khora" },
-  { owner: "ram4-dev", name: "memory_contagion_research", label: "Memory Contagion Research" },
+  { owner: "ram4-dev", name: "pears-vault", label: "Hackvault" },
   { owner: "ram4-dev", name: "esp32-hermes-voice", label: "ESP32 Voice Agent" },
 ];
 // Repos pinned to a fixed position regardless of push date (1-indexed).
