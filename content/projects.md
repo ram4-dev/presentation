@@ -1,6 +1,6 @@
 # Proyectos destacados
 
-Estos son los que más me representan hoy. Para el catálogo completo de mis 49 repos públicos, ver `repositories.md`.
+Estos son los que más me representan hoy. Para el catálogo de repos públicos, ver `repositories.md`.
 
 ## Compass — foco actual
 
@@ -34,6 +34,42 @@ Producto AI-native para People Analytics e inteligencia organizacional. Va más 
 - **Foco:** AI · HR Tech · Agent Workflows
 - **Estado:** En progreso
 - **Sitio:** https://khora.ar
+
+## Agent-Mediated Memory Poisoning: investigación activa
+
+Investigación sobre el efecto conductual de recuperar experiencias contaminadas desde una memoria compartida. El piloto actual compara cinco formas de presentar el mismo contenido sintético y mide su efecto con evaluación ciega. Usa únicamente escenarios ficticios o benignos, sin herramientas ni efectos externos.
+
+- **Rol:** Investigador / Builder
+- **Stack:** Python · Inspect AI · Retrieval experiments
+- **Foco:** AI Safety · Agent memory · Behavioral evaluation
+- **Repo:** https://github.com/ram4-dev/memory_contagion_research
+
+## ESP32 Voice Agent
+
+Interfaz de voz push-to-talk construida sobre una Waveshare ESP32-S3. El firmware en ESP-IDF graba y reproduce audio; un bridge en FastAPI, desplegado en Proxmox, conecta speech-to-text, sesiones persistentes de Hermes Agent y síntesis de voz. Las credenciales quedan fuera del dispositivo.
+
+- **Rol:** Creador / Ingeniero de sistema
+- **Stack:** C · ESP-IDF · FastAPI · SQLite · Proxmox
+- **Estado:** Prototipo físico en desarrollo
+- **Repo:** https://github.com/ram4-dev/esp32-hermes-voice
+
+## Hackvault
+
+Bóveda P2P para compartir secretos y sincronizar archivos `.env` en ambas direcciones. Cifra los valores con AES-256-GCM antes de persistirlos en Hypercore/Hyperbee, conecta peers por HyperDHT y mantiene réplicas locales cifradas que funcionan offline.
+
+- **Rol:** Creador
+- **Stack:** TypeScript · HyperDHT · Hypercore · Hyperbee
+- **Estado:** Open source, con tests unitarios y de integración
+- **Repo:** https://github.com/ram4-dev/pears-vault
+
+## Herdr Automations
+
+Plugin de automatización por cron, intervalos y eventos para sesiones persistentes de agentes. Un worker durable controla scheduling, concurrencia y recuperación; la TUI permite ejecutar, pausar, reintentar y revisar diagnósticos sin ocultar el trabajo del agente.
+
+- **Rol:** Creador
+- **Stack:** TypeScript · Bun · SQLite · TUI
+- **Estado:** Open source
+- **Repo:** https://github.com/ram4-dev/herdr-automations
 
 ## Crewlink
 
@@ -94,6 +130,15 @@ También lo presenté como charla de **SDD + arquitectura multiagente** en la pr
 - **Charla:** SDD + arquitectura multiagente — primera meetup argentina de Codex
 - **Presentación:** /presentations/04-charla-codex.html
 - **Repo:** https://github.com/ram4-dev/simple_mutiple_agents_sdd
+
+## Nana Wallet
+
+Wallet agéntica accesible construida en equipo para el Aleph Hackathon 2026. Permite pedir una transferencia con lenguaje cotidiano, revisar destinatario, red, token, importe y fee, y confirmar antes de ejecutar con Tether WDK. La memoria RAG resuelve destinatarios sin exponer direcciones durante la búsqueda.
+
+- **Rol:** Co-builder · Backend WDK · Memoria de destinatarios · Integración frontend/backend
+- **Stack:** TypeScript · React · Capacitor · Fastify · Tether WDK · PostgreSQL/pgvector
+- **Verificación:** 244 tests pasando entre backend y frontend
+- **Repo del equipo:** https://github.com/rober8b/aleph-hackathon
 
 ## Más
 

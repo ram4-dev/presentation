@@ -19,6 +19,38 @@ Landing y assets de Khora, mi producto AI-native de People Analytics e inteligen
 - Sitios: https://v0-khora-landing.vercel.app · https://khora-henna.vercel.app
 - Repos: https://github.com/ram4-dev/khora-landing · https://github.com/ram4-dev/khora_landing
 
+### Agent-Mediated Memory Poisoning: `memory_contagion_research`
+
+Investigación sobre cómo la recuperación de experiencias contaminadas cambia la conducta de agentes. El piloto compara cinco mecanismos de presentación mediante registros sintéticos, consultas controladas y evaluación ciega.
+
+- Stack: Python
+- Estado: investigación activa
+- Repo: https://github.com/ram4-dev/memory_contagion_research
+
+### ESP32 Voice Agent: `esp32-hermes-voice`
+
+Interfaz push-to-talk sobre ESP32-S3 con firmware ESP-IDF y un bridge FastAPI desplegable en Proxmox. Cubre captura y reproducción de audio, sesiones persistentes de Hermes, TTS temporal, idempotencia y retención controlada.
+
+- Stack: C · Python · ESP-IDF · FastAPI
+- Estado: prototipo físico en desarrollo
+- Repo: https://github.com/ram4-dev/esp32-hermes-voice
+
+### Hackvault: `pears-vault`
+
+Bóveda P2P de secretos con persistencia AES-256-GCM, transporte HyperDHT, replicación Hypercore/Hyperbee y sincronización bidireccional de `.env`.
+
+- Stack: TypeScript
+- Estado: open source
+- Repo: https://github.com/ram4-dev/pears-vault
+
+### Nana Wallet: `rober8b/aleph-hackathon`
+
+Wallet agéntica accesible creada en equipo para el Aleph Hackathon 2026. Combina frontend web y móvil, un backend Fastify conectado a Tether WDK, confirmación explícita antes de transferir y memoria RAG de destinatarios con PostgreSQL y pgvector.
+
+- Rol: co-builder; backend WDK, memoria de destinatarios e integración frontend/backend
+- Stack: TypeScript · React · Capacitor · Fastify · Tether WDK · PostgreSQL
+- Repo del equipo: https://github.com/rober8b/aleph-hackathon
+
 ### Crewlink
 
 Plataforma donde agentes pueden contratar a otros agentes para tareas específicas. Los agentes también pueden postularse como freelancers. Es uno de mis experimentos más interesantes alrededor de economías agente-a-agente.
@@ -66,6 +98,13 @@ Bot de WhatsApp para gestión de gastos grupales con IA — "El Tesorero Tóxico
 ## Tier 2 — Dev tooling y agent infra
 
 Herramientas y frameworks que construí alrededor del trabajo con agentes y coding agents. Más nicho, más técnico, menos "producto".
+
+### Herdr Automations: `herdr-automations`
+
+Automatizaciones por cron, intervalo y eventos para Herdr. Usa un worker durable, estado en SQLite, límites de concurrencia, recuperación después de reinicios y una TUI para operar ejecuciones y diagnósticos.
+
+- Stack: TypeScript · Bun · SQLite
+- Repo: https://github.com/ram4-dev/herdr-automations
 
 ### Tool Hub MCP — `tool-hub-mcp`
 
