@@ -123,6 +123,11 @@
   .project-row h3{font-family:var(--serif);font-weight:500;font-size:28px;letter-spacing:-.01em;color:var(--ink)}
   .project-row p{color:var(--ink-2);font-size:15px;line-height:1.55;max-width:560px}
   .project-row .p-meta{font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+  .project-row .p-clones{display:inline-flex;align-items:center;gap:7px;width:fit-content;max-width:100%;margin-top:3px;padding:6px 9px;border:1px solid var(--line);border-radius:999px;background:var(--paper);font-family:var(--sans);font-size:11px;line-height:1.35;color:var(--ink-2);font-variant-numeric:tabular-nums}
+  .project-row .p-clones strong{color:var(--ink);font-size:12px}
+  .project-row .p-clones-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0}
+  .project-row .p-clones.unavailable{color:var(--ink-3)}
+  .project-row .p-clones.unavailable .p-clones-dot{background:var(--ink-3)}
   .project-row .p-status{font-family:var(--sans);font-size:13px;color:var(--ink-3);flex-shrink:0;padding-top:4px}
   .project-row .p-thumb{position:absolute;right:0;top:50%;transform:translateY(-50%);width:180px;height:110px;overflow:hidden;opacity:0;transition:opacity .25s ease;pointer-events:none;border:1px solid var(--line)}
   .project-row:hover .p-thumb{opacity:1}
@@ -329,6 +334,7 @@
         <h3>Compass</h3>
         <p data-en="Security layer for agent payments — validates, authorizes and caps transfers before they touch the real rail." data-es="Capa de seguridad para pagos de agentes — valida, autoriza y limita los movimientos antes de que toquen el rail real.">Security layer for agent payments — validates, authorizes and caps transfers before they touch the real rail.</p>
         <span class="p-meta" data-en="Builder · Agent Payments · 2nd place hackathon · Dev3Pack accelerator" data-es="Builder · Agent Payments · 2do en hackathon · Aceleración Dev3Pack">Builder · Agent Payments · 2nd place hackathon · Dev3Pack accelerator</span>
+        <span class="p-clones" data-clone-repo="ram4-dev/solana_hackathon"><span class="p-clones-dot"></span><span>$ loading clone count...</span></span>
       </span>
       <span class="p-status" data-en="In progress" data-es="En progreso">In progress</span>
     </a>
@@ -338,6 +344,7 @@
         <h3>Nana Wallet</h3>
         <p data-en="Accessible agentic wallet built for the Aleph Hackathon. It turns everyday-language transfer requests into a preview, explicit confirmation and WDK execution, with recipient memory that keeps addresses out of search results." data-es="Wallet agéntica accesible construida para el Aleph Hackathon. Convierte pedidos cotidianos en una vista previa, confirmación explícita y ejecución con WDK; la memoria de destinatarios mantiene las direcciones fuera de los resultados de búsqueda.">Accessible agentic wallet built for the Aleph Hackathon. It turns everyday-language transfer requests into a preview, explicit confirmation and WDK execution, with recipient memory that keeps addresses out of search results.</p>
         <span class="p-meta" data-en="Co-builder · Tether WDK · React · Capacitor · Fastify" data-es="Co-builder · Tether WDK · React · Capacitor · Fastify">Co-builder · Tether WDK · React · Capacitor · Fastify</span>
+        <span class="p-clones" data-clone-repo="rober8b/aleph-hackathon"><span class="p-clones-dot"></span><span>$ loading clone count...</span></span>
       </span>
       <span class="p-status" data-en="Hackathon project" data-es="Proyecto de hackathon">Hackathon project</span>
     </a>
@@ -348,6 +355,7 @@
         <h3>Khora</h3>
         <p data-en="AI-native People Analytics and organizational intelligence. Goes beyond dashboards — predicts, signals and acts." data-es="People Analytics AI-native e inteligencia organizacional. Va más allá de los dashboards — predice, señala y actúa.">AI-native People Analytics and organizational intelligence. Goes beyond dashboards — predicts, signals and acts.</p>
         <span class="p-meta" data-en="Founder · AI · HR Tech" data-es="Founder · AI · HR Tech">Founder · AI · HR Tech</span>
+        <span class="p-clones" data-clone-repo="ram4-dev/khora-landing"><span class="p-clones-dot"></span><span>$ loading clone count...</span></span>
       </span>
       <span class="p-status" data-en="In progress" data-es="En progreso">In progress</span>
     </a>
@@ -357,6 +365,7 @@
         <h3>Memory Contagion Research</h3>
         <p data-en="Measures how poisoned experience retrieval changes an agent's behavior. The current pilot compares five presentation strategies with blinded judging." data-es="Mide cómo la recuperación de experiencias contaminadas cambia el comportamiento de un agente. El piloto compara cinco estrategias con evaluación ciega.">Measures how poisoned experience retrieval changes an agent's behavior. The current pilot compares five presentation strategies with blinded judging.</p>
         <span class="p-meta" data-en="Research · AI Safety · Python · Behavioral experiments" data-es="Investigación · AI Safety · Python · Experimentos conductuales">Research · AI Safety · Python · Behavioral experiments</span>
+        <span class="p-clones" data-clone-repo="ram4-dev/memory_contagion_research"><span class="p-clones-dot"></span><span>$ loading clone count...</span></span>
       </span>
       <span class="p-status" data-en="Active research" data-es="Investigación activa">Active research</span>
     </a>
@@ -366,6 +375,7 @@
         <h3>ESP32 Voice Agent</h3>
         <p data-en="Push-to-talk voice agent built on an ESP32-S3. The firmware records and plays audio while a FastAPI bridge handles speech, persistent Hermes sessions and short-lived TTS files." data-es="Agente de voz push-to-talk sobre ESP32-S3. El firmware graba y reproduce audio; un bridge en FastAPI resuelve voz, sesiones persistentes de Hermes y archivos TTS temporales.">Push-to-talk voice agent built on an ESP32-S3. The firmware records and plays audio while a FastAPI bridge handles speech, persistent Hermes sessions and short-lived TTS files.</p>
         <span class="p-meta" data-en="ESP-IDF · C · FastAPI · Proxmox · Embedded audio" data-es="ESP-IDF · C · FastAPI · Proxmox · Audio embebido">ESP-IDF · C · FastAPI · Proxmox · Embedded audio</span>
+        <span class="p-clones" data-clone-repo="ram4-dev/esp32-hermes-voice"><span class="p-clones-dot"></span><span>$ loading clone count...</span></span>
       </span>
       <span class="p-status" data-en="Hardware prototype" data-es="Prototipo físico">Hardware prototype</span>
     </a>
@@ -764,11 +774,37 @@ function renderCloneTraffic(){
   }).join('');
 }
 
+function renderSelectedBuildTraffic(){
+  const traffic=new Map(((GH_DATA&&GH_DATA.clone_traffic)||[]).map((r)=>[`${r.owner}/${r.name}`,r]));
+  document.querySelectorAll('#projects [data-clone-repo]').forEach((el)=>{
+    const row=traffic.get(el.dataset.cloneRepo);
+    el.classList.toggle('unavailable',GH_STATE==='error'||!row||!row.available);
+    if(GH_STATE==='loading'){
+      el.innerHTML=`<span class="p-clones-dot"></span><span>${LANG==='es'?'$ cargando clonaciones...':'$ loading clone count...'}</span>`;
+      return;
+    }
+    if(!row||!row.available){
+      el.innerHTML=`<span class="p-clones-dot"></span><span>${LANG==='es'?'clonaciones no disponibles':'clone count unavailable'}</span>`;
+      return;
+    }
+    const locale=LANG==='es'?'es-AR':'en-US';
+    const uniqueCount=Number(row.uniques);
+    const uniques=uniqueCount.toLocaleString(locale);
+    const clones=Number(row.count).toLocaleString(locale);
+    const people=LANG==='es'?(uniqueCount===1?'persona':'personas'):(uniqueCount===1?'person':'people');
+    const copy=LANG==='es'
+      ?`<strong>${uniques}</strong> ${people} clonaron el repo · ${clones} clones totales · últimos 14 días`
+      :`<strong>${uniques}</strong> ${people} cloned the repo · ${clones} total clones · last 14 days`;
+    el.innerHTML=`<span class="p-clones-dot"></span><span>${copy}</span>`;
+  });
+}
+
 function renderGithubLive(){
   renderProfile();
   renderHeatmap();
   renderRepos();
   renderCloneTraffic();
+  renderSelectedBuildTraffic();
 }
 
 async function loadGithubLive(){
