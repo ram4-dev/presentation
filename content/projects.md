@@ -140,6 +140,16 @@ Wallet agéntica accesible construida en equipo para el Aleph Hackathon 2026. Pe
 - **Verificación:** 244 tests pasando entre backend y frontend
 - **Repo del equipo:** https://github.com/rober8b/aleph-hackathon
 
+## Nana Wallet — sitio público
+
+Landing pública del producto: Nani, la asistente de Nana, se anima en vivo en el navegador (Rive + Web Audio con lip-sync ligado al audio de bienvenida), sigue el puntero, parpadea y reacciona al foco del campo email con la pose de thumbs-up. La waitlist persiste en Supabase a través de una función serverless en Vercel, con honeypot antispam y baja desde el propio navegador.
+
+- **Rol:** Solo · diseño, implementación y deploy
+- **Stack:** HTML/CSS/JS · Rive (WASM) · Web Audio · Vercel Functions · Supabase
+- **Estado:** Landing publica y en línea; la app sigue en desarrollo
+- **Sitio:** https://nanalanding.vercel.app
+- **Repo:** https://github.com/ram4-dev/nana-landing
+
 ## Más
 
 GitHub completo: https://github.com/ram4-dev

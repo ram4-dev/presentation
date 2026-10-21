@@ -14,6 +14,7 @@ const REPO_LIMIT = 9;
 const FEATURED_REPOS = [
   { owner: "ram4-dev", name: "solana_hackathon", label: "Compass" },
   { owner: "rober8b", name: "aleph-hackathon", label: "Nana Wallet" },
+  { owner: "ram4-dev", name: "nana-landing", label: "Nana Landing" },
   { owner: "ram4-dev", name: "khora-landing", label: "Khora" },
   { owner: "ram4-dev", name: "pears-vault", label: "Hackvault" },
   { owner: "ram4-dev", name: "esp32-hermes-voice", label: "ESP32 Voice Agent" },
