@@ -16,7 +16,9 @@
   },
   "rewrites": [
     { "source": "/cv", "destination": "/api/cv" },
-    { "source": "/cv/", "destination": "/api/cv" }
+    { "source": "/cv/", "destination": "/api/cv" },
+    { "source": "/bitconf", "destination": "/presentations/05-bitconf-read-the-code.html" },
+    { "source": "/bitconf/", "destination": "/presentations/05-bitconf-read-the-code.html" }
   ],
   "headers": [
     {
