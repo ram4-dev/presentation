@@ -65,8 +65,13 @@ const server = http.createServer((req, res) => {
   }
 
   // Static: serve files from project root.
+  // /bitconf mirrors the vercel.json rewrite to the self-contained deck.
   const urlPath = req.url.split("?")[0];
-  const cleanPath = urlPath === "/" ? "/index.html" : urlPath;
+  const routed =
+    urlPath === "/bitconf" || urlPath === "/bitconf/"
+      ? "/presentations/05-bitconf-read-the-code.html"
+      : null;
+  const cleanPath = routed || (urlPath === "/" ? "/index.html" : urlPath);
   const filePath = path.join(ROOT, decodeURIComponent(cleanPath));
 
   // Prevent path traversal.

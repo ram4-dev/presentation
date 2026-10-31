@@ -66,6 +66,14 @@ Charla sobre spec-driven development, gestión de contexto y orquestación multi
 - Tema: SDD · Arquitectura multiagente · Coding agents
 - Presentación: /presentations/04-charla-codex.html
 
+### "Read the code! La nueva vagancia cognitiva de los devs" — LABITCONF 2026
+
+Charla sobre la vagancia cognitiva que aparece cuando los devs dejan de leer el código que generan con IA: qué se pierde en research, implementación y documentación, y cómo cambiar el workflow para seguir entendiendo lo que se mergea.
+
+- Evento: LABITCONF 2026 (La Bitconf)
+- Tema: Código asistido por IA · Lectura de código · Workflow
+- Presentación: /bitconf
+
 ## Temas que suelo tocar
 
 - Diseño de sistemas agentic y multi-agent sin complejidad innecesaria
